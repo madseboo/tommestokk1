@@ -161,6 +161,13 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .modal-result table{font-size:.82rem}
 .modal-result .stub-note{background:#FCF2EA;border-left:4px solid var(--signal);border-radius:0 6px 6px 0;padding:.5rem .7rem;font-size:.78rem;margin-bottom:.8rem}
 
+/* ================= Innlogging (header) ================= */
+.header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.header-btn{font:inherit;font-weight:600;font-size:.82rem;padding:.4rem .9rem;border-radius:999px;border:1px solid var(--alu-dark);background:transparent;color:#fff;cursor:pointer}
+.header-btn:hover{background:var(--signal);border-color:var(--signal)}
+.header-btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.header-user{font-size:.8rem;color:var(--alu);display:flex;align-items:center;gap:.6rem}
+
 footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(--ink-soft);border-top:1px solid var(--line);background:var(--bg)}
 
 @media print{
@@ -184,6 +191,14 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
     Tommestokk<em>1</em>
   </button>
   <span class="crumb" id="crumb">Digitale verktøy for deg som bygger</span>
+  <div class="header-auth">
+    <button class="header-btn" id="authLoginBtn" type="button">Logg inn</button>
+    <div class="header-user" id="authUserBox" style="display:none">
+      <span id="authUserEmail"></span>
+      <button class="header-btn" id="authProjectsBtn" type="button">Mine prosjekter</button>
+      <button class="header-btn" id="authLogoutBtn" type="button">Logg ut</button>
+    </div>
+  </div>
 </header>
 
 <!-- ==================================================== FORSIDE -->
@@ -288,6 +303,11 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Løpemeter per profil, lekter, sløyfer, spiker/skruer og svinn per veggflate.</p>
       </div>
     </div>
+
+    <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
+      <h2>Dine prosjekter</h2>
+      <div id="projectsList"></div>
+    </section>
   </div>
 </main>
 
@@ -392,6 +412,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
           <button class="btn" id="te-copyBtn" type="button">Kopier bestillingsliste</button>
           <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
           <button class="btn secondary" id="te-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="te-lagreBtn" type="button">Lagre i prosjekt</button>
           <span id="te-copyStatus" class="copy-status" role="status"></span>
         </div>
       </section>
@@ -484,6 +505,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
           <button class="btn" id="ds-copyBtn" type="button">Kopier handleliste</button>
           <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
           <button class="btn secondary" id="ds-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="ds-lagreBtn" type="button">Lagre i prosjekt</button>
           <span id="ds-copyStatus" class="copy-status" role="status"></span>
         </div>
       </section>
@@ -591,6 +613,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
           <button class="btn" id="rk-copyBtn" type="button">Kopier bestillingsliste</button>
           <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
           <button class="btn secondary" id="rk-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="rk-lagreBtn" type="button">Lagre i prosjekt</button>
           <span id="rk-copyStatus" class="copy-status" role="status"></span>
         </div>
       </section>
@@ -616,6 +639,69 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
   </div>
 </div>
 
+<!-- ==================================================== INNLOGGING (magisk lenke) -->
+<div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="authModalClose" aria-label="Lukk">✕</button>
+    <h2 id="authModalTitle">Logg inn</h2>
+    <p class="sub" id="authStep1Sub">Få tilgang til dine lagrede prosjekter og beregninger. Vi sender deg en engangskode på e-post — ikke noe passord å huske.</p>
+    <div id="authStep1">
+      <div class="field" style="margin-top:1rem">
+        <label for="authEmail">E-postadresse</label>
+        <input type="email" id="authEmail" placeholder="din@epost.no" autocomplete="email">
+      </div>
+      <div class="actions">
+        <button class="btn" id="authSendBtn" type="button">Send kode</button>
+      </div>
+    </div>
+    <div id="authStep2" style="display:none">
+      <p class="sub" style="margin-top:1rem">Vi har sendt en 6-sifret kode til <b id="authSentEmail"></b>. Skriv den inn under.</p>
+      <div class="field" style="margin-top:1rem">
+        <label for="authCode">Engangskode</label>
+        <input type="text" id="authCode" placeholder="123456" inputmode="numeric" autocomplete="one-time-code" maxlength="6">
+      </div>
+      <div class="actions">
+        <button class="btn" id="authVerifyBtn" type="button">Bekreft kode</button>
+        <button class="btn secondary" id="authResendBtn" type="button">Send kode på nytt</button>
+      </div>
+    </div>
+    <div class="alert warn" id="authErrorNote" style="display:none;margin-top:1rem"></div>
+  </div>
+</div>
+
+<!-- ==================================================== LAGRE I PROSJEKT -->
+<div class="modal-overlay" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="saveModalClose" aria-label="Lukk">✕</button>
+    <h2 id="saveModalTitle">Lagre i prosjekt</h2>
+    <p class="sub" id="saveModalSub"></p>
+    <div class="field" style="margin-top:1rem">
+      <label for="saveProjectSelect">Velg prosjekt</label>
+      <select id="saveProjectSelect"></select>
+    </div>
+    <div class="field">
+      <label for="saveNewProjectName">Eller opprett nytt prosjekt</label>
+      <input type="text" id="saveNewProjectName" placeholder="f.eks. Hyttetomta 2026">
+    </div>
+    <div class="actions">
+      <button class="btn" id="saveConfirmBtn" type="button">Lagre beregning</button>
+    </div>
+    <div class="alert ok" id="saveOkNote" style="display:none;margin-top:1rem">Lagret ✓</div>
+    <div class="alert warn" id="saveErrNote" style="display:none;margin-top:1rem"></div>
+  </div>
+</div>
+
+<!-- ==================================================== PROSJEKTDETALJER -->
+<div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+  <div class="modal-box" style="max-width:680px">
+    <button class="modal-close" id="projectModalClose" aria-label="Lukk">✕</button>
+    <h2 id="projectModalTitle">Prosjekt</h2>
+    <p class="sub" id="projectModalSub"></p>
+    <button class="btn secondary" id="projectDeleteBtn" type="button" style="margin-top:.75rem">Slett prosjekt</button>
+    <div id="projectModalCalcs"></div>
+  </div>
+</div>
+
 <footer>
   <div class="wrap" style="padding:0">
     <b>Tommestokk1</b> gjør tabelloppslag i veiledende spenntabeller (C24, snølast 4,5 kN/m²) og følger produsentenes
@@ -626,6 +712,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
 "use strict";
 
@@ -652,6 +739,20 @@ async function copy(txt, statusEl){
   try{ await navigator.clipboard.writeText(txt); statusEl.textContent="Kopiert ✓"; }
   catch{ statusEl.textContent="Kunne ikke kopiere — merk teksten manuelt."; }
   setTimeout(()=>statusEl.textContent="",2500);
+}
+
+/** Leser rå inndata fra et verktøys skjemafelt (input/select) + valgte segment-knapper,
+ *  til bruk som "inndata" ved lagring i prosjekt. Ingen endring i kalkulatorene selv. */
+function readForm(viewId){
+  const root = $("view-"+viewId), data = {};
+  root.querySelectorAll("input[id], select[id]").forEach(el=>{
+    data[el.id] = el.type === "checkbox" ? el.checked : el.value;
+  });
+  root.querySelectorAll("[role=group] button[aria-pressed=true]").forEach(btn=>{
+    const key = Object.keys(btn.dataset)[0];
+    if (key) data["valg_"+key] = btn.dataset[key];
+  });
+  return data;
 }
 
 /* ========================================================================
@@ -867,6 +968,357 @@ const PriceModal = (()=>{
 })();
 PriceModal.init();
 
+/* ========================================================================
+   AUTH — innlogging med engangskode på e-post (Supabase Auth, åpen registrering)
+   Kode i stedet for klikkbar lenke: lenker "brukes opp" ofte av e-post-
+   leverandørers sikkerhetsskanning (særlig Gmail) før brukeren selv klikker.
+   ======================================================================== */
+const SUPABASE_URL = "https://edutnmtttkhuhkemnnmo.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_2_sgCwLsDxXvm-1M1FAVLw_tTbCpb6s";
+
+const AUTH = (()=>{
+  const sb = SUPABASE_URL.startsWith("http")
+    ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+    : null;
+  let user = null;
+  const listeners = [];
+
+  function onChange(fn){ listeners.push(fn); }
+  function notify(){ listeners.forEach(fn=>fn(user)); }
+
+  function syncHeader(){
+    $("authLoginBtn").style.display = user ? "none" : "";
+    $("authUserBox").style.display = user ? "flex" : "none";
+    if (user) $("authUserEmail").textContent = user.email;
+  }
+
+  function showStep1(){
+    $("authStep1").style.display = ""; $("authStep2").style.display = "none";
+    $("authErrorNote").style.display = "none";
+  }
+  function showStep2(email){
+    $("authSentEmail").textContent = email;
+    $("authStep1").style.display = "none"; $("authStep2").style.display = "";
+    $("authErrorNote").style.display = "none";
+    $("authCode").value = "";
+  }
+
+  function openLoginModal(){
+    $("authEmail").value = "";
+    showStep1();
+    $("authModal").classList.add("open");
+  }
+  function closeLoginModal(){ $("authModal").classList.remove("open"); }
+
+  async function signOut(){ if(sb) await sb.auth.signOut(); }
+
+  async function sendCode(email){
+    if (!sb){
+      $("authErrorNote").textContent = "Supabase er ikke konfigurert ennå — sett SUPABASE_URL/SUPABASE_ANON_KEY.";
+      $("authErrorNote").style.display = "block";
+      return false;
+    }
+    if (!email) return false;
+    const {error} = await sb.auth.signInWithOtp({ email });
+    if (error){
+      $("authErrorNote").textContent = "Kunne ikke sende kode: " + error.message;
+      $("authErrorNote").style.display = "block";
+      return false;
+    }
+    return true;
+  }
+
+  function init(){
+    $("authLoginBtn").addEventListener("click", openLoginModal);
+    $("authModalClose").addEventListener("click", closeLoginModal);
+    $("authModal").addEventListener("click", e=>{ if(e.target.id==="authModal") closeLoginModal(); });
+    $("authLogoutBtn").addEventListener("click", signOut);
+
+    $("authSendBtn").addEventListener("click", async ()=>{
+      const email = $("authEmail").value.trim();
+      if (!email) return;
+      $("authSendBtn").disabled = true;
+      const ok = await sendCode(email);
+      $("authSendBtn").disabled = false;
+      if (ok) showStep2(email);
+    });
+
+    $("authResendBtn").addEventListener("click", async ()=>{
+      const email = $("authSentEmail").textContent;
+      $("authResendBtn").disabled = true;
+      await sendCode(email);
+      $("authResendBtn").disabled = false;
+    });
+
+    $("authVerifyBtn").addEventListener("click", async ()=>{
+      if (!sb) return;
+      const email = $("authSentEmail").textContent;
+      const code = $("authCode").value.trim();
+      if (!code) return;
+      $("authVerifyBtn").disabled = true;
+      const {error} = await sb.auth.verifyOtp({ email, token: code, type: "email" });
+      $("authVerifyBtn").disabled = false;
+      if (error){
+        $("authErrorNote").textContent = "Feil kode: " + error.message;
+        $("authErrorNote").style.display = "block";
+        return;
+      }
+      closeLoginModal();
+    });
+
+    if (!sb){
+      console.warn("Tommestokk1: Supabase er ikke konfigurert ennå — sett SUPABASE_URL/SUPABASE_ANON_KEY.");
+      return;
+    }
+    sb.auth.onAuthStateChange((_event, session)=>{
+      user = session?.user || null;
+      syncHeader(); notify();
+    });
+    sb.auth.getSession().then(({data})=>{
+      user = data.session?.user || null;
+      syncHeader(); notify();
+    });
+  }
+
+  return {init, onChange, signOut, openLoginModal, getUser:()=>user, get sb(){ return sb; }};
+})();
+AUTH.init();
+
+/* ========================================================================
+   PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
+   ======================================================================== */
+const Projects = (()=>{
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk"};
+  let pending = null; // {verktoy, label, inndata, resultat}
+
+  async function list(){
+    const {data, error} = await AUTH.sb.from("projects")
+      .select("id,navn,opprettet_at").order("opprettet_at",{ascending:false});
+    if (error){ console.warn(error); return []; }
+    return data;
+  }
+
+  async function create(navn){
+    const {data, error} = await AUTH.sb.from("projects")
+      .insert({navn, user_id: AUTH.getUser().id}).select().single();
+    if (error) throw error;
+    return data;
+  }
+
+  async function saveCalculation(projectId, verktoy, inndata, resultat){
+    const {error} = await AUTH.sb.from("calculations")
+      .insert({project_id: projectId, verktoy, inndata, resultat});
+    if (error) throw error;
+  }
+
+  async function countByProject(){
+    const {data, error} = await AUTH.sb.from("calculations").select("project_id");
+    if (error) return {};
+    const counts = {};
+    data.forEach(r=>counts[r.project_id]=(counts[r.project_id]||0)+1);
+    return counts;
+  }
+
+  async function deleteProject(id){
+    const {error} = await AUTH.sb.from("projects").delete().eq("id", id);
+    if (error) throw error;
+  }
+
+  async function deleteCalculation(id){
+    const {error} = await AUTH.sb.from("calculations").delete().eq("id", id);
+    if (error) throw error;
+  }
+
+  async function updateCalculation(id, resultat){
+    const {error} = await AUTH.sb.from("calculations").update({resultat}).eq("id", id);
+    if (error) throw error;
+  }
+
+  async function listCalculations(projectId){
+    const {data, error} = await AUTH.sb.from("calculations")
+      .select("id,verktoy,inndata,resultat,opprettet_at")
+      .eq("project_id", projectId).order("opprettet_at",{ascending:false});
+    if (error){ console.warn(error); return []; }
+    return data;
+  }
+
+  const dtFmt = iso => new Date(iso).toLocaleString("nb-NO",{dateStyle:"short",timeStyle:"short"});
+
+  let currentProject = null, currentCalcs = [], editingCalcId = null;
+
+  function calcCard(calc){
+    const label = TOOL_LABELS[calc.verktoy] || calc.verktoy;
+    const editing = calc.id === editingCalcId;
+    const products = calc.resultat || [];
+    const rows = products.map((p,i)=>{
+      const qty = editing
+        ? `<input class="price calc-qty" type="number" min="0" step="1" value="${p.quantity}" data-idx="${i}" style="width:5rem" aria-label="Antall ${p.title}">`
+        : `<span class="qty-badge">${fmt(p.quantity)}</span> <span class="art" style="display:inline">${p.unit}</span>`;
+      const price = editing
+        ? `<input class="price calc-price" type="number" min="0" step="1" value="${p.estPrice||0}" data-idx="${i}" aria-label="Pris ${p.title}">`
+        : kr(p.estPrice||0);
+      return `<tr><td>${p.title}${p.note?`<span class="art">${p.note}</span>`:""}</td>
+        <td class="num">${qty}</td><td class="num">${price}</td>
+        <td class="num">${kr((p.estPrice||0)*p.quantity)}</td></tr>`;
+    }).join("");
+    const actions = editing
+      ? `<button class="btn calc-save-btn" type="button" data-calc-id="${calc.id}">Lagre endringer</button>
+         <button class="btn secondary calc-cancel-btn" type="button" data-calc-id="${calc.id}">Avbryt</button>`
+      : `<button class="btn secondary calc-edit-btn" type="button" data-calc-id="${calc.id}">Rediger</button>
+         <button class="btn secondary calc-delete-btn" type="button" data-calc-id="${calc.id}">Slett denne beregningen</button>`;
+    return `<div class="card" style="margin-top:1rem" data-calc-id="${calc.id}">
+      <h2>${label} <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— lagret ${dtFmt(calc.opprettet_at)}</span></h2>
+      <table>
+        <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Sum</th></tr></thead>
+        <tbody>${rows}</tbody>
+        ${Renderer.renderSumRow(products, {})}
+      </table>
+      <div class="actions" style="margin-top:.75rem">${actions}</div>
+    </div>`;
+  }
+
+  function renderCalcsList(){
+    $("projectModalCalcs").innerHTML = currentCalcs.length
+      ? currentCalcs.map(calcCard).join("")
+      : `<p style="color:var(--ink-soft);font-size:.88rem;margin-top:1rem">Ingen beregninger lagret i dette prosjektet ennå.</p>`;
+  }
+
+  async function openProjectModal(project){
+    currentProject = project; editingCalcId = null;
+    $("projectModalTitle").textContent = project.navn;
+    $("projectModalSub").textContent = "Laster lagrede beregninger …";
+    $("projectModalCalcs").innerHTML = "";
+    $("projectModal").classList.add("open");
+    currentCalcs = await listCalculations(project.id);
+    $("projectModalSub").textContent = currentCalcs.length
+      ? `${currentCalcs.length} lagret beregning(er) i dette prosjektet.`
+      : "Ingen beregninger lagret i dette prosjektet ennå.";
+    renderCalcsList();
+  }
+  function closeProjectModal(){ $("projectModal").classList.remove("open"); }
+
+  async function handleDeleteProject(){
+    if (!currentProject) return;
+    if (!confirm(`Slette prosjektet «${currentProject.navn}» og alle ${currentCalcs.length} lagrede beregning(er) i det? Dette kan ikke angres.`)) return;
+    await deleteProject(currentProject.id);
+    closeProjectModal();
+    renderHomeProjects();
+  }
+
+  async function handleCalcsClick(e){
+    const editBtn = e.target.closest(".calc-edit-btn");
+    const cancelBtn = e.target.closest(".calc-cancel-btn");
+    const saveBtn = e.target.closest(".calc-save-btn");
+    const delBtn = e.target.closest(".calc-delete-btn");
+    if (editBtn){ editingCalcId = editBtn.dataset.calcId; renderCalcsList(); return; }
+    if (cancelBtn){ editingCalcId = null; renderCalcsList(); return; }
+    if (delBtn){
+      if (!confirm("Slette denne beregningen? Dette kan ikke angres.")) return;
+      await deleteCalculation(delBtn.dataset.calcId);
+      currentCalcs = currentCalcs.filter(c=>c.id!==delBtn.dataset.calcId);
+      $("projectModalSub").textContent = currentCalcs.length
+        ? `${currentCalcs.length} lagret beregning(er) i dette prosjektet.`
+        : "Ingen beregninger lagret i dette prosjektet ennå.";
+      renderCalcsList();
+      return;
+    }
+    if (saveBtn){
+      const id = saveBtn.dataset.calcId;
+      const calc = currentCalcs.find(c=>c.id===id);
+      const card = document.querySelector(`[data-calc-id="${id}"]`);
+      const products = (calc.resultat||[]).map((p,i)=>{
+        const qtyInput = card.querySelector(`.calc-qty[data-idx="${i}"]`);
+        const priceInput = card.querySelector(`.calc-price[data-idx="${i}"]`);
+        return {...p,
+          quantity: Math.max(0, parseFloat(qtyInput.value)||0),
+          estPrice: Math.max(0, parseFloat(priceInput.value)||0)};
+      });
+      await updateCalculation(id, products);
+      calc.resultat = products;
+      editingCalcId = null;
+      renderCalcsList();
+      return;
+    }
+  }
+
+  async function openSaveModal(verktoy, label, inndata, resultat){
+    if (!AUTH.getUser()){ AUTH.openLoginModal(); return; }
+    pending = {verktoy, label, inndata, resultat};
+    $("saveModalSub").textContent = `Lagrer beregningen fra ${label}.`;
+    $("saveOkNote").style.display="none"; $("saveErrNote").style.display="none";
+    $("saveNewProjectName").value = "";
+    const projects = await list();
+    $("saveProjectSelect").innerHTML = projects.length
+      ? projects.map(p=>`<option value="${p.id}">${p.navn}</option>`).join("")
+      : `<option value="">— ingen prosjekter ennå —</option>`;
+    $("saveModal").classList.add("open");
+  }
+  function closeSaveModal(){ $("saveModal").classList.remove("open"); }
+
+  let saving = false;
+  async function confirmSave(){
+    if (saving) return;
+    saving = true;
+    $("saveConfirmBtn").disabled = true;
+    $("saveErrNote").style.display="none";
+    try{
+      let projectId = $("saveProjectSelect").value;
+      const newName = $("saveNewProjectName").value.trim();
+      if (newName) projectId = (await create(newName)).id;
+      if (!projectId) throw new Error("Velg eller opprett et prosjekt.");
+      await saveCalculation(projectId, pending.verktoy, pending.inndata, pending.resultat);
+      $("saveOkNote").style.display = "block";
+      renderHomeProjects();
+      setTimeout(closeSaveModal, 1200);
+    }catch(err){
+      $("saveErrNote").textContent = "Kunne ikke lagre: " + err.message;
+      $("saveErrNote").style.display = "block";
+    }finally{
+      saving = false;
+      $("saveConfirmBtn").disabled = false;
+    }
+  }
+
+  let cache = [];
+  async function renderHomeProjects(){
+    if (!AUTH.getUser()){ $("projectsCard").style.display="none"; return; }
+    const [projects, counts] = [await list(), await countByProject()];
+    cache = projects;
+    $("projectsCard").style.display = "block";
+    $("projectsList").innerHTML = projects.length
+      ? projects.map(p=>`<button type="button" class="dim-step" data-project-id="${p.id}"
+          style="width:100%;text-align:left;background:none;border:none;font:inherit;cursor:pointer;border-bottom:1px dashed var(--line)">
+          <span class="no">📁</span><div><b>${p.navn}</b>
+          <span class="src">${counts[p.id]||0} beregning(er) · opprettet ${dtFmt(p.opprettet_at)} · åpne →</span></div></button>`).join("")
+      : `<p style="color:var(--ink-soft);font-size:.88rem">Ingen prosjekter ennå — bruk «Lagre i prosjekt» i et av verktøyene for å komme i gang.</p>`;
+    $("projectsList").querySelectorAll("[data-project-id]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const p = cache.find(x=>x.id===btn.dataset.projectId);
+        if (p) openProjectModal(p);
+      });
+    });
+  }
+
+  function init(){
+    $("saveModalClose").addEventListener("click", closeSaveModal);
+    $("saveModal").addEventListener("click", e=>{ if(e.target.id==="saveModal") closeSaveModal(); });
+    $("saveConfirmBtn").addEventListener("click", confirmSave);
+    $("projectModalClose").addEventListener("click", closeProjectModal);
+    $("projectModal").addEventListener("click", e=>{ if(e.target.id==="projectModal") closeProjectModal(); });
+    $("projectDeleteBtn").addEventListener("click", handleDeleteProject);
+    $("projectModalCalcs").addEventListener("click", handleCalcsClick);
+    $("authProjectsBtn").addEventListener("click", async ()=>{
+      nav("home");
+      await renderHomeProjects();
+      $("projectsCard").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+    AUTH.onChange(renderHomeProjects);
+  }
+
+  return {init, openSaveModal};
+})();
+Projects.init();
+
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
 const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk"};
@@ -1047,6 +1499,7 @@ const TE = (()=>{
     }));
     $("te-copyBtn").addEventListener("click",()=>copy(liste,$("te-copyStatus")));
     $("te-priserBtn").addEventListener("click",()=>PriceModal.open(TE.products, "Terrasse"));
+    $("te-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("terrasse","Terrasse",readForm("terrasse"),TE.products));
     render();
   }
   return {init, products:[]};
@@ -1164,6 +1617,7 @@ const DS = (()=>{
     }
     $("ds-copyBtn").addEventListener("click",()=>copy(liste,$("ds-copyStatus")));
     $("ds-priserBtn").addEventListener("click",()=>PriceModal.open(DS.products, "DryppStop undertak"));
+    $("ds-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("dryppstop","DryppStop undertak",readForm("dryppstop"),DS.products));
     render();
   }
   return {init, products:[]};
@@ -1376,6 +1830,7 @@ const RK = (()=>{
     }));
     $("rk-copyBtn").addEventListener("click",()=>copy(liste,$("rk-copyStatus")));
     $("rk-priserBtn").addEventListener("click",()=>PriceModal.open(RK.products, "Rekkverk"));
+    $("rk-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("rekkverk","Rekkverk",readForm("rekkverk"),RK.products));
     render();
   }
   return {init, products:[]};
