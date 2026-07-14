@@ -295,6 +295,23 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <span class="go">Åpne verktøyet →</span>
       </button>
 
+      <button class="tool-card" data-nav="parkett">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g fill="#E6D9B8" stroke="#C9CFD4" stroke-width="1.5">
+              <rect x="8" y="10" width="60" height="14" rx="2"/><rect x="72" y="10" width="40" height="14" rx="2"/>
+              <rect x="8" y="28" width="34" height="14" rx="2"/><rect x="46" y="28" width="60" height="14" rx="2"/>
+              <rect x="8" y="46" width="52" height="14" rx="2"/><rect x="64" y="46" width="48" height="14" rx="2"/>
+            </g>
+            <rect x="8" y="64" width="76" height="14" rx="2" fill="#F5C842" stroke="#C99A1F" stroke-width="1.5"/>
+            <rect x="88" y="64" width="24" height="14" rx="2" fill="#E85D0F"/>
+          </svg>
+        </span>
+        <h3>Parkett &amp; laminat</h3>
+        <p>Rom-mål inn → pakker, underlag, fuktsperre og lister ut. Svinn etter leggemønster, siste rad-sjekk og ekspansjonsfuge etter produsentreglene.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
+
       <div class="tool-card soon" aria-disabled="true">
         <span class="badge-soon">Kommer</span>
         <span class="icon" aria-hidden="true">
@@ -639,6 +656,112 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== PARKETT -->
+<main class="view" id="view-parkett">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Parkett &amp; laminat — <em>rom-mål inn, pakker og lister ut</em></h1>
+      <p>Beregner pakker med riktig svinn for leggemønsteret, underlag og fuktsperre etter
+      undergulvet, gulvlister og overgangslister — med siste rad-sjekk og ekspansjonsfuge
+      etter produsentenes leggeanvisninger.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="pk-lengde">Lengde <span class="hint">(rommets lengste mål, m)</span></label>
+          <input type="number" id="pk-lengde" min="0.5" max="30" step="0.1" value="5.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="pk-bredde">Bredde <span class="hint">(m)</span></label>
+          <input type="number" id="pk-bredde" min="0.5" max="30" step="0.1" value="4.0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="pk-typeLabel">Gulvtype <span class="hint">(styrer regler — produktet velger du fritt)</span></label>
+        <div class="segment" role="group" aria-labelledby="pk-typeLabel">
+          <button type="button" data-gulv="parkett" aria-pressed="true">Parkett 14 mm</button>
+          <button type="button" data-gulv="laminat" aria-pressed="false">Laminat 8 mm</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="pk-monsterLabel">Leggemønster <span class="hint">(styrer svinn)</span></label>
+        <div class="segment" role="group" aria-labelledby="pk-monsterLabel">
+          <button type="button" data-monster="rett" aria-pressed="true">Rett</button>
+          <button type="button" data-monster="diagonal" aria-pressed="false">Diagonal</button>
+          <button type="button" data-monster="fiskebein" aria-pressed="false">Fiskebein</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="pk-gulvLabel">Undergulv</label>
+        <div class="segment" role="group" aria-labelledby="pk-gulvLabel">
+          <button type="button" data-under="tre" aria-pressed="true">Tre/spon</button>
+          <button type="button" data-under="betong" aria-pressed="false">Betong / varmekabler</button>
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="pk-bordbredde">Bordbredde <span class="hint">(mm, står på pakken)</span></label>
+          <input type="number" id="pk-bordbredde" min="60" max="400" step="1" value="190" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="pk-pakke">Pakkestørrelse <span class="hint">(m² per pakke)</span></label>
+          <input type="number" id="pk-pakke" min="0.5" max="6" step="0.01" value="2.2" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="pk-dorer">Døråpninger <span class="hint">(antall — overgangslister/terskler)</span></label>
+        <input type="number" id="pk-dorer" min="0" max="10" step="1" value="1" inputmode="numeric">
+      </div>
+      <label class="check">
+        <input type="checkbox" id="pk-lister" checked>
+        <span>Ta med gulvlister langs veggene</span>
+      </label>
+      <div id="pk-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="pk-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Leggeplan">
+        <h2>Leggeplan</h2>
+        <div id="pk-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E6D9B8"></span>Gulvbord</span>
+          <span><span class="swatch" style="background:#F5C842"></span>Siste rad (kappes)</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Veggavstand / ekspansjon</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <div class="stats" id="pk-stats"></div>
+        <table id="pk-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="pk-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="pk-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="pk-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="pk-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="pk-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -847,6 +970,16 @@ const Catalog = (()=>{
     dryppstop_skruer: {category:"skrue",  title:"DryppStop skruer 4×30 (pose à 100)",  unit:"pose", defaultPrice:379, lookup:{manufacturerPartNumber:"4110981", nobb:"43290955"}},
     dryppstop_fuge:   {category:"fuge",   title:"DryppStop fugemasse / Danalim 685",   unit:"tube", defaultPrice:139, lookup:{manufacturerPartNumber:"4100935", nobb:"57389738"}},
     dryppstop_bakkant:{category:"beslag", title:"Bakkantbeslag mot vegg (per 2 m)",    unit:"stk",  defaultPrice:149},
+    /* --- Parkett & laminat --- */
+    parkett_klikk_14:     {category:"gulv", title:"Parkett klikk 14 mm — fritt produktvalg", dimensions:"14", unit:"pk", defaultPrice:750},
+    laminat_klikk_8:      {category:"gulv", title:"Laminat klikk 8 mm — fritt produktvalg", dimensions:"8", unit:"pk", defaultPrice:400},
+    fiskebein_klikk:      {category:"gulv", title:"Fiskebeinsgulv klikk (A/B-bord) — fritt produktvalg", unit:"pk", defaultPrice:1100},
+    gulvunderlag_foam:    {category:"underlag", title:"Gulvunderlag skum/kombi (rull à 15 m²)", unit:"rull", defaultPrice:349},
+    fuktsperre_02mm:      {category:"underlag", title:"Fuktsperre PE-folie 0,2 mm (rull à 39 m²)", unit:"rull", defaultPrice:299},
+    gulvlist_12x58:       {category:"list", title:"Gulvlist furu 12 × 58 hvitmalt", dimensions:"12x58", unit:"lm", defaultPrice:35},
+    overgangslist_terskel:{category:"list", title:"Overgangslist/terskel justerbar", unit:"stk", defaultPrice:249},
+    t_profil_ekspansjon:  {category:"list", title:"T-profil for ekspansjonsfuge", unit:"stk", defaultPrice:329},
+    avstandskiler:        {category:"tilbehor", title:"Avstandskiler/monteringskiler (pk à 30)", unit:"pk", defaultPrice:79},
   };
 
   function get(id){ return DB[id]; }
@@ -1105,7 +1238,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -1338,7 +1471,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -1853,11 +1986,197 @@ const RK = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= PARKETT ========================= */
+const PK = (()=>{
+  /* Svinn per leggemønster (bransjetommelfingre: rett 3-5 %, diagonal 10-15 %, fiskebein 15-20 %) */
+  const SVINN = {rett:0.05, diagonal:0.12, fiskebein:0.18};
+  const MONSTER_NAVN = {rett:"rett legging", diagonal:"diagonal legging", fiskebein:"fiskebein"};
+  const UNDERLAG_RULL = 15, FUKTSPERRE_RULL = 39;   // m² per rull
+  /* Maks sammenhengende flate uten ekspansjonsprofil (typiske produsentgrenser) */
+  const MAKS_FLATE = {parkett:{langs:12, tvers:6}, laminat:{langs:10, tvers:10}};
+  const st = {gulv:"parkett", monster:"rett", under:"tre", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const L=Math.max(0.5,parseFloat($("pk-lengde").value)||0), B=Math.max(0.5,parseFloat($("pk-bredde").value)||0);
+    const langs=Math.max(L,B), tvers=Math.min(L,B);      // bord legges langs rommets lengste retning
+    const areal=+(L*B).toFixed(2);
+    const svinn=SVINN[st.monster];
+    const pakkeM2=Math.max(0.5,parseFloat($("pk-pakke").value)||2.2);
+    const bestillM2=+(areal*(1+svinn)).toFixed(1);
+    const pakker=Math.ceil(bestillM2/pakkeM2);
+    const bordB=Math.max(0.06,(parseFloat($("pk-bordbredde").value)||190)/1000);   // m
+    const rader=Math.ceil(tvers/bordB);
+    const sisteRad=+(tvers-(rader-1)*bordB).toFixed(3);   // bredde på siste rad, m
+    const sisteSmal=st.monster==="rett" && sisteRad<0.05;
+    const delteRader=+((bordB+sisteRad)/2).toFixed(3);    // første/siste rad hvis man deler kappet
+    const veggAvstand=Math.max(10,Math.ceil(1.5*tvers));  // mm — 1,5 mm per breddemeter, min 10
+    const grense=MAKS_FLATE[st.gulv];
+    const trengerTprofil=langs>grense.langs || tvers>grense.tvers;
+    const tprofiler=trengerTprofil?Math.ceil(tvers/2.7):0;   // én fuge over rommets bredde
+    const underlagRuller=Math.ceil(areal/UNDERLAG_RULL);
+    const fuktsperre=st.under==="betong"?Math.ceil(areal*1.15/FUKTSPERRE_RULL):0;  // 15 % til 20 cm overlapp
+    const dorer=Math.max(0,parseInt($("pk-dorer").value,10)||0);
+    const medLister=$("pk-lister").checked;
+    const listLm=medLister?Math.ceil((2*(L+B)-dorer*0.9)*1.05):0;
+    return {L,B,langs,tvers,areal,svinn,pakkeM2,bestillM2,pakker,bordB,rader,sisteRad,sisteSmal,
+            delteRader,veggAvstand,grense,trengerTprofil,tprofiler,underlagRuller,fuktsperre,
+            dorer,medLister,listLm};
+  }
+
+  function render(){
+    const r=beregn();
+
+    /* Regelsjekk */
+    $("pk-regelsjekk").innerHTML =
+      (st.under==="betong"
+        ? `<div class="alert ok"><b>Betong/varmekabler:</b> fuktsperre (0,2 mm PE-folie, SD &gt; 75) er lagt til i listen. Legges med 20 cm overlapp, skjøter tapes.</div>`
+        : ``)
+      + (r.trengerTprofil
+        ? `<div class="alert warn" style="margin-top:.5rem"><b>Stor flate:</b> over ${r.grense.langs} × ${r.grense.tvers} m må gulvflaten deles med ekspansjonsfuge — T-profil er lagt til i listen. Del ved en døråpning om mulig.</div>`
+        : ``);
+
+    /* Slik er det regnet */
+    const steps=[
+      {t:`Areal ${fm1(r.L)} × ${fm1(r.B)} m = <b>${fm1(r.areal)} m²</b> + ${Math.round(r.svinn*100)} % svinn (${MONSTER_NAVN[st.monster]}) → bestill <b>${fm1(r.bestillM2)} m²</b>`,
+       s:`Tommelfingerregel: rett 5 %, diagonal 12 %, fiskebein 18 % — kapp gjenbrukes som startbord i neste rad`},
+      {t:`${fm1(r.bestillM2)} m² ÷ ${String(r.pakkeM2).replace(".",",")} m²/pakke → <b>${r.pakker} pakker</b>`,
+       s:`Rund alltid opp — rest er reserve ved feilkapp og senere reparasjon`},
+      ...(st.monster==="rett"?[
+      {t:`Bredde ${fm1(r.tvers)} m ÷ ${Math.round(r.bordB*1000)} mm bord → <b>${r.rader} rader</b>, siste rad <b>${Math.round(r.sisteRad*1000)} mm</b>${r.sisteSmal?` — for smal!`:``}`,
+       s:r.sisteSmal
+         ?`Under 50 mm: kapp første rad til ${Math.round(r.delteRader*1000)} mm, så blir første og siste rad like brede`
+         :`Over 50 mm — greit å legge siste rad som den blir`}]:[]),
+      {t:`Veggavstand <b>${r.veggAvstand} mm</b> hele veien rundt — skjules av gulvlisten`,
+       s:`1,5 mm per breddemeter, minst 10 mm — gulvet skal flyte fritt`},
+      {t:st.under==="betong"
+        ?`Undergulv betong/varmekabler → <b>fuktsperre + ${r.underlagRuller} rull underlag</b>`
+        :`Undergulv tre/spon → <b>${r.underlagRuller} rull underlag</b>, fuktsperre ikke nødvendig`,
+       s:`Underlag à ${UNDERLAG_RULL} m² per rull${st.under==="betong"?` · alternativ: kombiunderlag med innebygd fuktsperre`:``}`},
+    ];
+    $("pk-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    /* Materialliste */
+    const P=st.priser;
+    const gulvId = st.monster==="fiskebein" ? "fiskebein_klikk" : (st.gulv==="parkett" ? "parkett_klikk_14" : "laminat_klikk_8");
+    const rows=[
+      Catalog.make(gulvId, r.pakker, {sourceTool:"parkett",
+        note:`${fm1(r.bestillM2)} m² inkl. ${Math.round(r.svinn*100)} % svinn — sjekk m²/pakke mot valgt produkt${st.monster==="fiskebein"?` · fiskebein krever egne A- og B-bord`:``}`,
+        estPrice:P[gulvId]}),
+      Catalog.make("gulvunderlag_foam", r.underlagRuller, {sourceTool:"parkett",
+        note:`${fm1(r.areal)} m² gulvflate, rull à ${UNDERLAG_RULL} m²`, estPrice:P.gulvunderlag_foam}),
+    ];
+    if (r.fuktsperre) rows.push(Catalog.make("fuktsperre_02mm", r.fuktsperre, {sourceTool:"parkett",
+        note:`kreves på betong/varmekabler — 20 cm overlapp, tapede skjøter`, estPrice:P.fuktsperre_02mm}));
+    if (r.listLm) rows.push(Catalog.make("gulvlist_12x58", r.listLm, {sourceTool:"parkett",
+        note:`omkrets ${fm1(2*(r.L+r.B))} m − ${r.dorer} døråpning(er), inkl. 5 % kapp — gjæres i hjørnene`, estPrice:P.gulvlist_12x58}));
+    if (r.dorer) rows.push(Catalog.make("overgangslist_terskel", r.dorer, {sourceTool:"parkett",
+        note:`én per døråpning — husk ekspansjonsrom også under listen`, estPrice:P.overgangslist_terskel}));
+    if (r.tprofiler) rows.push(Catalog.make("t_profil_ekspansjon", r.tprofiler, {sourceTool:"parkett",
+        note:`deler flater over ${r.grense.langs} × ${r.grense.tvers} m — legg fugen ved døråpning om mulig`, estPrice:P.t_profil_ekspansjon}));
+    rows.push(Catalog.make("avstandskiler", 1, {sourceTool:"parkett",
+        note:`holder ${r.veggAvstand} mm veggavstand under legging — fjernes før listing`, estPrice:P.avstandskiler}));
+
+    PK.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("pk-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("pk-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("pk-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.areal)}</b><small>m² gulv</small></div>
+      <div class="stat"><b>${r.pakker}</b><small>pakker</small></div>
+      ${st.monster==="rett"?`<div class="stat"><b>${r.rader}</b><small>rader</small></div>
+      <div class="stat"><b>${Math.round(r.sisteRad*1000)}</b><small>mm siste rad</small></div>`:``}
+      <div class="stat"><b>${r.veggAvstand}</b><small>mm veggavstand</small></div>`;
+
+    $("pk-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg fritt hos forhandleren, og juster bordbredde, m² per pakke og pris til gulvet du lander på — mengdene regnes om automatisk.`,
+      `La pakkene akklimatisere seg 48 timer i rommet før legging — uåpnet, liggende flatt.`,
+      `Legg bordene i lysretningen (mot hovedvinduet), eller langs rommets lengste vegg.`,
+      `Endeskjøter forskyves minst 40–50 cm fra rad til rad — start neste rad med kappet fra forrige.`,
+      st.monster==="fiskebein"?`Fiskebein: tørrlegg de tre første radene og kontroller vinkelen mot lengste vegg før du klikker.`:``,
+      st.gulv==="parkett"?`Parkett frarådes i våtrom — bruk våtromsgodkjent gulv der.`:``,
+      st.under==="betong"?`Nystøpt betong må være tørr (RF under 65 %) før gulvet legges — fuktsperren erstatter ikke uttørking.`:``,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Parkett/laminat ${r.L} × ${r.B} m (${fm1(r.areal)} m²)`,
+      `${MONSTER_NAVN[st.monster]}, ${Math.round(r.svinn*100)} % svinn → ${fm1(r.bestillM2)} m² · undergulv: ${st.under==="betong"?"betong/varmekabler":"tre/spon"}`,
+    ]);
+  }
+
+  /* Leggeplan: rommet ovenfra, bord langs lengste retning */
+  function tegn(r){
+    const W=660,PAD=52,sk=Math.min((W-2*PAD)/r.langs,300/r.tvers);
+    const bw=r.langs*sk,bh=r.tvers*sk,H=bh+2*PAD+14,x0=(W-bw)/2,y0=PAD;
+    let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Leggeplan: ${r.rader} rader, siste rad ${Math.round(r.sisteRad*1000)} mm">`;
+    /* veggavstand/ekspansjon markeres som oransje ramme utenpå gulvet */
+    s+=`<rect x="${x0-5}" y="${y0-5}" width="${bw+10}" height="${bh+10}" fill="none" stroke="#E85D0F" stroke-width="2" stroke-dasharray="6 4"/>`;
+    if (st.monster==="rett"){
+      const bordL=2.0*sk;                                  // typisk bordlengde for illustrasjon
+      for(let i=0;i<r.rader;i++){
+        const y=y0+i*r.bordB*sk;
+        const h=Math.min(r.bordB*sk,y0+bh-y);
+        const siste=i===r.rader-1;
+        if(h<=0) break;
+        s+=`<rect x="${x0}" y="${y}" width="${bw}" height="${Math.max(h,2)}" fill="${siste?"#F5C842":"#E6D9B8"}" stroke="#C9CFD4" stroke-width="1"/>`;
+        const offset=((i%3)*0.45+0.3)*sk;                  // forskutte endeskjøter
+        for(let x=x0+offset;x<x0+bw-2;x+=bordL)
+          s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+h}" stroke="#C9CFD4" stroke-width="1.2"/>`;
+      }
+    } else if (st.monster==="diagonal"){
+      s+=`<rect x="${x0}" y="${y0}" width="${bw}" height="${bh}" fill="#E6D9B8" stroke="#C9CFD4"/>`;
+      const step=Math.max(r.bordB*sk*1.4,10);
+      for(let d=-bh;d<bw;d+=step)
+        s+=`<line x1="${x0+Math.max(d,0)}" y1="${y0+Math.max(-d,0)}" x2="${x0+Math.min(d+bh,bw)}" y2="${y0+Math.min(bw-d,bh)}" stroke="#C9CFD4" stroke-width="1.5"/>`;
+    } else {
+      s+=`<rect x="${x0}" y="${y0}" width="${bw}" height="${bh}" fill="#E6D9B8" stroke="#C9CFD4"/>`;
+      const seg=Math.max(r.bordB*sk*2.2,16);
+      for(let y=y0+seg/2;y<y0+bh;y+=seg)
+        for(let x=x0;x<x0+bw-seg;x+=seg)
+          s+=`<path d="M${x} ${y} l${seg/2} ${-seg/2} l${seg/2} ${seg/2}" fill="none" stroke="#C9CFD4" stroke-width="1.5"/>`;
+    }
+    s+=`<text x="${x0+bw/2}" y="${y0+bh+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">${fm1(r.langs)} m · bord legges denne veien →</text>
+        <text x="${x0-30}" y="${y0+bh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-30} ${y0+bh/2})">${fm1(r.tvers)} m${st.monster==="rett"?` · ${r.rader} rader`:``}</text>
+        <text x="${x0+bw-4}" y="${y0-10}" font-size="11" text-anchor="end" fill="#C24C0A" font-family="Inter,sans-serif">${r.veggAvstand} mm veggavstand</text>`;
+    if (st.monster==="rett")
+      s+=`<text x="${x0+bw+8}" y="${y0+bh-r.sisteRad*sk/2+4}" font-size="11" fill="#C99A1F" font-family="Inter,sans-serif" font-weight="600">${Math.round(r.sisteRad*1000)}</text>`;
+    s+=`</svg>`;
+    $("pk-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["pk-lengde","pk-bredde","pk-bordbredde","pk-pakke","pk-dorer","pk-lister"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-parkett [data-gulv]").forEach(b=>b.addEventListener("click",()=>{
+      st.gulv=b.dataset.gulv;
+      document.querySelectorAll("#view-parkett [data-gulv]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-parkett [data-monster]").forEach(b=>b.addEventListener("click",()=>{
+      st.monster=b.dataset.monster;
+      document.querySelectorAll("#view-parkett [data-monster]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-parkett [data-under]").forEach(b=>b.addEventListener("click",()=>{
+      st.under=b.dataset.under;
+      document.querySelectorAll("#view-parkett [data-under]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("pk-copyBtn").addEventListener("click",()=>copy(liste,$("pk-copyStatus")));
+    $("pk-priserBtn").addEventListener("click",()=>PriceModal.open(PK.products, "Parkett og laminat"));
+    $("pk-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("parkett","Parkett og laminat",readForm("parkett"),PK.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
 RK.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk → riktig verktøy
+PK.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett → riktig verktøy
 </script>
 </body>
 </html>
