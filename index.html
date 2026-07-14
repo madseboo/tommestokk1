@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Tommestokk1 · Digitale verktøy for deg som bygger</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;               /* hindrer mørk modus i å style skjemafelt og bakgrunner */
+  --bg:#EFF1EE;
+  --panel:#FFFFFF;
+  --ink:#1C2A33;
+  --ink-soft:#4A5A64;
+  --alu:#C9CFD4;
+  --alu-dark:#8E979E;
+  --signal:#E85D0F;
+  --signal-dark:#C24C0A;
+  --tre:#E6D9B8;
+  --ok:#1E7A46;
+  --warn:#9A4B00;
+  --line:#DCE0DD;
+  --radius:10px;
+  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;min-height:100vh}
+a{color:var(--signal-dark)}
+input,select,button{color-scheme:light}
+
+/* ================= Header ================= */
+header{background:var(--ink);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.7rem;cursor:pointer;background:none;border:none;color:#fff;font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
+.brand svg{height:30px;width:auto;display:block}
+.brand em{font-style:normal;color:var(--signal)}
+header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);border-radius:999px;padding:.15rem .7rem}
+.brand:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:1.5rem}
+.view{display:none}
+.view.active{display:block}
+
+/* ================= Forside ================= */
+.hero{padding:1.5rem 0 .5rem;text-align:left}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,5.5vw,3.4rem);text-transform:uppercase;letter-spacing:.02em;line-height:1.02;max-width:20ch}
+.hero h1 em{font-style:normal;color:var(--signal)}
+.hero p{max-width:58ch;color:var(--ink-soft);margin-top:.7rem;font-size:1rem}
+.hero .rule{margin-top:1.2rem;max-width:520px}
+.hero .rule svg{width:100%;height:auto;display:block}
+
+.promise{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.4rem}
+.promise div{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600}
+.promise svg{width:22px;height:22px;flex:none}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem;margin-top:2rem}
+.tool-card{
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.15rem;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
+  display:flex;flex-direction:column;gap:.7rem;transition:transform .12s ease, box-shadow .12s ease;
+}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(28,42,51,.12)}
+.tool-card:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.tool-card .icon{height:84px;display:flex;align-items:center}
+.tool-card .icon svg{height:100%;width:auto;max-width:100%}
+.tool-card h3{font-family:var(--font-display);font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
+.tool-card p{font-size:.83rem;color:var(--ink-soft);flex:1}
+.tool-card .go{font-size:.85rem;font-weight:700;color:var(--signal-dark)}
+.tool-card.soon{cursor:default;opacity:.75}
+.tool-card.soon:hover{transform:none;box-shadow:none}
+.badge-soon{align-self:flex-start;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;background:var(--tre);border-radius:999px;padding:.15rem .6rem}
+
+/* ================= Verktøysider (delt) ================= */
+.tool-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tool-head h1{font-family:var(--font-display);font-weight:700;font-size:clamp(1.8rem,4vw,2.5rem);text-transform:uppercase;letter-spacing:.02em;line-height:1.05}
+.tool-head h1 em{font-style:normal;color:var(--signal)}
+.tool-head p{max-width:64ch;color:var(--ink-soft);margin-top:.4rem;font-size:.93rem}
+.back{font:inherit;font-size:.85rem;font-weight:600;background:none;border:none;color:var(--signal-dark);cursor:pointer;padding:.3rem 0}
+.back:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:1.25rem;margin-top:1.25rem;align-items:start}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem}
+.card+.card{margin-top:1.25rem}
+.card h2{font-family:var(--font-display);font-weight:600;font-size:1.15rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--signal);display:inline-block;padding-bottom:.15rem;margin-bottom:1rem}
+
+.field{margin-bottom:1rem}
+.field label{display:block;font-weight:600;font-size:.85rem;margin-bottom:.25rem}
+.field .hint{font-size:.75rem;color:var(--ink-soft);font-weight:400}
+.field input[type=number],.field select{width:100%;padding:.55rem .7rem;font:inherit;font-variant-numeric:tabular-nums;border:1px solid var(--alu-dark);border-radius:6px;background:#fff;color:var(--ink)}
+.field input:focus,.field select:focus{outline:2px solid var(--signal);outline-offset:1px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+.segment{display:flex;border:1px solid var(--alu-dark);border-radius:6px;overflow:hidden}
+.segment button{flex:1;padding:.5rem .3rem;font:inherit;font-size:.82rem;font-weight:600;background:#fff;color:var(--ink-soft);border:none;cursor:pointer}
+.segment button[aria-pressed=true]{background:var(--ink);color:#fff}
+.segment button:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+
+.check{display:flex;gap:.5rem;align-items:flex-start;font-size:.85rem;margin-bottom:1rem}
+.check input{margin-top:.2rem;accent-color:var(--signal)}
+
+.alert{border-left:4px solid var(--signal);background:#FCF2EA;border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.83rem;margin-top:.75rem}
+.alert.ok{border-color:var(--ok);background:#EAF4EE}
+.alert.warn{border-color:var(--warn);background:#FBEFE2}
+
+.dim-step{display:flex;gap:.8rem;padding:.75rem 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+.dim-step:last-child{border-bottom:none}
+.dim-step .no{font-family:var(--font-display);font-weight:700;font-size:1.3rem;color:var(--signal);min-width:1.6rem;line-height:1.2}
+.dim-step b{font-variant-numeric:tabular-nums}
+.dim-step .src{display:block;font-size:.73rem;color:var(--ink-soft);margin-top:.15rem}
+
+.plan-card svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.75rem;color:var(--ink-soft);margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.swatch{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--line)}
+
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:.55rem .5rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;color:var(--ink-soft)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .art{display:block;font-size:.72rem;color:var(--ink-soft)}
+tr.sum td{border-top:2px solid var(--ink);border-bottom:none;font-weight:700;font-size:.95rem}
+td input.price{width:6rem;padding:.3rem .4rem;font:inherit;font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right;border:1px dashed var(--alu-dark);border-radius:5px;background:#FAFBFA;color:var(--ink)}
+td input.price:focus{outline:2px solid var(--signal);border-style:solid}
+.qty-badge{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-variant-numeric:tabular-nums;border-radius:6px;padding:.1rem .55rem;min-width:2.4rem;text-align:center}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem}
+.stat b{display:block;font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat small{font-size:.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+
+.notes{margin-top:1rem;font-size:.8rem;color:var(--ink-soft)}
+.notes li{margin:.35rem 0 .35rem 1.1rem}
+.notes li::marker{color:var(--signal)}
+
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem}
+.btn{font:inherit;font-weight:600;font-size:.88rem;padding:.6rem 1.1rem;border-radius:7px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn.secondary{background:#fff;color:var(--ink)}
+.btn:hover{background:var(--signal);border-color:var(--signal)}
+.btn.secondary:hover{background:#F6E9DF;border-color:var(--signal);color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.copy-status{font-size:.8rem;color:var(--ok);align-self:center}
+
+/* ================= Prismodal (arkitektur-stub, ingen live priser) ================= */
+.modal-overlay{position:fixed;inset:0;background:rgba(28,42,51,.55);display:none;align-items:center;justify-content:center;padding:1rem;z-index:100}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--panel);border-radius:var(--radius);max-width:520px;width:100%;max-height:85vh;overflow-y:auto;padding:1.5rem}
+.modal-box h2{font-family:var(--font-display);font-weight:700;font-size:1.3rem;text-transform:uppercase;letter-spacing:.04em}
+.modal-box .sub{font-size:.83rem;color:var(--ink-soft);margin-top:.3rem}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:1.2rem}
+.store-pick{border:1px solid var(--alu-dark);border-radius:8px;background:#fff;padding:.7rem;font:inherit;font-weight:600;font-size:.88rem;cursor:pointer;text-align:left}
+.store-pick:hover{border-color:var(--signal);background:#FCF2EA}
+.store-pick.combo{grid-column:1/-1;background:var(--bg);border-style:dashed}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;line-height:1;color:var(--ink-soft);cursor:pointer;padding:.1rem .4rem}
+.modal-close:hover{color:var(--signal-dark)}
+.modal-result{margin-top:1.2rem;display:none}
+.modal-result.show{display:block}
+.modal-result table{font-size:.82rem}
+.modal-result .stub-note{background:#FCF2EA;border-left:4px solid var(--signal);border-radius:0 6px 6px 0;padding:.5rem .7rem;font-size:.78rem;margin-bottom:.8rem}
+
+footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(--ink-soft);border-top:1px solid var(--line);background:var(--bg)}
+
+@media print{
+  header,.inputs-card,.actions,.back{display:none}
+  body,html{background:#fff}
+  .grid{grid-template-columns:1fr}
+  .card{border:none;padding:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .tool-card{transition:none}
+  .tool-card:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <button class="brand" data-nav="home" aria-label="Til forsiden">
+    <!-- tommestokk-ikon -->
+    <svg viewBox="0 0 64 34" aria-hidden="true"><g stroke="#E85D0F" stroke-width="6" stroke-linecap="round" fill="none"><path d="M5 29 L24 6 L43 29 L59 10"/></g><g fill="#fff"><circle cx="5" cy="29" r="3"/><circle cx="24" cy="6" r="3"/><circle cx="43" cy="29" r="3"/><circle cx="59" cy="10" r="3"/></g></svg>
+    Tommestokk<em>1</em>
+  </button>
+  <span class="crumb" id="crumb">Digitale verktøy for deg som bygger</span>
+</header>
+
+<!-- ==================================================== FORSIDE -->
+<main class="view active" id="view-home">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Mål inn. <em>Handleliste ut.</em> Og hele regnestykket synlig.</h1>
+      <p>Tommestokk1 er verktøykassa for deg som bygger selv — proff eller hobbysnekker.
+      Hvert verktøy dimensjonerer etter norske spenntabeller og produsentenes egne monteringsregler,
+      og gir deg kappliste og bestillingsliste du kan ta rett med til byggevarehuset.</p>
+      <div class="rule" aria-hidden="true">
+        <!-- utbrettet tommestokk med måltall -->
+        <svg viewBox="0 0 520 46">
+          <g>
+            <rect x="0" y="14" width="168" height="20" rx="3" fill="#F5C842" stroke="#C99A1F"/>
+            <rect x="164" y="10" width="168" height="20" rx="3" fill="#F5C842" stroke="#C99A1F" transform="rotate(-3 164 20)"/>
+            <rect x="328" y="12" width="168" height="20" rx="3" fill="#F5C842" stroke="#C99A1F" transform="rotate(2 328 22)"/>
+            <g stroke="#1C2A33" stroke-width="1.5">
+              <line x1="14" y1="14" x2="14" y2="22"/><line x1="42" y1="14" x2="42" y2="26"/><line x1="70" y1="14" x2="70" y2="22"/><line x1="98" y1="14" x2="98" y2="26"/><line x1="126" y1="14" x2="126" y2="22"/><line x1="154" y1="14" x2="154" y2="26"/>
+            </g>
+            <text x="36" y="31" font-size="9" font-family="Inter,sans-serif" fill="#1C2A33">10</text>
+            <text x="92" y="31" font-size="9" font-family="Inter,sans-serif" fill="#1C2A33">20</text>
+            <circle cx="166" cy="20" r="4" fill="#C99A1F"/>
+            <circle cx="330" cy="22" r="4" fill="#C99A1F"/>
+          </g>
+        </svg>
+      </div>
+      <div class="promise">
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="#1E7A46" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg>Norske spenntabeller og produsentregler</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="#1E7A46" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg>Kappliste i standardlengder</div>
+        <div><svg viewBox="0 0 24 24" fill="none" stroke="#1E7A46" stroke-width="2.5"><path d="M4 12l5 5L20 6"/></svg>Regnestykket vises — alt kan etterprøves</div>
+      </div>
+    </div>
+
+    <div class="tools">
+      <button class="tool-card" data-nav="terrasse">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <rect x="6" y="4" width="108" height="8" fill="#1C2A33" rx="2"/>
+            <g stroke="#E6D9B8" stroke-width="4"><line x1="10" y1="22" x2="110" y2="22"/><line x1="10" y1="32" x2="110" y2="32"/><line x1="10" y1="42" x2="110" y2="42"/><line x1="10" y1="52" x2="110" y2="52"/><line x1="10" y1="62" x2="110" y2="62"/></g>
+            <g stroke="#8E979E" stroke-width="3"><line x1="20" y1="16" x2="20" y2="68"/><line x1="45" y1="16" x2="45" y2="68"/><line x1="70" y1="16" x2="70" y2="68"/><line x1="95" y1="16" x2="95" y2="68"/></g>
+            <line x1="8" y1="70" x2="112" y2="70" stroke="#E85D0F" stroke-width="5"/>
+            <g fill="#1C2A33"><rect x="16" y="66" width="8" height="8" rx="1"/><rect x="56" y="66" width="8" height="8" rx="1"/><rect x="96" y="66" width="8" height="8" rx="1"/></g>
+          </svg>
+        </span>
+        <h3>Terrasse</h3>
+        <p>Dimensjonerer bjelkelag fra spenntabell (C24, snølast 4,5 kN/m²) og regner bjelker, bærebjelker, stolper, bord, skruer og beslag — med kappliste.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
+
+      <button class="tool-card" data-nav="dryppstop">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g stroke="#E6D9B8" stroke-width="5"><line x1="8" y1="8" x2="112" y2="8"/><line x1="8" y1="17" x2="112" y2="17"/></g>
+            <g stroke="#8E979E" stroke-width="4"><line x1="26" y1="22" x2="26" y2="52"/><line x1="60" y1="22" x2="60" y2="52"/><line x1="94" y1="22" x2="94" y2="52"/></g>
+            <path d="M8 52 Q26 66 43 52 Q60 66 77 52 Q94 66 112 52" fill="none" stroke="#1C2A33" stroke-width="3.5"/>
+            <g fill="#3B8BC4"><path d="M34 64 q4 7 0 9 q-4-2 0-9"/><path d="M68 68 q4 7 0 9 q-4-2 0-9"/><path d="M99 63 q4 7 0 9 q-4-2 0-9"/></g>
+            <line x1="14" y1="78" x2="106" y2="78" stroke="#E85D0F" stroke-width="3" stroke-dasharray="6 4"/>
+          </svg>
+        </span>
+        <h3>DryppStop undertak</h3>
+        <p>Tørr uteplass under terrassen. Plater, profiler, beslag, skruer og fugemasse etter Plastmos monteringsveiledning — med varenummer klare for disken.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
+
+      <button class="tool-card" data-nav="rekkverk">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <line x1="10" y1="74" x2="110" y2="74" stroke="#1C2A33" stroke-width="4"/>
+            <g stroke="#8E979E" stroke-width="4"><line x1="18" y1="18" x2="18" y2="74"/><line x1="102" y1="18" x2="102" y2="74"/></g>
+            <line x1="12" y1="16" x2="108" y2="16" stroke="#E85D0F" stroke-width="5"/>
+            <g stroke="#E6D9B8" stroke-width="3"><line x1="32" y1="22" x2="32" y2="72"/><line x1="46" y1="22" x2="46" y2="72"/><line x1="60" y1="22" x2="60" y2="72"/><line x1="74" y1="22" x2="74" y2="72"/><line x1="88" y1="22" x2="88" y2="72"/></g>
+          </svg>
+        </span>
+        <h3>Rekkverk</h3>
+        <p>TEK17-sikkert spilerekkverk: riktig høyde ut fra fallhøyden, eksakt spileavstand per felt (aldri over 10 cm åpning), stolper, sviller og festemidler.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
+
+      <div class="tool-card soon" aria-disabled="true">
+        <span class="badge-soon">Kommer</span>
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g stroke="#E6D9B8" stroke-width="6"><line x1="14" y1="10" x2="14" y2="74"/><line x1="28" y1="10" x2="28" y2="74"/><line x1="42" y1="10" x2="42" y2="74"/><line x1="56" y1="10" x2="56" y2="74"/><line x1="70" y1="10" x2="70" y2="74"/><line x1="84" y1="10" x2="84" y2="74"/><line x1="98" y1="10" x2="98" y2="74"/></g>
+            <g stroke="#E85D0F" stroke-width="4"><line x1="8" y1="24" x2="112" y2="24"/><line x1="8" y1="58" x2="112" y2="58"/></g>
+          </svg>
+        </span>
+        <h3>Levegg</h3>
+        <p>Stolpedimensjon etter vindlast og høyde, fundament, bord og festemidler.</p>
+      </div>
+
+      <div class="tool-card soon" aria-disabled="true">
+        <span class="badge-soon">Kommer</span>
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <polygon points="60,6 112,34 8,34" fill="#8E979E"/>
+            <rect x="16" y="34" width="88" height="44" fill="#fff" stroke="#C9CFD4"/>
+            <g stroke="#E6D9B8" stroke-width="4"><line x1="24" y1="38" x2="24" y2="76"/><line x1="36" y1="38" x2="36" y2="76"/><line x1="48" y1="38" x2="48" y2="76"/><line x1="60" y1="38" x2="60" y2="76"/><line x1="72" y1="38" x2="72" y2="76"/><line x1="84" y1="38" x2="84" y2="76"/><line x1="96" y1="38" x2="96" y2="76"/></g>
+          </svg>
+        </span>
+        <h3>Kledning</h3>
+        <p>Løpemeter per profil, lekter, sløyfer, spiker/skruer og svinn per veggflate.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ==================================================== TERRASSE -->
+<main class="view" id="view-terrasse">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Terrasse — <em>fra mål til komplett bestilling</em></h1>
+      <p>Gi mål og bordtype. Verktøyet dimensjonerer bæresystemet fra spenntabell for terrassebjelker
+      (C24, dimensjonerende snølast 4,5&nbsp;kN/m²) og regner alt nedstrøms — med kappliste i standardlengder.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="te-bredde">Bredde <span class="hint">(langs vegg, m)</span></label>
+          <input type="number" id="te-bredde" min="1" max="20" step="0.1" value="5.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="te-dybde">Dybde <span class="hint">(ut fra vegg, m)</span></label>
+          <input type="number" id="te-dybde" min="1" max="15" step="0.1" value="4.0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="te-bordLabel">Terrassebord <span class="hint">(styrer c/c bjelker)</span></label>
+        <div class="segment" role="group" aria-labelledby="te-bordLabel">
+          <button type="button" data-bord="28" aria-pressed="true">28 × 120 → c/c 600</button>
+          <button type="button" data-bord="21" aria-pressed="false">21 × 95 → c/c 400</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="te-tbjelke">Terrassebjelke <span class="hint">(C24 impregnert)</span></label>
+        <select id="te-tbjelke">
+          <option value="auto" selected>Auto — minste dimensjon som fungerer</option>
+          <option value="48x148">48 × 148</option>
+          <option value="48x173">48 × 173</option>
+          <option value="48x198">48 × 198</option>
+          <option value="48x223">48 × 223</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="te-bbjelke">Bærebjelke</label>
+        <select id="te-bbjelke">
+          <option value="48x198" selected>48 × 198 (søyleavstand 2,5 m)</option>
+          <option value="48x223">48 × 223 (søyleavstand 2,9 m)</option>
+          <option value="2x48x198">2 stk 48 × 198 (søyleavstand 3,6 m)</option>
+          <option value="2x48x223">2 stk 48 × 223 (søyleavstand 4,1 m)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="te-festLabel">Innfesting terrassebjelker</label>
+        <div class="segment" role="group" aria-labelledby="te-festLabel">
+          <button type="button" data-fest="oppa" aria-pressed="true">Oppå bærebjelke</button>
+          <button type="button" data-fest="sko" aria-pressed="false">I bjelkesko (spenn × 0,9)</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="te-hoyde">Høyde over terreng <span class="hint">(til overkant dekke, cm)</span></label>
+        <input type="number" id="te-hoyde" min="10" max="300" step="5" value="60" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label for="te-svinn">Svinn/kapp <span class="hint">(påslag terrassebord)</span></label>
+        <select id="te-svinn">
+          <option value="5">5 % — rette kutt</option>
+          <option value="8" selected>8 % — normalt</option>
+          <option value="12">12 % — skråkutt/tilpasning</option>
+        </select>
+      </div>
+      <div id="te-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="te-dimSteps"></div>
+        <div id="te-altHint"></div>
+      </section>
+      <section class="card plan-card" aria-label="Konstruksjonsplan">
+        <h2>Konstruksjonsplan</h2>
+        <div id="te-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#1C2A33"></span>Vegg</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Bærebjelke + stolper</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Terrassebjelker</span>
+          <span><span class="swatch" style="background:#E6D9B8"></span>Bordretning</span>
+        </div>
+      </section>
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <div class="stats" id="te-stats"></div>
+        <table id="te-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="te-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="te-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="te-priserBtn" type="button">Finn priser</button>
+          <span id="te-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- ==================================================== DRYPPSTOP -->
+<main class="view" id="view-dryppstop">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>DryppStop undertak — <em>mål inn, handleliste ut</em></h1>
+      <p>Komplett materialliste for Plastmo DryppStop under terrasse eller balkong. Basert på produsentens
+      monteringsveiledning: plater 60&nbsp;×&nbsp;160&nbsp;cm med 10&nbsp;cm overlapp, profil på hver sperre,
+      skruer c/c&nbsp;30&nbsp;cm og fugemasse etter forbruksnorm.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="ds-lengde">Lengde <span class="hint">(fallretning, m)</span></label>
+          <input type="number" id="ds-lengde" min="0.5" max="30" step="0.1" value="4.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="ds-bredde">Bredde <span class="hint">(langs vegg, m)</span></label>
+          <input type="number" id="ds-bredde" min="0.5" max="30" step="0.1" value="6.0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="ds-cc">Senteravstand sperrer <span class="hint">(c/c, cm)</span></label>
+        <select id="ds-cc">
+          <option value="60" selected>60 cm (standard)</option>
+          <option value="50">50 cm — platene tilpasses</option>
+          <option value="40">40 cm — platene tilpasses</option>
+          <option value="30">30 cm — platene tilpasses</option>
+        </select>
+      </div>
+      <div class="field">
+        <label id="ds-beslagLabel">Montering</label>
+        <div class="segment" role="group" aria-labelledby="ds-beslagLabel">
+          <button type="button" id="ds-medBeslag" aria-pressed="true">Med beslag (anbefalt)</button>
+          <button type="button" id="ds-utenBeslag" aria-pressed="false">Uten beslag</button>
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="ds-vind">
+        <span>Vindutsatt område — 1 ekstra skrue i nedkant av hver plate, på hver side</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="ds-bakkant" checked>
+        <span>Ta med bakkantbeslag mot vegg (hindrer drypp på innsiden)</span>
+      </label>
+      <div class="field">
+        <label for="ds-svinn">Svinn/kapp <span class="hint">(påslag på plater)</span></label>
+        <select id="ds-svinn">
+          <option value="0">0 % — bestiller eksakt</option>
+          <option value="5" selected>5 % — normalt</option>
+          <option value="10">10 % — mye tilpasning</option>
+        </select>
+      </div>
+      <div class="alert" id="ds-fallNote"></div>
+    </section>
+
+    <div>
+      <section class="card plan-card" aria-label="Leggeplan">
+        <h2>Leggeplan</h2>
+        <div id="ds-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#fff"></span>DryppStop-plate</span>
+          <span><span class="swatch" style="background:#F3D9C6"></span>10 cm overlapp</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Sperre / alu-profil</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Fallretning</span>
+        </div>
+      </section>
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <div class="stats" id="ds-stats"></div>
+        <table id="ds-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="ds-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="ds-copyBtn" type="button">Kopier handleliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="ds-priserBtn" type="button">Finn priser</button>
+          <span id="ds-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- ==================================================== REKKVERK -->
+<main class="view" id="view-rekkverk">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Rekkverk — <em>TEK17-sikkert, med eksakt spileavstand</em></h1>
+      <p>Vertikalt spilerekkverk i tre. Verktøyet setter riktig høyde ut fra fallhøyden (TEK17 §12-15),
+      fordeler spilene med nøyaktig lik avstand i hvert felt — aldri over 10&nbsp;cm lysåpning — og gir
+      komplett materialliste med festemidler.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+
+      <div class="field">
+        <label>Rekkverkssider <span class="hint">(lengde i m — sett 0 for å utelate)</span></label>
+        <div class="duo" style="grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" id="rk-sideA" min="0" max="30" step="0.1" value="5.0" inputmode="decimal" aria-label="Side A (m)">
+          <input type="number" id="rk-sideB" min="0" max="30" step="0.1" value="4.0" inputmode="decimal" aria-label="Side B (m)">
+          <input type="number" id="rk-sideC" min="0" max="30" step="0.1" value="0" inputmode="decimal" aria-label="Side C (m)">
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="rk-sammenheng" checked>
+        <span>Sidene henger sammen — hjørnestolper deles</span>
+      </label>
+
+      <div class="field">
+        <label for="rk-fall">Fallhøyde fra dekket <span class="hint">(til terreng, cm)</span></label>
+        <input type="number" id="rk-fall" min="0" max="1500" step="5" value="80" inputmode="numeric">
+      </div>
+
+      <div class="field">
+        <label for="rk-cc">Maks stolpeavstand <span class="hint">(c/c, cm)</span></label>
+        <select id="rk-cc">
+          <option value="120">120 cm — stivest</option>
+          <option value="150" selected>150 cm — normalt</option>
+          <option value="180">180 cm — maks anbefalt</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label id="rk-spileLabel">Spiledimensjon</label>
+        <div class="segment" role="group" aria-labelledby="rk-spileLabel">
+          <button type="button" data-spile="45" aria-pressed="true">21 × 45</button>
+          <button type="button" data-spile="70" aria-pressed="false">21 × 70</button>
+          <button type="button" data-spile="95" aria-pressed="false">21 × 95</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label id="rk-stolpeLabel">Stolper</label>
+        <div class="segment" role="group" aria-labelledby="rk-stolpeLabel">
+          <button type="button" data-stolpe="48x98" aria-pressed="true">48 × 98</button>
+          <button type="button" data-stolpe="98x98" aria-pressed="false">98 × 98</button>
+        </div>
+      </div>
+
+      <label class="check">
+        <input type="checkbox" id="rk-handloper" checked>
+        <span>Toppbord 28 × 120 som håndløper (anbefalt — beskytter endeved og gir godt grep)</span>
+      </label>
+
+      <div id="rk-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="rk-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Felttegning">
+        <h2>Felttegning <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— lengste side, målsatt</span></h2>
+        <div id="rk-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#8E979E"></span>Stolpe</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Toppbord/håndløper</span>
+          <span><span class="swatch" style="background:#E6D9B8"></span>Spiler</span>
+          <span><span class="swatch" style="background:#1C2A33"></span>Sviller</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <div class="stats" id="rk-stats"></div>
+        <table id="rk-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="rk-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="rk-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="rk-priserBtn" type="button">Finn priser</button>
+          <span id="rk-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- ==================================================== PRISMODAL (arkitektur-stub) -->
+<div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="priceModalClose" aria-label="Lukk">✕</button>
+    <h2 id="priceModalTitle">Finn priser</h2>
+    <p class="sub" id="priceModalSub">Velg butikk for prissammenligning av handlelisten.</p>
+    <div class="store-grid" id="priceModalStores"></div>
+    <div class="modal-result" id="priceModalResult">
+      <div class="stub-note">Arkitektur-demo: dette er mockpriser, ikke live data fra butikken. Ekte prisoppslag kobles på her senere, uten å endre kalkulatorene.</div>
+      <table>
+        <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Sum</th></tr></thead>
+        <tbody id="priceModalRows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap" style="padding:0">
+    <b>Tommestokk1</b> gjør tabelloppslag i veiledende spenntabeller (C24, snølast 4,5 kN/m²) og følger produsentenes
+    monteringsveiledninger — det er ikke prosjektering. Punktlaster, spesiell bruksbelastning eller store høyder krever
+    kvalifisert dimensjonering. Priser er redigerbare utgangspunkt; sjekk dagspris hos forhandler. Regelsjekker er
+    veiledende — se dibk.no og kommunens arealplan. DryppStop-beregningen følger Plastmos veiledning; reklamasjonsrett
+    forutsetter DryppStop-skruer og -fugemasse.
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ========================= Felles ========================= */
+const $   = id => document.getElementById(id);
+const fmt = n  => n.toLocaleString("nb-NO");
+const fm1 = n  => n.toLocaleString("nb-NO",{minimumFractionDigits:1,maximumFractionDigits:1});
+const kr  = n  => Math.round(n).toLocaleString("nb-NO") + " kr";
+const STD_LENGDER = [3.0, 3.6, 4.2, 4.8, 5.4, 6.0];
+
+function kapp(behov, antall){
+  const res = {};
+  const enkel = STD_LENGDER.find(L => L >= behov - 1e-9);
+  if (enkel){ res[enkel] = antall; return {biter:res, skjoter:0}; }
+  let n6 = Math.floor(behov/6.0), rest = +(behov - n6*6.0).toFixed(3);
+  const per = Array(n6).fill(6.0);
+  if (rest > 0.01) per.push(STD_LENGDER.find(L=>L>=rest) || 6.0);
+  per.forEach(L => res[L]=(res[L]||0)+antall);
+  return {biter:res, skjoter:per.length-1};
+}
+const kappTekst = k => Object.entries(k.biter).map(([L,n])=>`${n} × ${String(L).replace(".",",")} m`).join(" + ");
+
+async function copy(txt, statusEl){
+  try{ await navigator.clipboard.writeText(txt); statusEl.textContent="Kopiert ✓"; }
+  catch{ statusEl.textContent="Kunne ikke kopiere — merk teksten manuelt."; }
+  setTimeout(()=>statusEl.textContent="",2500);
+}
+
+/* ========================================================================
+   PRODUKTARKITEKTUR
+   Alle kalkulatorene bygger Product[] i stedet for HTML direkte.
+   Flyt:  Kalkulator → Product[] (via Catalog) → Renderer → HTML
+   Dette gjør at samme liste senere kan brukes til utskrift, PDF, CSV,
+   prisoppslag, butikklenker og API — uten å endre kalkulatorene.
+   ======================================================================== */
+
+/* ---------- Del 1: Standardisert produktmodell ---------- */
+const Product = {
+  create(spec){
+    return {
+      id: spec.id,
+      category: spec.category || "",
+      title: spec.title || spec.id,
+      dimensions: spec.dimensions || null,
+      quality: spec.quality || null,
+      treatment: spec.treatment || null,
+      quantity: spec.quantity ?? 0,
+      unit: spec.unit || "stk",
+      note: spec.note || "",                 // forklaring til kunden (kappliste, montering)
+      estPrice: spec.estPrice ?? null,        // veiledende pris per enhet, redigerbar
+      sourceTool: spec.sourceTool || null,    // hvilket verktøy produktet kom fra
+      lookup: {
+        nobb: spec.lookup?.nobb || "",
+        ean: spec.lookup?.ean || "",
+        manufacturer: spec.lookup?.manufacturer || "",
+        manufacturerPartNumber: spec.lookup?.manufacturerPartNumber || "",
+      },
+    };
+  }
+};
+
+/* ---------- Del 2: Produktdatabase ----------
+   Ett oppslag per vare. Flere verktøy kan referere samme id
+   (f.eks. "stolpe_98x98_imp" brukes både i Terrasse og Rekkverk,
+   og "bolt_m10" er felles festemiddel-katalogpost). */
+const Catalog = (()=>{
+  const DB = {
+    /* --- Terrasse: bjelker --- */
+    tbjelke_48x148_c24:   {category:"terrassebjelke", title:"Terrassebjelke 48 × 148 C24 imp.", dimensions:"48x148", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:45},
+    tbjelke_48x173_c24:   {category:"terrassebjelke", title:"Terrassebjelke 48 × 173 C24 imp.", dimensions:"48x173", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:55},
+    tbjelke_48x198_c24:   {category:"terrassebjelke", title:"Terrassebjelke 48 × 198 C24 imp.", dimensions:"48x198", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:65},
+    tbjelke_48x223_c24:   {category:"terrassebjelke", title:"Terrassebjelke 48 × 223 C24 imp.", dimensions:"48x223", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:78},
+    baerebjelke_48x198_c24:{category:"baerebjelke", title:"Bærebjelke 48 × 198 C24 imp.", dimensions:"48x198", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:65},
+    baerebjelke_48x223_c24:{category:"baerebjelke", title:"Bærebjelke 48 × 223 C24 imp.", dimensions:"48x223", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:78},
+    /* --- Terrasse / Rekkverk: stolper (delt katalogpost) --- */
+    stolpe_48x98_imp:     {category:"stolpe", title:"Stolpe 48 × 98 imp.", dimensions:"48x98", treatment:"impregnert", unit:"lm", defaultPrice:42},
+    stolpe_98x98_imp:     {category:"stolpe", title:"Stolpe 98 × 98 imp.", dimensions:"98x98", treatment:"impregnert", unit:"lm", defaultPrice:75},
+    stolpesko_98:         {category:"beslag", title:"Justerbar stolpesko/søylefot", unit:"stk", defaultPrice:189},
+    /* --- Terrasse: bord og skruer --- */
+    terrassebord_28x120_imp:{category:"terrassebord", title:"Terrassebord 28 × 120 imp.", dimensions:"28x120", treatment:"impregnert", unit:"lm", defaultPrice:30},
+    terrassebord_21x95_imp: {category:"terrassebord", title:"Terrassebord 21 × 95 imp.",  dimensions:"21x95",  treatment:"impregnert", unit:"lm", defaultPrice:20},
+    terrasseskrue_48x75_a4:{category:"skrue", title:"Terrasseskruer 4,8 × 75 A4 (pk à 250)", unit:"pk", defaultPrice:349},
+    terrasseskrue_42x55_a4:{category:"skrue", title:"Terrasseskruer 4,2 × 55 A4 (pk à 250)", unit:"pk", defaultPrice:349},
+    bjelkesko_48:         {category:"beslag", title:"Bjelkesko 48 mm m/ beslagskruer", unit:"stk", defaultPrice:25},
+    vinkelbeslag_90:      {category:"beslag", title:"Vinkelbeslag 90° m/ beslagskruer", unit:"stk", defaultPrice:12},
+    bolt_m10:             {category:"festemiddel", title:"Gjennomgående bolt M10 m/ mutter og skive", unit:"stk", defaultPrice:15},
+    /* --- Rekkverk --- */
+    rekkverk_svill_48x73: {category:"svill", title:"Svill 48 × 73 imp. (topp og bunn)", dimensions:"48x73", treatment:"impregnert", unit:"lm", defaultPrice:25},
+    spile_21x45_imp:      {category:"spile", title:"Spile 21 × 45 imp.", dimensions:"21x45", treatment:"impregnert", unit:"lm", defaultPrice:14},
+    spile_21x70_imp:      {category:"spile", title:"Spile 21 × 70 imp.", dimensions:"21x70", treatment:"impregnert", unit:"lm", defaultPrice:19},
+    spile_21x95_imp:      {category:"spile", title:"Spile 21 × 95 imp.", dimensions:"21x95", treatment:"impregnert", unit:"lm", defaultPrice:24},
+    rekkverk_toppbord_28x120_imp:{category:"handloper", title:"Toppbord 28 × 120 imp. (håndløper)", dimensions:"28x120", treatment:"impregnert", unit:"lm", defaultPrice:30},
+    treskrue_42x55_a4:    {category:"skrue", title:"Treskruer 4,2 × 55 A4 (pk à 250)", unit:"pk", defaultPrice:329},
+    konstruksjonsskrue_6x90:{category:"skrue", title:"Konstruksjonsskruer 6 × 90 (pk à 100)", unit:"pk", defaultPrice:279},
+    /* --- DryppStop (Plastmo, med reelle NOBB/artikkelnummer) --- */
+    dryppstop_plate:  {category:"plate",  title:"DryppStop plate 60 × 160 cm",         dimensions:"60x160", unit:"stk", defaultPrice:239, lookup:{manufacturerPartNumber:"4158316", nobb:"40996704"}},
+    dryppstop_prof300:{category:"profil", title:"DryppStop alu-profil 300 cm",         dimensions:"300",    unit:"stk", defaultPrice:229, lookup:{manufacturerPartNumber:"4100916", nobb:"43109621"}},
+    dryppstop_prof150:{category:"profil", title:"DryppStop alu-profil 150 cm",         dimensions:"150",    unit:"stk", defaultPrice:129, lookup:{manufacturerPartNumber:"4100915", nobb:"40996928"}},
+    dryppstop_skjot:  {category:"profil", title:"DryppStop skjøteprofil 15 cm",        dimensions:"15",     unit:"stk", defaultPrice:49,  lookup:{manufacturerPartNumber:"4100920", nobb:"51566086"}},
+    dryppstop_beslag: {category:"beslag", title:"DryppStop beslag 300 cm",             dimensions:"300",    unit:"stk", defaultPrice:199, lookup:{manufacturerPartNumber:"4100930", nobb:"60025517"}},
+    dryppstop_skruer: {category:"skrue",  title:"DryppStop skruer 4×30 (pose à 100)",  unit:"pose", defaultPrice:379, lookup:{manufacturerPartNumber:"4110981", nobb:"43290955"}},
+    dryppstop_fuge:   {category:"fuge",   title:"DryppStop fugemasse / Danalim 685",   unit:"tube", defaultPrice:139, lookup:{manufacturerPartNumber:"4100935", nobb:"57389738"}},
+    dryppstop_bakkant:{category:"beslag", title:"Bakkantbeslag mot vegg (per 2 m)",    unit:"stk",  defaultPrice:149},
+  };
+
+  function get(id){ return DB[id]; }
+  function all(){ return Object.entries(DB).map(([id,v])=>({id, ...v})); }
+  /** Bygg et Product fra en katalogpost + mengde fra en kalkulator. */
+  function make(id, quantity, extra={}){
+    const base = DB[id];
+    if (!base) console.warn("Tommestokk1: ukjent produkt-id i katalogen →", id);
+    return Product.create({
+      id, quantity,
+      category: base?.category, title: base?.title || id,
+      dimensions: base?.dimensions, quality: base?.quality, treatment: base?.treatment,
+      unit: base?.unit || "stk",
+      estPrice: extra.estPrice ?? base?.defaultPrice ?? 0,
+      note: extra.note || "",
+      sourceTool: extra.sourceTool || null,
+      lookup: base?.lookup || {},
+    });
+  }
+  return {get, all, make, DB};
+})();
+
+/* ---------- Del 4: Butikkmotor ----------
+   Kun registrering av butikker foreløpig — ingen integrasjon. */
+const Stores = (()=>{
+  const list = [
+    {id:"monter",     name:"Montér"},
+    {id:"obsbygg",    name:"Obs BYGG"},
+    {id:"byggmakker", name:"Byggmakker"},
+    {id:"maxbo",      name:"Maxbo"},
+    {id:"byggmax",    name:"Byggmax"},
+    {id:"bauhaus",    name:"Bauhaus"},
+  ];
+  function all(){ return list; }
+  function get(id){ return list.find(s=>s.id===id); }
+  /** Fremtidige butikker registreres her — kalkulatorene trenger ikke endres. */
+  function register(store){ list.push(store); }
+  return {all, get, register};
+})();
+
+/* ---------- Del 5: Prisoppslag ----------
+   STUB: returnerer kun mockdata (Product.estPrice). Byttes senere ut med
+   ekte API-kall/scraping per butikk — signaturen skal ikke endres. */
+const PriceLookup = (()=>{
+  function lookupPrices(products, storeId){
+    return products.map(p=>({
+      id: p.id, price: p.estPrice ?? null, url: "", available: true, store: storeId,
+    }));
+  }
+  /** "Billigste kombinasjon": stub som senere skal spørre alle butikker
+   *  og velge billigst pris per vare. Returnerer i dag samme mockdata. */
+  function lookupCheapestCombo(products){
+    return products.map(p=>({
+      id: p.id, price: p.estPrice ?? null, url: "", available: true, store: null,
+    }));
+  }
+  return {lookupPrices, lookupCheapestCombo};
+})();
+
+/* ---------- Del 3: Renderer ----------
+   Kalkulatorene kaller ALDRI innerHTML direkte på materiallisten lenger.
+   De bygger Product[], og Renderer gjør om til HTML/tekst/CSV. */
+const Renderer = (()=>{
+  function priceOf(p, overrides){ return overrides?.[p.id] ?? p.estPrice ?? 0; }
+  function total(products, overrides={}){
+    return products.reduce((sum,p)=>sum + priceOf(p,overrides)*p.quantity, 0);
+  }
+  function renderRows(products, overrides={}){
+    return products.map(p=>{
+      const price = priceOf(p,overrides), sum = price*p.quantity;
+      const nobb = p.lookup?.nobb ? `<span class="art">NOBB ${p.lookup.nobb}</span>` : "";
+      return `<tr><td>${p.title}${p.note?`<span class="art">${p.note}</span>`:""}${nobb}</td>
+        <td class="num"><span class="qty-badge">${fmt(p.quantity)}</span> <span class="art" style="display:inline">${p.unit}</span></td>
+        <td class="num"><input class="price" type="number" min="0" step="1" value="${price}" data-key="${p.id}" aria-label="Pris ${p.title}"></td>
+        <td class="num">${kr(sum)}</td></tr>`;
+    }).join("");
+  }
+  function renderSumRow(products, overrides={}){
+    return `<tr class="sum"><td colspan="3">Estimert totalpris (veiledende)</td><td class="num">${kr(total(products,overrides))}</td></tr>`;
+  }
+  function toPlainText(products, headerLines=[], overrides={}){
+    return [...headerLines, "",
+      ...products.map(p=>`• ${p.quantity} ${p.unit} — ${p.title}${p.note?` (${p.note})`:""}`),
+      "", `Estimert totalpris: ${kr(total(products,overrides))} (veiledende)`].join("\n");
+  }
+  function toCSV(products, overrides={}){
+    const head = ["Vare","Dimensjon","Antall","Enhet","Pris","Sum","NOBB"];
+    const lines = [head.join(";")];
+    products.forEach(p=>{
+      const price = priceOf(p,overrides);
+      lines.push([p.title, p.dimensions||"", p.quantity, p.unit, price, price*p.quantity, p.lookup?.nobb||""].join(";"));
+    });
+    return lines.join("\n");
+  }
+  return {total, renderRows, renderSumRow, toPlainText, toCSV};
+})();
+
+/* ---------- Del 6: "Finn priser"-modal (UI, ingen prisoppslag ennå) ---------- */
+const PriceModal = (()=>{
+  let current = {products:[], label:""};
+  function open(products, label){
+    current = {products, label};
+    $("priceModalTitle").textContent = `Finn priser — ${label}`;
+    $("priceModalSub").textContent = `${products.length} varelinjer i handlelisten. Velg butikk for å sammenligne.`;
+    $("priceModalResult").classList.remove("show");
+    $("priceModalStores").innerHTML = Stores.all().map(s=>
+      `<button class="store-pick" type="button" data-store="${s.id}">${s.name}</button>`
+    ).join("") + `<button class="store-pick combo" type="button" data-store="__combo">🏆 Billigste kombinasjon</button>`;
+    $("priceModalStores").querySelectorAll("[data-store]").forEach(b=>
+      b.addEventListener("click",()=>showResult(b.dataset.store))
+    );
+    $("priceModal").classList.add("open");
+  }
+  function showResult(storeId){
+    const isCombo = storeId === "__combo";
+    const results = isCombo
+      ? PriceLookup.lookupCheapestCombo(current.products)
+      : PriceLookup.lookupPrices(current.products, storeId);
+    const byId = Object.fromEntries(results.map(r=>[r.id, r]));
+    let total = 0;
+    $("priceModalRows").innerHTML = current.products.map(p=>{
+      const r = byId[p.id] || {price:p.estPrice};
+      const sum = (r.price||0)*p.quantity; total += sum;
+      return `<tr><td>${p.title}</td><td class="num">${fmt(p.quantity)} ${p.unit}</td>
+        <td class="num">${r.price!=null?kr(r.price):"—"}</td><td class="num">${kr(sum)}</td></tr>`;
+    }).join("") + `<tr class="sum"><td colspan="3">Sum${isCombo?" (billigste kombinasjon)":""}</td><td class="num">${kr(total)}</td></tr>`;
+    $("priceModalResult").classList.add("show");
+  }
+  function close(){ $("priceModal").classList.remove("open"); }
+  function init(){
+    $("priceModalClose").addEventListener("click", close);
+    $("priceModal").addEventListener("click", e=>{ if(e.target.id==="priceModal") close(); });
+    document.addEventListener("keydown", e=>{ if(e.key==="Escape") close(); });
+  }
+  return {open, close, init};
+})();
+PriceModal.init();
+
+/* ========================= Navigasjon ========================= */
+/* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk"};
+
+function visView(v){
+  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+  $("view-"+v).classList.add("active");
+  $("crumb").textContent = VIEWS[v];
+  window.scrollTo({top:0});
+}
+
+function nav(v){
+  visView(v);
+  if (v === "home"){
+    // ren URL — fjern ev. hash uten å laste siden på nytt
+    if (location.hash) history.pushState(null,"",location.pathname + location.search);
+  } else {
+    if (location.hash !== "#"+v) history.pushState(null,"","#"+v);
+  }
+}
+
+function route(){
+  const v = location.hash.slice(1);
+  visView(VIEWS[v] ? v : "home");   // ingen/ukjent hash → forsiden, uten å røre adresselinjen
+}
+
+document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>nav(b.dataset.nav)));
+window.addEventListener("popstate", route);   // dekker tilbake/frem og manuell hash-endring
+
+/* ========================= TERRASSE ========================= */
+const TE = (()=>{
+  const SPENN = {"48x148":{400:2.7,600:2.3},"48x173":{400:3.2,600:2.7},"48x198":{400:3.6,600:3.1},"48x223":{400:4.1,600:3.5}};
+  const REKKE = ["48x148","48x173","48x198","48x223"];
+  const BB = {"48x198":{navn:"48 × 198 C24 imp.",spenn:2.5,dobbel:false},"48x223":{navn:"48 × 223 C24 imp.",spenn:2.9,dobbel:false},
+              "2x48x198":{navn:"2 stk 48 × 198 C24 imp.",spenn:3.6,dobbel:true},"2x48x223":{navn:"2 stk 48 × 223 C24 imp.",spenn:4.1,dobbel:true}};
+  const BORD = {28:{navn:"Terrassebord 28 × 120 imp.",cc:600,dekker:0.125,skrue:"4,8 × 75",pk:250},
+                21:{navn:"Terrassebord 21 × 95 imp.", cc:400,dekker:0.100,skrue:"4,2 × 55",pk:250}};
+  const st = {bord:28, fest:"oppa", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const B=Math.max(1,parseFloat($("te-bredde").value)||0), D=Math.max(1,parseFloat($("te-dybde").value)||0);
+    const H=Math.max(10,parseFloat($("te-hoyde").value)||0)/100, svinn=parseInt($("te-svinn").value,10)/100;
+    const bord=BORD[st.bord], cc=bord.cc, sko = st.fest==="sko" ? 0.9 : 1.0;
+    const maxS = d => SPENN[d][cc]*sko;
+    const linjerFor = d => Math.ceil(D/maxS(d))+1;
+    const valgt=$("te-tbjelke").value, auto=valgt==="auto";
+    let tDim;
+    if(auto){ const min=Math.min(...REKKE.map(linjerFor)); tDim=REKKE.find(d=>linjerFor(d)===min); }
+    else tDim=valgt;
+    const bLinjer=linjerFor(tDim), feltSpenn=D/(bLinjer-1), tSpenn=maxS(tDim);
+    let alt=null;
+    for(const d of REKKE) if(REKKE.indexOf(d)>REKKE.indexOf(tDim) && linjerFor(d)<bLinjer){ alt={dim:d,linjer:linjerFor(d)}; break; }
+    const bb=BB[$("te-bbjelke").value];
+    const stolperPerLinje=Math.ceil(B/bb.spenn)+1, stolper=bLinjer*stolperPerLinje, stolpeL=+(H+0.1).toFixed(2);
+    const tAntall=Math.floor(B/(cc/1000))+1, tKapp=kapp(D,tAntall);
+    const bbFaktor=bb.dobbel?2:1, bbKapp=kapp(B,bLinjer*bbFaktor);
+    const rader=Math.ceil(D/bord.dekker), bordLm=Math.ceil(rader*B*(1+svinn));
+    const bordSkruer=rader*tAntall*2, skruePk=Math.ceil(bordSkruer/bord.pk);
+    const bjelkesko=st.fest==="sko"?tAntall*(bLinjer-1)*2:0, vinkler=st.fest==="oppa"?tAntall*bLinjer:0;
+    return {B,D,H,cc,bord,tDim,tSpenn,bLinjer,feltSpenn,alt,bb,stolperPerLinje,stolper,stolpeL,tAntall,tKapp,
+            bbKapp,bbFaktor,rader,bordLm,bordSkruer,skruePk,bjelkesko,vinkler,sko,svinn};
+  }
+
+  function render(){
+    const r=beregn();
+    $("te-regelsjekk").innerHTML =
+      (r.H<=1.0
+        ? `<div class="alert ok"><b>Trolig unntatt søknadsplikt:</b> høyde ≤ 1,0 m. Sjekk avstand til nabogrense (min. 1,0 m) og kommunens arealplan.</div>`
+        : `<div class="alert warn"><b>Over 1,0 m høyde:</b> normalt søknadspliktig. Sjekk dibk.no før du bygger.</div>`)
+      + (r.H>0.5 ? `<div class="alert warn" style="margin-top:.5rem"><b>Rekkverk:</b> fallhøyde over 0,5 m skal sikres med rekkverk (min. 1,0 m). Beregn det i Rekkverk-verktøyet på forsiden.</div>` : ``);
+
+    const steps=[
+      {t:`Bordtype <b>${r.bord.navn.replace(" imp.","")}</b> → terrassebjelker <b>c/c ${r.cc} mm</b>`,
+       s:`Regel: c/c 400 for 21 mm bord, c/c 600 for 28 mm bord`},
+      {t:`Terrassebjelke <b>${r.tDim.replace("x"," × ")} C24</b> klarer <b>${fm1(r.tSpenn)} m</b> spenn ved c/c ${r.cc}${r.sko<1?" (× 0,9 for bjelkesko)":""}`,
+       s:`Spenntabell terrassebjelker, C24, snølast 4,5 kN/m²${$("te-tbjelke").value==="auto"?" · valgt automatisk":""}`},
+      {t:`Dybde ${fm1(r.D)} m ÷ ${fm1(r.tSpenn)} m → <b>${r.bLinjer} bærebjelkelinjer</b> (faktisk spenn ${fm1(r.feltSpenn)} m)`,
+       s:`Linje ved vegg${r.bLinjer>2?", "+(r.bLinjer-2)+" mellomliggende":""} og linje ytterst`},
+      {t:`Bærebjelke <b>${r.bb.navn}</b> → søyleavstand maks <b>${fm1(r.bb.spenn)} m</b> → <b>${r.stolperPerLinje} stolper per linje</b>, ${r.stolper} totalt`,
+       s:`Bærebjelketabell, terrassebjelker montert ${st.fest==="oppa"?"oppå":"i bjelkesko"}`},
+      {t:`Bredde ${fm1(r.B)} m ved c/c ${r.cc} → <b>${r.tAntall} terrassebjelker</b> à ${fm1(r.D)} m`,
+       s:`Kappes fra: ${kappTekst(r.tKapp)}${r.tKapp.skjoter>0?" · skjøtes med lask over bærebjelke":""}`},
+    ];
+    $("te-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+    $("te-altHint").innerHTML=r.alt
+      ? `<div class="alert">Tips: med <b>${r.alt.dim.replace("x"," × ")}</b> klarer du deg med <b>${r.alt.linjer} bærebjelkelinjer</b> i stedet for ${r.bLinjer} — færre stolper og fundament. Velg dimensjonen i menyen for å sammenligne.</div>` : ``;
+
+    const P=st.priser, setD=(k,v)=>{ if(!(k in P)) P[k]=v; };
+    const tLm=Object.entries(r.tKapp.biter).reduce((a,[L,n])=>a+L*n,0);
+    const bbLm=Object.entries(r.bbKapp.biter).reduce((a,[L,n])=>a+L*n,0);
+    const bbBaseDim = $("te-bbjelke").value.replace("2x","");             // fysisk samme dimensjon, delt/dobbel er kun mengde
+    const stolpeDim = "98x98";                                            // terrassestolper er alltid 98×98 i dette verktøyet
+    const bordId  = st.bord===28 ? "terrassebord_28x120_imp" : "terrassebord_21x95_imp";
+    const skrueId = st.bord===28 ? "terrasseskrue_48x75_a4"  : "terrasseskrue_42x55_a4";
+
+    const rows = [
+      Catalog.make(`tbjelke_${r.tDim}_c24`, Math.round(tLm), {sourceTool:"terrasse",
+        note:`${r.tAntall} stk à ${fm1(r.D)} m — bestill ${kappTekst(r.tKapp)} per bjelke`, estPrice:P[`tbjelke_${r.tDim}_c24`]}),
+      Catalog.make(`baerebjelke_${bbBaseDim}_c24`, Math.round(bbLm), {sourceTool:"terrasse",
+        note:`${r.bLinjer}${r.bbFaktor>1?" doble":""} linjer à ${fm1(r.B)} m — ${kappTekst(r.bbKapp)} per linje, skjøt over stolpe`, estPrice:P[`baerebjelke_${bbBaseDim}_c24`]}),
+      Catalog.make(`stolpe_${stolpeDim}_imp`, +(r.stolper*r.stolpeL).toFixed(1), {sourceTool:"terrasse",
+        note:`${r.stolper} stk à ca. ${fm1(r.stolpeL)} m (justeres på plass)`, estPrice:P[`stolpe_${stolpeDim}_imp`]}),
+      Catalog.make("stolpesko_98", r.stolper, {sourceTool:"terrasse",
+        note:`én per stolpe — alt.: støpt fundament med søylesko`, estPrice:P.stolpesko_98}),
+      Catalog.make(bordId, r.bordLm, {sourceTool:"terrasse",
+        note:`${r.rader} rader à ${fm1(r.B)} m, inkl. ${Math.round(r.svinn*100)} % svinn — fallende lengder`, estPrice:P[bordId]}),
+      Catalog.make(skrueId, r.skruePk, {sourceTool:"terrasse",
+        note:`${fmt(r.bordSkruer)} skruer — 2 per bord per bjelke`, estPrice:P[skrueId]}),
+    ];
+    if (r.bjelkesko) rows.push(Catalog.make("bjelkesko_48", r.bjelkesko, {sourceTool:"terrasse",
+        note:`2 per bjelke per innfesting`, estPrice:P.bjelkesko_48}));
+    if (r.vinkler) rows.push(Catalog.make("vinkelbeslag_90", r.vinkler, {sourceTool:"terrasse",
+        note:`terrassebjelke → bærebjelke (ev. stikkskruing)`, estPrice:P.vinkelbeslag_90}));
+    rows.push(Catalog.make("bolt_m10", r.stolper*2, {sourceTool:"terrasse",
+        note:`2 per stolpe, bærebjelke → stolpe`, estPrice:P.bolt_m10}));
+
+    TE.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("te-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("te-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("te-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.B*r.D)}</b><small>m² terrasse</small></div>
+      <div class="stat"><b>${r.tAntall}</b><small>terrassebjelker</small></div>
+      <div class="stat"><b>${r.bLinjer}</b><small>bærebjelkelinjer</small></div>
+      <div class="stat"><b>${r.stolper}</b><small>stolper</small></div>
+      <div class="stat"><b>${fmt(r.bordSkruer)}</b><small>skruer</small></div>`;
+
+    $("te-notes").innerHTML=[
+      `Bruk hele lengder på terrassebjelkene der du kan${r.tKapp.skjoter>0?" — her må de skjøtes: lask på begge sider, godt innenfor understøtting":""}.`,
+      `3–5 mm mellomrom mellom bordene. Start med helt bord ytterst, kapp mot vegg.`,
+      `Fundament er ikke priset: jordspyd/skruefundament for lette plattinger, frostfritt støpt punkt for høyde/last.`,
+      `Kubbing mellom bjelkene er ikke nødvendig når spenntabellen følges, men stiver av dekket.`,
+      r.H>0.5?`Husk rekkverk (min. 1,0 m) — bruk Rekkverk-verktøyet.`:``,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Terrasse ${r.B} × ${r.D} m (${fm1(r.B*r.D)} m²)`,
+      `Konstruksjon: ${r.tDim} c/c ${r.cc} på ${r.bLinjer} linjer ${r.bb.navn}, ${r.stolper} stolper`,
+    ]);
+  }
+
+  function tegn(r){
+    const W=660,PAD=52,sk=Math.min((W-2*PAD)/r.B,320/r.D);
+    const bw=r.B*sk,dh=r.D*sk,H=dh+2*PAD+14,x0=(W-bw)/2,y0=PAD;
+    let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Plan: ${r.bLinjer} bærebjelkelinjer, ${r.tAntall} terrassebjelker">`;
+    for(let y=y0;y<y0+dh;y+=Math.max(r.bord.dekker*sk,4))
+      s+=`<line x1="${x0}" y1="${y}" x2="${x0+bw}" y2="${y}" stroke="#E6D9B8" stroke-width="2"/>`;
+    const ccM=r.cc/1000;
+    for(let i=0;i<r.tAntall;i++){const x=Math.min(x0+i*ccM*sk,x0+bw);
+      s+=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+dh}" stroke="#8E979E" stroke-width="3"/>`;}
+    for(let l=0;l<r.bLinjer;l++){const y=y0+l*r.feltSpenn*sk;
+      s+=`<line x1="${x0-8}" y1="${y}" x2="${x0+bw+8}" y2="${y}" stroke="#E85D0F" stroke-width="5"/>`;
+      const sp=r.B/(r.stolperPerLinje-1);
+      for(let p=0;p<r.stolperPerLinje;p++){const x=x0+Math.min(p*sp,r.B)*sk;
+        s+=`<rect x="${x-5}" y="${y-5}" width="10" height="10" fill="#1C2A33" rx="2"/>`;}}
+    s+=`<rect x="${x0-16}" y="${y0-16}" width="${bw+32}" height="9" fill="#1C2A33"/>
+        <text x="${x0-16}" y="${y0-22}" font-size="11" fill="#4A5A64" font-family="Inter,sans-serif">Vegg</text>
+        <text x="${x0+bw/2}" y="${y0+dh+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">${fm1(r.B)} m · ${r.tAntall} bjelker c/c ${r.cc}</text>
+        <text x="${x0-30}" y="${y0+dh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-30} ${y0+dh/2})">${fm1(r.D)} m · spenn ${fm1(r.feltSpenn)} m</text></svg>`;
+    $("te-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["te-bredde","te-dybde","te-tbjelke","te-bbjelke","te-hoyde","te-svinn"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-terrasse [data-bord]").forEach(b=>b.addEventListener("click",()=>{
+      st.bord=+b.dataset.bord;   // katalog-id endres automatisk med bordtype — ingen manuell prisreset nødvendig
+      document.querySelectorAll("#view-terrasse [data-bord]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-terrasse [data-fest]").forEach(b=>b.addEventListener("click",()=>{
+      st.fest=b.dataset.fest;
+      document.querySelectorAll("#view-terrasse [data-fest]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("te-copyBtn").addEventListener("click",()=>copy(liste,$("te-copyStatus")));
+    $("te-priserBtn").addEventListener("click",()=>PriceModal.open(TE.products, "Terrasse"));
+    render();
+  }
+  return {init, products:[]};
+})();
+
+/* ========================= DRYPPSTOP ========================= */
+const DS = (()=>{
+  const DEKKER=1.5, SKRUE_CC=0.30, FUGE_PROFIL=20, FUGE_SKJOT=12;
+  const st={beslag:true,priser:{}};
+  let liste="";
+
+  function beregn(){
+    const L=Math.max(0.5,parseFloat($("ds-lengde").value)||0), B=Math.max(0.5,parseFloat($("ds-bredde").value)||0);
+    const cc=parseInt($("ds-cc").value,10)/100, svinn=parseInt($("ds-svinn").value,10)/100;
+    const med=st.beslag, vind=$("ds-vind").checked, bak=$("ds-bakkant").checked;
+    const felt=Math.max(1,Math.ceil(B/cc)), rader=felt+1, perFelt=Math.max(1,Math.ceil(L/DEKKER));
+    const plater=Math.ceil(felt*perFelt*(1+svinn));
+    let n3=Math.floor(L/3), rest=+(L-n3*3).toFixed(3), n15=0;
+    if(rest>0.001){ if(rest<=1.5) n15=1; else n3+=1; }
+    const prof300=n3*rader, prof150=n15*rader, biter=n3+n15, profilM=rader*L;
+    const skjoter=biter>1?(biter-1)*rader:0;
+    const beslag=med?rader*Math.ceil(L/3):0;
+    let skruerA=rader*(Math.floor(L/SKRUE_CC)+1); if(vind) skruerA+=plater*2;
+    const skruer=Math.ceil(skruerA/100);
+    const skjotM=(perFelt-1)*felt*cc;
+    let fuge=Math.ceil(skjotM/FUGE_SKJOT); if(!med) fuge+=Math.ceil(profilM/FUGE_PROFIL);
+    fuge=Math.max(1,fuge);
+    const bakkant=bak?Math.ceil(B/2):0;
+    return {L,B,cc,felt,rader,perFelt,plater,prof300,prof150,skjoter,beslag,skruer,skruerA,fuge,bakkant,
+            fallCm:+(L*1.5).toFixed(1),med,vind};
+  }
+
+  function render(){
+    const r=beregn();
+    $("ds-fallNote").innerHTML=`Krav til fall: min. 1,5 cm/m → med ${String(r.L).replace(".",",")} m lengde trenger du <b>minst ${String(r.fallCm).replace(".",",")} cm</b> høydeforskjell fra vegg til ytterkant.`;
+    $("ds-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.L*r.B)}</b><small>m² areal</small></div>
+      <div class="stat"><b>${r.rader}</b><small>profilrader</small></div>
+      <div class="stat"><b>${r.felt} × ${r.perFelt}</b><small>felt × plater/felt</small></div>
+      <div class="stat"><b>${fmt(r.skruerA)}</b><small>skruer totalt</small></div>`;
+
+    const P = st.priser;
+    const rows=[];
+    const add=(id,antall,kom="")=>{ if(antall>0) rows.push(Catalog.make(id, antall, {note:kom, sourceTool:"dryppstop", estPrice:P[id]})); };
+    add("dryppstop_plate",r.plater,"inkl. svinn");
+    add("dryppstop_prof300",r.prof300);
+    add("dryppstop_prof150",r.prof150);
+    add("dryppstop_skjot",r.skjoter,r.med&&r.skjoter>0?"profilrader over 3 m må skjøtes også med beslag":"");
+    add("dryppstop_beslag",r.beslag,"kappes i lengde per sperre");
+    add("dryppstop_skruer",r.skruer,`${fmt(r.skruerA)} skruer${r.vind?" inkl. vindskruer":""}, c/c 30 cm — forbor profilen`);
+    add("dryppstop_fuge",r.fuge,r.med?"til plateskjøtene":"bak/over profil + plateskjøter");
+    add("dryppstop_bakkant",r.bakkant,"monteres fra vegg og ca. 20 cm ut over platene");
+
+    DS.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("ds-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("ds-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("ds-notes").innerHTML=[
+      `Platene dekker 150 cm i fallretning (10 cm overlapp). Siste rad kappes — tapetkniv eller platesaks.`,
+      r.cc<0.6?`Ved c/c ${r.cc*100} cm kappes platene i bredden — forvent mer kapp.`:``,
+      `Rengjør treverket og avfett profilene før montering. Tetningsmasse i alle plateskjøter.`,
+      r.med?`Med beslag slipper du å fuge profilene når raden er maks 3 m og uten bærebjelke i spennet.`
+           :`Uten beslag: rikelig fugemasse bak og over profilen mot treverket (ca. 1 tube per 20 m profil).`,
+      `Ikke monter tett tak under DryppStop — platene må kunne rengjøres.`,
+      `Alu-profiler kan korrodere i saltholdig miljø (kystnære strøk).`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `HANDLELISTE — DryppStop undertak`,
+      `Areal: ${r.L} × ${r.B} m (${fm1(r.L*r.B)} m²), c/c ${r.cc*100} cm, ${r.med?"med":"uten"} beslag`,
+    ]) + `\nHusk: min. ${r.fallCm} cm fall totalt, forboring av profiler, avfetting før fuging.`;
+  }
+
+  function tegn(r){
+    const W=640,PAD=46,sk=Math.min((W-2*PAD)/r.B,300/r.L);
+    const bw=r.B*sk,lh=r.L*sk,H=lh+2*PAD,x0=(W-bw)/2,y0=PAD;
+    let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Leggeplan: ${r.felt} felt à ${r.perFelt} plater">`;
+    s+=`<rect x="${x0-14}" y="${y0-16}" width="${bw+28}" height="10" fill="#1C2A33"/>
+        <text x="${x0-14}" y="${y0-22}" font-size="11" fill="#4A5A64" font-family="Inter,sans-serif">Vegg</text>`;
+    for(let f=0;f<r.felt;f++){
+      const fx=x0+f*r.cc*sk, fw=Math.min(r.cc*sk,x0+bw-fx);
+      for(let p=0;p<r.perFelt;p++){
+        const py=y0+p*DEKKER*sk, ph=Math.min(1.6*sk,y0+lh-py);
+        s+=`<rect x="${fx+2}" y="${py}" width="${fw-4}" height="${Math.max(ph,4)}" fill="#FFFFFF" stroke="#C9CFD4" rx="2"/>`;
+        if(p>0) s+=`<rect x="${fx+2}" y="${py}" width="${fw-4}" height="${Math.min(0.1*sk,ph)}" fill="#F3D9C6"/>`;
+      }
+    }
+    for(let i=0;i<=r.felt;i++){
+      const sx=Math.min(x0+i*r.cc*sk,x0+bw);
+      s+=`<rect x="${sx-3}" y="${y0}" width="6" height="${lh}" fill="#8E979E" rx="2"/>`;
+    }
+    s+=`<line x1="${x0}" y1="${y0+lh+18}" x2="${x0+bw}" y2="${y0+lh+18}" stroke="#1C2A33" stroke-width="1.2"/>
+        <text x="${x0+bw/2}" y="${y0+lh+34}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">${fm1(r.B)} m · ${r.rader} sperrer c/c ${r.cc*100} cm</text>
+        <text x="${x0-30}" y="${y0+lh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-30} ${y0+lh/2})">${fm1(r.L)} m</text>`;
+    const ax=x0+bw+24;
+    s+=`<line x1="${ax}" y1="${y0+6}" x2="${ax}" y2="${y0+lh-14}" stroke="#E85D0F" stroke-width="3"/>
+        <polygon points="${ax-6},${y0+lh-14} ${ax+6},${y0+lh-14} ${ax},${y0+lh-2}" fill="#E85D0F"/>
+        <text x="${ax+12}" y="${y0+lh/2}" font-size="11" fill="#C24C0A" font-family="Inter,sans-serif" transform="rotate(90 ${ax+12} ${y0+lh/2})" text-anchor="middle">Fall min. 1,5 cm/m</text></svg>`;
+    $("ds-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["ds-lengde","ds-bredde","ds-cc","ds-svinn","ds-vind","ds-bakkant"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    $("ds-medBeslag").addEventListener("click",()=>{st.beslag=true;sync();});
+    $("ds-utenBeslag").addEventListener("click",()=>{st.beslag=false;sync();});
+    function sync(){
+      $("ds-medBeslag").setAttribute("aria-pressed",st.beslag);
+      $("ds-utenBeslag").setAttribute("aria-pressed",!st.beslag);
+      render();
+    }
+    $("ds-copyBtn").addEventListener("click",()=>copy(liste,$("ds-copyStatus")));
+    $("ds-priserBtn").addEventListener("click",()=>PriceModal.open(DS.products, "DryppStop undertak"));
+    render();
+  }
+  return {init, products:[]};
+})();
+
+/* ========================= REKKVERK ========================= */
+const RK = (()=>{
+  /* TEK17 §12-15: maks lysåpning 0,10 m. Vi dimensjonerer mot 98 mm for byggemargin. */
+  const MAKS_APNING = 0.098;
+  const SPILE = {45:{navn:"Spile 21 × 45 imp.", b:0.045, id:"spile_21x45_imp"},
+                 70:{navn:"Spile 21 × 70 imp.", b:0.070, id:"spile_21x70_imp"},
+                 95:{navn:"Spile 21 × 95 imp.", b:0.095, id:"spile_21x95_imp"}};
+  const STOLPE = {"48x98":{navn:"Stolpe 48 × 98 imp.", b:0.048, id:"stolpe_48x98_imp"},
+                  "98x98":{navn:"Stolpe 98 × 98 imp.", b:0.098, id:"stolpe_98x98_imp"}};
+  const st = {spile:45, stolpe:"48x98", priser:{}};
+  let liste = "";
+
+  /* Kjernen: fordel spiler jevnt i et felt uten å bryte 10 cm-kravet */
+  function spilefelt(feltB, spileB){
+    if (feltB <= MAKS_APNING) return {n:0, apn:feltB};        // lite felt — trenger ingen spile
+    const n = Math.ceil((feltB - MAKS_APNING) / (spileB + MAKS_APNING));
+    const apn = (feltB - n*spileB) / (n + 1);
+    return {n, apn};
+  }
+
+  function beregn(){
+    const sider = ["rk-sideA","rk-sideB","rk-sideC"]
+      .map((id,i)=>({navn:"ABC"[i], L:Math.max(0,parseFloat($(id).value)||0)}))
+      .filter(s=>s.L>0.2);
+    const fall = Math.max(0,parseFloat($("rk-fall").value)||0)/100;   // m
+    const ccMaks = parseInt($("rk-cc").value,10)/100;
+    const sammen = $("rk-sammenheng").checked && sider.length>1;
+    const handloper = $("rk-handloper").checked;
+    const sp = SPILE[st.spile], stp = STOLPE[st.stolpe];
+
+    /* TEK17-krav ut fra fallhøyde */
+    const kravRekkverk = fall > 0.5;
+    const kravH = fall > 10 ? 1.2 : 1.0;
+    const H = kravH;                                   // byggehøyde = kravet (mål fra overkant dekke)
+
+    /* Per side: stolper, felt, spiler */
+    let totStolper=0, totSpiler=0, totL=0, perSide=[];
+    for (const s of sider){
+      const nStolper = Math.ceil(s.L/ccMaks) + 1;
+      const nFelt = nStolper - 1;
+      const feltB = (s.L - nStolper*stp.b) / nFelt;    // lysmål mellom stolpene
+      const f = spilefelt(feltB, sp.b);
+      perSide.push({...s, nStolper, nFelt, feltB, spilerPerFelt:f.n, apn:f.apn});
+      totStolper += nStolper; totSpiler += f.n*nFelt; totL += s.L;
+    }
+    if (sammen) totStolper -= (sider.length-1);        // delte hjørnestolper
+
+    /* Lengder */
+    const spileL = +(H - 0.05 - 0.028).toFixed(2);     // fra 5 cm over dekke til underkant toppbord
+    const stolpeL = +(H + 0.45).toFixed(2);            // + innfesting mot bjelkelag
+    const spileLm = Math.ceil(totSpiler*spileL*1.10);  // 10 % kapp
+    const stolpeLm = +(totStolper*stolpeL).toFixed(1);
+    const svillLm = Math.ceil(totL*2*1.05);            // topp- og bunnsvill
+    const toppLm = handloper ? Math.ceil(totL*1.05) : 0;
+    const spileSkruer = totSpiler*4;                    // 2 topp + 2 bunn
+    const spileSkruerPk = Math.ceil(spileSkruer/250);
+    const bolter = totStolper*2;
+
+    const verste = Math.max(...perSide.map(p=>p.apn));
+    return {sider:perSide, fall, kravRekkverk, kravH, H, sammen, ccMaks, sp, stp,
+            totStolper, totSpiler, totL, spileL, stolpeL, spileLm, stolpeLm, svillLm,
+            toppLm, handloper, spileSkruer, spileSkruerPk, bolter, verste};
+  }
+
+  function render(){
+    const r = beregn();
+    if (!r.sider.length){
+      $("rk-dimSteps").innerHTML = `<div class="alert">Angi minst én sidelengde over 0,2 m.</div>`;
+      $("rk-planSvg").innerHTML=""; $("rk-stats").innerHTML="";
+      $("rk-matTable").querySelector("tbody").innerHTML=""; $("rk-notes").innerHTML="";
+      RK.products = []; liste=""; return;
+    }
+
+    /* Regelsjekk */
+    $("rk-regelsjekk").innerHTML =
+      (!r.kravRekkverk
+        ? `<div class="alert ok"><b>Fallhøyde ≤ 0,5 m:</b> TEK17 krever ikke rekkverk — men verktøyet regner gjerne likevel.</div>`
+        : `<div class="alert"><b>Rekkverk påkrevd</b> (fallhøyde over 0,5 m, TEK17 §12-11). Kravhøyde: <b>${r.kravH.toFixed(1).replace(".",",")} m</b>${r.fall>10?" (over 10 m fall)":""}.</div>`)
+      + (r.fall>=3 ? "" : r.kravRekkverk ? `<div class="alert ok" style="margin-top:.5rem">Under 3,0 m fall kan sikring løses på annen forsvarlig måte (f.eks. dyp blomsterkasse) — men rekkverk er den enkle fasiten.</div>` : "");
+
+    /* Slik er det regnet */
+    const sideTekst = r.sider.map(p=>
+      `Side ${p.navn} (${fm1(p.L)} m): <b>${p.nStolper} stolper</b> → ${p.nFelt} felt à ${(p.feltB*100).toFixed(0)} cm → <b>${p.spilerPerFelt} spiler per felt</b>, lysåpning <b>${(p.apn*1000).toFixed(0)} mm</b>`
+    ).join("<br>");
+    const steps = [
+      {t:`Fallhøyde ${fm1(r.fall)} m → rekkverkshøyde <b>${r.kravH.toFixed(1).replace(".",",")} m</b>`,
+       s:`TEK17 §12-15: min. 1,0 m inntil 10 m nivåforskjell, 1,2 m over`},
+      {t:`Stolper ${r.stp.navn.replace(" imp.","")} med maks c/c ${r.ccMaks*100} cm`,
+       s:sideTekst + (r.sammen?`<br>Hjørnestolper deles: −${r.sider.length-1} stolpe(r)`:``)},
+      {t:`Spiler fordeles jevnt: verste lysåpning <b>${(r.verste*1000).toFixed(0)} mm</b> ≤ 100 mm ✓`,
+       s:`TEK17 §12-15 (5): åpninger maks 0,10 m — verktøyet dimensjonerer mot 98 mm for byggemargin`},
+      {t:`Spilelengde ca. <b>${(r.spileL*100).toFixed(0)} cm</b> (${r.totSpiler} stk), stolpelengde ca. <b>${(r.stolpeL*100).toFixed(0)} cm</b>`,
+       s:`Spile: 5 cm over dekket til underkant toppbord · stolpe: + 45 cm innfesting mot bjelkelaget`},
+    ];
+    $("rk-dimSteps").innerHTML = steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    /* Materialliste */
+    const P = st.priser;
+    const rows = [
+      Catalog.make(r.stp.id, r.stolpeLm, {sourceTool:"rekkverk", estPrice:P[r.stp.id],
+        note:`${r.totStolper} stk à ca. ${(r.stolpeL*100).toFixed(0)} cm — boltes mot bjelkelag/stubbloft`}),
+      Catalog.make("rekkverk_svill_48x73", r.svillLm, {sourceTool:"rekkverk", estPrice:P.rekkverk_svill_48x73,
+        note:`2 × ${fm1(r.totL)} m mellom stolpene, inkl. 5 % kapp`}),
+      Catalog.make(r.sp.id, r.spileLm, {sourceTool:"rekkverk", estPrice:P[r.sp.id],
+        note:`${r.totSpiler} spiler à ${(r.spileL*100).toFixed(0)} cm, inkl. 10 % kapp — kjøp lengder delelig på spilemålet`}),
+    ];
+    if (r.toppLm) rows.push(Catalog.make("rekkverk_toppbord_28x120_imp", r.toppLm, {sourceTool:"rekkverk",
+        estPrice:P.rekkverk_toppbord_28x120_imp, note:`legges flatt over stolper og spiler, skjøt over stolpe`}));
+    rows.push(
+      Catalog.make("treskrue_42x55_a4", r.spileSkruerPk, {sourceTool:"rekkverk", estPrice:P.treskrue_42x55_a4,
+        note:`${fmt(r.spileSkruer)} skruer — 2 i topp og 2 i bunn per spile`}),
+      Catalog.make("konstruksjonsskrue_6x90", 1, {sourceTool:"rekkverk", estPrice:P.konstruksjonsskrue_6x90,
+        note:`sviller og toppbord mot stolper`}),
+      Catalog.make("bolt_m10", r.bolter, {sourceTool:"rekkverk", estPrice:P.bolt_m10,
+        note:`2 per stolpe — aldri bare skruer i stolpeinnfestingen`}),
+    );
+
+    RK.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("rk-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("rk-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("rk-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.totL)}</b><small>lm rekkverk</small></div>
+      <div class="stat"><b>${r.totStolper}</b><small>stolper</small></div>
+      <div class="stat"><b>${fmt(r.totSpiler)}</b><small>spiler</small></div>
+      <div class="stat"><b>${(r.verste*1000).toFixed(0)}</b><small>mm maks åpning</small></div>
+      <div class="stat"><b>${r.kravH.toFixed(1).replace(".",",")}</b><small>m høyde</small></div>`;
+
+    $("rk-notes").innerHTML=[
+      `Bruk kun vertikale spiler — liggende spiler gjør rekkverket klatrbart og bryter TEK17 §12-15 (1).`,
+      `Åpning mellom dekke og bunnsvill/spiler: maks 10 cm (5 cm hvis rekkverket står utenpå bjelkelaget).`,
+      `Stolpene boltes med 2 gjennomgående bolter mot bjelkelaget — rekkverket skal tåle at noen faller mot det.`,
+      `Lag ett spilefelt som mal, kontrollmål lysåpningen, og bruk en kappet klosse som avstandslære for resten.`,
+      `Bygg 1–2 cm over kravhøyden — treverket setter seg, og kontrollmål gjøres fra overkant ferdig dekke.`,
+    ].map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Rekkverk ${fm1(r.totL)} lm, høyde ${r.kravH.toFixed(1)} m`,
+      `Sider: ${r.sider.map(p=>`${p.navn}=${fm1(p.L)} m`).join(", ")} · ${r.sp.navn} · maks åpning ${(r.verste*1000).toFixed(0)} mm`,
+    ]);
+  }
+
+  /* Felttegning: lengste side i oppriss, målsatt */
+  function tegn(r){
+    const p = [...r.sider].sort((a,b)=>b.L-a.L)[0];
+    const visFelt = Math.min(p.nFelt, 3);                       // vis inntil 3 felt
+    const W=660, PAD=54;
+    const feltPx = (W-2*PAD-((visFelt+1)*10)) / visFelt;
+    const skala = feltPx / p.feltB;
+    const hPx = r.H*skala*0.55;                                  // komprimer høyden litt for lesbarhet
+    const Hsvg = hPx + 2*PAD + 10;
+    const y0 = PAD, yDekk = y0 + hPx;
+    let s = `<svg viewBox="0 0 ${W} ${Hsvg}" role="img" aria-label="Rekkverksfelt med ${p.spilerPerFelt} spiler og ${(p.apn*1000).toFixed(0)} mm lysåpning">`;
+    // dekke
+    s+=`<rect x="${PAD-20}" y="${yDekk}" width="${W-2*PAD+40}" height="8" fill="#E6D9B8" stroke="#C9CFD4"/>`;
+    let x = PAD;
+    for(let f=0; f<visFelt; f++){
+      // stolpe
+      s+=`<rect x="${x}" y="${y0-6}" width="10" height="${hPx+14}" fill="#8E979E" rx="2"/>`;
+      const fx = x+10;
+      // sviller
+      s+=`<rect x="${fx}" y="${y0+14}" width="${feltPx}" height="5" fill="#1C2A33"/>
+          <rect x="${fx}" y="${yDekk-16}" width="${feltPx}" height="5" fill="#1C2A33"/>`;
+      // spiler jevnt fordelt
+      const apnPx = p.apn*skala, spPx = r.sp.b*skala;
+      for(let i=0;i<p.spilerPerFelt;i++){
+        const sx = fx + apnPx + i*(spPx+apnPx);
+        s+=`<rect x="${sx}" y="${y0+10}" width="${Math.max(spPx,2)}" height="${hPx-22}" fill="#E6D9B8" stroke="#C9CFD4" stroke-width=".5"/>`;
+      }
+      // åpningsmål i første felt
+      if(f===0 && p.spilerPerFelt>0){
+        const mx1=fx, mx2=fx+apnPx, my=y0+hPx*0.5;
+        s+=`<line x1="${mx1}" y1="${my}" x2="${mx2}" y2="${my}" stroke="#C24C0A" stroke-width="1.5"/>
+            <text x="${(mx1+mx2)/2}" y="${my-6}" font-size="11" text-anchor="middle" fill="#C24C0A" font-family="Inter" font-weight="600">${(p.apn*1000).toFixed(0)}</text>`;
+      }
+      x = fx + feltPx;
+    }
+    // siste stolpe
+    s+=`<rect x="${x}" y="${y0-6}" width="10" height="${hPx+14}" fill="#8E979E" rx="2"/>`;
+    // toppbord
+    if(r.handloper) s+=`<rect x="${PAD-6}" y="${y0-12}" width="${x-PAD+22}" height="8" fill="#E85D0F" rx="2"/>`;
+    // høydemål
+    s+=`<line x1="${PAD-26}" y1="${y0-8}" x2="${PAD-26}" y2="${yDekk}" stroke="#1C2A33" stroke-width="1.2"/>
+        <text x="${PAD-32}" y="${(y0+yDekk)/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${PAD-32} ${(y0+yDekk)/2})">${r.kravH.toFixed(1).replace(".",",")} m</text>`;
+    // feltmål
+    s+=`<text x="${W/2}" y="${yDekk+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">Side ${p.navn}: felt à ${(p.feltB*100).toFixed(0)} cm · ${p.spilerPerFelt} spiler · lysåpning ${(p.apn*1000).toFixed(0)} mm${p.nFelt>visFelt?` · (${p.nFelt} felt totalt)`:``}</text>`;
+    s+=`</svg>`;
+    $("rk-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["rk-sideA","rk-sideB","rk-sideC","rk-fall","rk-cc","rk-sammenheng","rk-handloper"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-rekkverk [data-spile]").forEach(b=>b.addEventListener("click",()=>{
+      st.spile=+b.dataset.spile;   // katalog-id endres automatisk med spiledimensjon
+      document.querySelectorAll("#view-rekkverk [data-spile]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-rekkverk [data-stolpe]").forEach(b=>b.addEventListener("click",()=>{
+      st.stolpe=b.dataset.stolpe;
+      document.querySelectorAll("#view-rekkverk [data-stolpe]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("rk-copyBtn").addEventListener("click",()=>copy(liste,$("rk-copyStatus")));
+    $("rk-priserBtn").addEventListener("click",()=>PriceModal.open(RK.products, "Rekkverk"));
+    render();
+  }
+  return {init, products:[]};
+})();
+
+/* ========================= Oppstart ========================= */
+TE.init();
+DS.init();
+RK.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk → riktig verktøy
+</script>
+</body>
+</html>
