@@ -324,18 +324,19 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Stolpedimensjon etter vindlast og høyde, fundament, bord og festemidler.</p>
       </div>
 
-      <div class="tool-card soon" aria-disabled="true">
-        <span class="badge-soon">Kommer</span>
+      <button class="tool-card" data-nav="kledning">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <polygon points="60,6 112,34 8,34" fill="#8E979E"/>
             <rect x="16" y="34" width="88" height="44" fill="#fff" stroke="#C9CFD4"/>
             <g stroke="#E6D9B8" stroke-width="4"><line x1="24" y1="38" x2="24" y2="76"/><line x1="36" y1="38" x2="36" y2="76"/><line x1="48" y1="38" x2="48" y2="76"/><line x1="60" y1="38" x2="60" y2="76"/><line x1="72" y1="38" x2="72" y2="76"/><line x1="84" y1="38" x2="84" y2="76"/><line x1="96" y1="38" x2="96" y2="76"/></g>
+            <line x1="16" y1="78" x2="104" y2="78" stroke="#E85D0F" stroke-width="3"/>
           </svg>
         </span>
         <h3>Kledning</h3>
-        <p>Løpemeter per profil, lekter, sløyfer, spiker/skruer og svinn per veggflate.</p>
-      </div>
+        <p>Veggmål inn → løpemeter kledning etter profil, sløyfer og lekter, spiker og musebånd ut. Dekkbredde-regning for tømmermann og dobbeltfals.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -766,6 +767,111 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== KLEDNING -->
+<main class="view" id="view-kledning">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Kledning — <em>veggmål inn, løpemeter og lekter ut</em></h1>
+      <p>Regner løpemeter kledningsbord fra profilens faktiske dekkbredde, sløyfer og lekter
+      etter monteringsprinsippet for stående og liggende kledning, pluss spiker, musebånd og
+      hjørnebord — med svinn du styrer selv.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="field">
+        <label>Vegglengder <span class="hint">(m — sett 0 for å utelate)</span></label>
+        <div class="duo" style="grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" id="kl-veggA" min="0" max="40" step="0.1" value="8.0" inputmode="decimal" aria-label="Vegg A (m)">
+          <input type="number" id="kl-veggB" min="0" max="40" step="0.1" value="6.0" inputmode="decimal" aria-label="Vegg B (m)">
+          <input type="number" id="kl-veggC" min="0" max="40" step="0.1" value="0" inputmode="decimal" aria-label="Vegg C (m)">
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="kl-hoyde">Vegghøyde <span class="hint">(m, til raft)</span></label>
+          <input type="number" id="kl-hoyde" min="1" max="12" step="0.1" value="2.5" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="kl-fradrag">Fradrag <span class="hint">(vinduer/dører, m²)</span></label>
+          <input type="number" id="kl-fradrag" min="0" max="100" step="0.5" value="4" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="kl-typeLabel">Kledningstype <span class="hint">(styrer dekkbredde og lekting)</span></label>
+        <div class="segment" role="group" aria-labelledby="kl-typeLabel">
+          <button type="button" data-ktype="tommermann" aria-pressed="true">Tømmermann</button>
+          <button type="button" data-ktype="dfals_st" aria-pressed="false">Dobbeltfals stående</button>
+          <button type="button" data-ktype="dfals_ligg" aria-pressed="false">Liggende</button>
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="kl-bordbredde">Bordbredde <span class="hint">(mm)</span></label>
+          <input type="number" id="kl-bordbredde" min="98" max="223" step="1" value="148" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label for="kl-hjorner">Ytterhjørner <span class="hint">(antall, hjørnebord)</span></label>
+          <input type="number" id="kl-hjorner" min="0" max="12" step="1" value="4" inputmode="numeric">
+        </div>
+      </div>
+      <div class="field">
+        <label for="kl-svinn">Svinn/kapp <span class="hint">(påslag kledningsbord)</span></label>
+        <select id="kl-svinn">
+          <option value="5">5 % — rette vegger, få åpninger</option>
+          <option value="8" selected>8 % — normalt</option>
+          <option value="12">12 % — mange åpninger/gavler</option>
+        </select>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="kl-museband" checked>
+        <span>Ta med musebånd i bunn av kledningen (gnagersikring av luftespalten)</span>
+      </label>
+      <div id="kl-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="kl-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Veggoppriss">
+        <h2>Veggoppriss <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— lengste vegg</span></h2>
+        <div id="kl-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E6D9B8"></span>Kledningsbord</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Sløyfer/lekter bak</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Musebånd</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="kl-stats"></div>
+        <table id="kl-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="kl-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="kl-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="kl-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="kl-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="kl-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -984,6 +1090,13 @@ const Catalog = (()=>{
     overgangslist_terskel:{category:"list", title:"Overgangslist/terskel justerbar", unit:"stk", defaultPrice:249},
     t_profil_ekspansjon:  {category:"list", title:"T-profil for ekspansjonsfuge", unit:"stk", defaultPrice:329},
     avstandskiler:        {category:"tilbehor", title:"Avstandskiler/monteringskiler (pk à 30)", unit:"pk", defaultPrice:79},
+    /* --- Kledning --- */
+    kledning_rekt_19x148:  {category:"kledning", title:"Kledningsbord rektangulær 19 × 148 — fritt valg av behandling", dimensions:"19x148", unit:"lm", defaultPrice:30},
+    kledning_dfals_19x148: {category:"kledning", title:"Kledningsbord dobbeltfals 19 × 148 — fritt valg av behandling", dimensions:"19x148", unit:"lm", defaultPrice:34},
+    sloyfe_23x48:          {category:"lekt", title:"Sløyfe 23 × 48 (lufting bak kledning)", dimensions:"23x48", unit:"lm", defaultPrice:12},
+    lekt_30x48:            {category:"lekt", title:"Lekt 30 × 48 (spikerslag for kledning)", dimensions:"30x48", unit:"lm", defaultPrice:16},
+    kledningsspiker_28x75: {category:"skrue", title:"Kledningsspiker 2,8 × 75 varmforsinket (pk à 1 kg ≈ 110 stk)", unit:"pk", defaultPrice:189},
+    museband_alu:          {category:"beslag", title:"Musebånd perforert aluminium", unit:"lm", defaultPrice:35},
   };
 
   function get(id){ return DB[id]; }
@@ -1242,7 +1355,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -1475,7 +1588,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -2175,12 +2288,186 @@ const PK = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= KLEDNING ========================= */
+const KL = (()=>{
+  /* Dekkbredde-modeller (mm): tømmermann = par av bord med 25 mm overlapp per side,
+     dobbeltfals = bordbredde minus fals (~15 mm). Kilde: leverandørenes forbrukstall
+     (≈8,2 lm/m² rektangulær, ≈7,7 lm/m² dobbeltfals ved 148 mm bord). */
+  const OVERLAPP = 25, FALS = 15, CC_LEKT = 0.6, SPIKER_PK = 110;
+  const TYPER = {
+    tommermann: {navn:"Tømmermann (stående)",       staaende:true,  bordId:"kledning_rekt_19x148",  lmPerM2:b=>2000/(2*b-2*OVERLAPP), spikerPerLm:2.5},
+    dfals_st:   {navn:"Dobbeltfals (stående)",      staaende:true,  bordId:"kledning_dfals_19x148", lmPerM2:b=>1000/(b-FALS),         spikerPerLm:3.4},
+    dfals_ligg: {navn:"Dobbeltfals/vestlands (liggende)", staaende:false, bordId:"kledning_dfals_19x148", lmPerM2:b=>1000/(b-FALS),    spikerPerLm:3.4},
+  };
+  const st = {ktype:"tommermann", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const vegger = ["kl-veggA","kl-veggB","kl-veggC"]
+      .map((id,i)=>({navn:"ABC"[i], L:Math.max(0,parseFloat($(id).value)||0)}))
+      .filter(v=>v.L>0.2);
+    const H = Math.max(1,parseFloat($("kl-hoyde").value)||0);
+    const brutto = +(vegger.reduce((a,v)=>a+v.L*H,0)).toFixed(1);
+    const fradrag = Math.min(brutto*0.9, Math.max(0,parseFloat($("kl-fradrag").value)||0));
+    const netto = +(brutto-fradrag).toFixed(1);
+    const bordB = Math.max(98,parseFloat($("kl-bordbredde").value)||148);
+    const svinn = parseInt($("kl-svinn").value,10)/100;
+    const type = TYPER[st.ktype];
+    const lmPerM2 = +(type.lmPerM2(bordB)).toFixed(2);
+    const kledningLm = Math.ceil(netto*lmPerM2*(1+svinn));
+    const bordAntall = Math.ceil(kledningLm/H);            // ca — stående bord à vegghøyde
+    const sumL = +(vegger.reduce((a,v)=>a+v.L,0)).toFixed(1);
+    /* Lekting: stående kledning = sløyfer (vertikalt) + lekter (horisontalt); liggende = kun stående lekter */
+    let sloyfeLm=0, lekterLm=0;
+    if (type.staaende){
+      sloyfeLm = Math.ceil(vegger.reduce((a,v)=>a+(Math.ceil(v.L/CC_LEKT)+1)*H,0));
+      lekterLm = Math.ceil(vegger.reduce((a,v)=>a+(Math.ceil(H/CC_LEKT)+1)*v.L,0));
+    } else {
+      lekterLm = Math.ceil(vegger.reduce((a,v)=>a+(Math.ceil(v.L/CC_LEKT)+1)*H,0));
+    }
+    const spiker = Math.ceil(kledningLm*type.spikerPerLm);
+    const spikerPk = Math.ceil(spiker/SPIKER_PK);
+    const museband = $("kl-museband").checked ? Math.ceil(sumL*1.05) : 0;
+    const hjorner = Math.max(0,parseInt($("kl-hjorner").value,10)||0);
+    const hjornebordLm = Math.ceil(hjorner*2*H);
+    return {vegger,H,brutto,fradrag,netto,bordB,svinn,type,lmPerM2,kledningLm,bordAntall,
+            sumL,sloyfeLm,lekterLm,spiker,spikerPk,museband,hjorner,hjornebordLm};
+  }
+
+  function render(){
+    const r = beregn();
+    if (!r.vegger.length){
+      $("kl-dimSteps").innerHTML = `<div class="alert">Angi minst én vegglengde over 0,2 m.</div>`;
+      $("kl-planSvg").innerHTML=""; $("kl-stats").innerHTML="";
+      $("kl-matTable").querySelector("tbody").innerHTML=""; $("kl-notes").innerHTML="";
+      KL.products = []; liste=""; return;
+    }
+
+    $("kl-regelsjekk").innerHTML =
+      `<div class="alert ok"><b>Lufting:</b> minst 23 mm luftespalte bak kledningen — sløyfene/lektene gir dette. Åpent i bunn og topp.</div>`
+      + ($("kl-museband").checked ? `` :
+        `<div class="alert warn" style="margin-top:.5rem"><b>Uten musebånd:</b> luftespalten er en åpen inngang for mus — gnagersikring anbefales sterkt.</div>`);
+
+    const dekkTekst = st.ktype==="tommermann"
+      ? `par à 2 bord med ${OVERLAPP} mm overlapp per side`
+      : `dekkbredde ${r.bordB-FALS} mm per bord (fals ${FALS} mm)`;
+    const steps=[
+      {t:`Veggareal ${r.vegger.map(v=>`${fm1(v.L)} × ${fm1(r.H)}`).join(" + ")} = ${fm1(r.brutto)} m² − ${fm1(r.fradrag)} m² åpninger → <b>${fm1(r.netto)} m²</b>`,
+       s:`Trekk kun store åpninger (vinduer/dører) — små åpninger dekkes av svinnet`},
+      {t:`${r.type.navn} med ${r.bordB} mm bord → <b>${fm1(r.lmPerM2)} lm/m²</b> → ${fm1(r.netto)} m² + ${Math.round(r.svinn*100)} % svinn = <b>${fmt(r.kledningLm)} lm</b> (≈ ${r.bordAntall} bord à ${fm1(r.H)} m)`,
+       s:dekkTekst},
+      {t:r.type.staaende
+        ?`Stående kledning: <b>${fmt(r.sloyfeLm)} lm sløyfer</b> (vertikalt, c/c 60) + <b>${fmt(r.lekterLm)} lm lekter</b> (horisontalt, c/c 60)`
+        :`Liggende kledning: <b>${fmt(r.lekterLm)} lm lekter</b> (vertikalt, c/c 60) — gir lufting uten egne sløyfer`,
+       s:`Lekter min. 30 × 48 for spiker · maks c/c 60 cm gir stødig spikerfeste`},
+      {t:`${fmt(r.spiker)} spiker → <b>${r.spikerPk} pk</b> à 1 kg`,
+       s:st.ktype==="tommermann"?`1 spiker per underligger og 2 per overligger per lekt — aldri gjennom begge bord`:`2 spiker per bord per lekt`},
+      {t:`${r.museband?`Musebånd <b>${fmt(r.museband)} lm</b> i bunn`:`Musebånd ikke medregnet`}${r.hjornebordLm?` · hjørnebord <b>${fmt(r.hjornebordLm)} lm</b> (${r.hjorner} hjørner à 2 bord)`:``}`,
+       s:`Musebåndet lukker luftespalten for gnagere uten å stenge luftingen`},
+    ];
+    $("kl-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[
+      Catalog.make(r.type.bordId, r.kledningLm, {sourceTool:"kledning",
+        note:`≈ ${fm1(r.netto*(1+r.svinn))} m² vegg — ${r.type.navn.toLowerCase()}, inkl. ${Math.round(r.svinn*100)} % svinn`,
+        estPrice:P[r.type.bordId]}),
+    ];
+    if (r.sloyfeLm) rows.push(Catalog.make("sloyfe_23x48", r.sloyfeLm, {sourceTool:"kledning",
+        note:`vertikalt c/c 60 cm — festes gjennom vindsperra til stenderne`, estPrice:P.sloyfe_23x48}));
+    rows.push(Catalog.make("lekt_30x48", r.lekterLm, {sourceTool:"kledning",
+        note:r.type.staaende?`horisontalt c/c 60 cm utenpå sløyfene`:`vertikalt c/c 60 cm — gir både feste og lufting`, estPrice:P.lekt_30x48}));
+    rows.push(Catalog.make("kledningsspiker_28x75", r.spikerPk, {sourceTool:"kledning",
+        note:`${fmt(r.spiker)} spiker — varmforsinket eller rustfri ved kyst`, estPrice:P.kledningsspiker_28x75}));
+    if (r.museband) rows.push(Catalog.make("museband_alu", r.museband, {sourceTool:"kledning",
+        note:`monteres i bunn av luftespalten, per vegg`, estPrice:P.museband_alu}));
+    if (r.hjornebordLm) rows.push(Catalog.make("kledning_rekt_19x148", r.hjornebordLm, {sourceTool:"kledning",
+        note:`hjørnebord — ${r.hjorner} hjørner à 2 bord à ${fm1(r.H)} m`, estPrice:P.kledning_rekt_19x148}));
+    rows.push(Catalog.make("konstruksjonsskrue_6x90", 1, {sourceTool:"kledning",
+        note:`sløyfer og lekter mot stendere/vegg`, estPrice:P.konstruksjonsskrue_6x90}));
+
+    KL.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("kl-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("kl-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("kl-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.netto)}</b><small>m² vegg</small></div>
+      <div class="stat"><b>${fmt(r.kledningLm)}</b><small>lm kledning</small></div>
+      <div class="stat"><b>${r.bordAntall}</b><small>bord (ca.)</small></div>
+      <div class="stat"><b>${fmt(r.sloyfeLm+r.lekterLm)}</b><small>lm lekter/sløyfer</small></div>
+      <div class="stat"><b>${fmt(r.spiker)}</b><small>spiker</small></div>`;
+
+    $("kl-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg profil og behandling (ubehandlet/grunnet/malt) fritt — juster bordbredde og pris, så regnes alt om.`,
+      `Kledningen skal slutte 20–30 cm over terreng — sputen nederst kappes med dryppnese (15° skråkutt).`,
+      st.ktype==="tommermann"?`Overlapp minst 20 mm per side (her ${OVERLAPP} mm) — og spikre aldri gjennom både over- og underligger.`:``,
+      `Skjøt bord over lekt/spikerslag, og forsegl endeved med grunning før montering.`,
+      `Gavltrekanter er ikke med i regnestykket — legg til gavlareal som fradrag i minus (øk vegghøyden) eller regn gavlen separat.`,
+      `Vindsperre forutsettes å være på plass — den er ikke priset her.`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Kledning ${fm1(r.netto)} m² (${r.vegger.map(v=>`${v.navn}=${fm1(v.L)} m`).join(", ")} × ${fm1(r.H)} m)`,
+      `${r.type.navn}, ${r.bordB} mm bord → ${fm1(r.lmPerM2)} lm/m² · ${Math.round(r.svinn*100)} % svinn`,
+    ]);
+  }
+
+  /* Veggoppriss: lengste vegg med bordretning, lekting antydet og musebånd i bunn */
+  function tegn(r){
+    const v = [...r.vegger].sort((a,b)=>b.L-a.L)[0];
+    const W=660,PAD=52,sk=Math.min((W-2*PAD)/v.L,260/r.H);
+    const bw=v.L*sk,bh=r.H*sk,Hsvg=bh+2*PAD+14,x0=(W-bw)/2,y0=PAD;
+    let s=`<svg viewBox="0 0 ${W} ${Hsvg}" role="img" aria-label="Veggoppriss ${r.type.navn}">`;
+    s+=`<rect x="${x0}" y="${y0}" width="${bw}" height="${bh}" fill="#E6D9B8" stroke="#C9CFD4"/>`;
+    if (r.type.staaende){
+      /* lekter bak (horisontale, stiplet) */
+      for(let y=y0+CC_LEKT*sk;y<y0+bh;y+=CC_LEKT*sk)
+        s+=`<line x1="${x0}" y1="${y}" x2="${x0+bw}" y2="${y}" stroke="#8E979E" stroke-width="2" stroke-dasharray="8 6"/>`;
+      /* stående bord */
+      const stepX = st.ktype==="tommermann" ? (2*r.bordB-2*OVERLAPP)/1000*sk : (r.bordB-FALS)/1000*sk;
+      for(let x=x0+stepX;x<x0+bw;x+=stepX)
+        s+=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+bh}" stroke="#C9A96A" stroke-width="${st.ktype==="tommermann"?2.5:1.5}"/>`;
+    } else {
+      /* stående lekter bak (stiplet) */
+      for(let x=x0+CC_LEKT*sk;x<x0+bw;x+=CC_LEKT*sk)
+        s+=`<line x1="${x}" y1="${y0}" x2="${x}" y2="${y0+bh}" stroke="#8E979E" stroke-width="2" stroke-dasharray="8 6"/>`;
+      /* liggende bord */
+      const stepY=(r.bordB-FALS)/1000*sk;
+      for(let y=y0+stepY;y<y0+bh;y+=stepY)
+        s+=`<line x1="${x0}" y1="${y}" x2="${x0+bw}" y2="${y}" stroke="#C9A96A" stroke-width="1.5"/>`;
+    }
+    if (r.museband) s+=`<line x1="${x0}" y1="${y0+bh+3}" x2="${x0+bw}" y2="${y0+bh+3}" stroke="#E85D0F" stroke-width="4"/>`;
+    s+=`<text x="${x0+bw/2}" y="${y0+bh+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">Vegg ${v.navn}: ${fm1(v.L)} m · ${r.type.navn}</text>
+        <text x="${x0-30}" y="${y0+bh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-30} ${y0+bh/2})">${fm1(r.H)} m</text></svg>`;
+    $("kl-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["kl-veggA","kl-veggB","kl-veggC","kl-hoyde","kl-fradrag","kl-bordbredde","kl-hjorner","kl-svinn","kl-museband"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-kledning [data-ktype]").forEach(b=>b.addEventListener("click",()=>{
+      st.ktype=b.dataset.ktype;
+      document.querySelectorAll("#view-kledning [data-ktype]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("kl-copyBtn").addEventListener("click",()=>copy(liste,$("kl-copyStatus")));
+    $("kl-priserBtn").addEventListener("click",()=>PriceModal.open(KL.products, "Kledning"));
+    $("kl-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("kledning","Kledning",readForm("kledning"),KL.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
 RK.init();
 PK.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett → riktig verktøy
+KL.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning → riktig verktøy
 </script>
 </body>
 </html>

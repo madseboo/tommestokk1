@@ -11,7 +11,7 @@ create table if not exists public.projects (
 create table if not exists public.calculations (
   id uuid primary key default gen_random_uuid(),
   project_id uuid not null references public.projects(id) on delete cascade,
-  verktoy text not null check (verktoy in ('terrasse','dryppstop','rekkverk','parkett')),
+  verktoy text not null check (verktoy in ('terrasse','dryppstop','rekkverk','parkett','kledning')),
   inndata jsonb not null default '{}'::jsonb,
   resultat jsonb not null default '{}'::jsonb,
   opprettet_at timestamptz not null default now()
