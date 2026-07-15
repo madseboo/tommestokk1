@@ -436,6 +436,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
       </section>
       <section class="card" aria-label="Materialliste">
         <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
         <div class="stats" id="te-stats"></div>
         <table id="te-matTable">
           <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
@@ -529,6 +530,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
       </section>
       <section class="card" aria-label="Materialliste">
         <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
         <div class="stats" id="ds-stats"></div>
         <table id="ds-matTable">
           <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
@@ -637,6 +639,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 
       <section class="card" aria-label="Materialliste">
         <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
         <div class="stats" id="rk-stats"></div>
         <table id="rk-matTable">
           <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
@@ -743,6 +746,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 
       <section class="card" aria-label="Materialliste">
         <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
         <div class="stats" id="pk-stats"></div>
         <table id="pk-matTable">
           <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
@@ -770,7 +774,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
     <p class="sub" id="priceModalSub">Velg butikk for prissammenligning av handlelisten.</p>
     <div class="store-grid" id="priceModalStores"></div>
     <div class="modal-result" id="priceModalResult">
-      <div class="stub-note">Arkitektur-demo: dette er mockpriser, ikke live data fra butikken. Ekte prisoppslag kobles på her senere, uten å endre kalkulatorene.</div>
+      <div class="stub-note">Dette er ikke live butikkpriser — tallene under er de veiledende prisene fra materiallisten din. Ekte prisoppslag kobles på senere. Rediger prisene i materiallisten når du har fått tilbud fra forhandleren.</div>
       <table>
         <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Sum</th></tr></thead>
         <tbody id="priceModalRows"></tbody>
@@ -1575,7 +1579,7 @@ const TE = (()=>{
       Catalog.make("stolpesko_98", r.stolper, {sourceTool:"terrasse",
         note:`én per stolpe — alt.: støpt fundament med søylesko`, estPrice:P.stolpesko_98}),
       Catalog.make(bordId, r.bordLm, {sourceTool:"terrasse",
-        note:`${r.rader} rader à ${fm1(r.B)} m, inkl. ${Math.round(r.svinn*100)} % svinn — fallende lengder`, estPrice:P[bordId]}),
+        note:`≈ ${fm1(r.bordLm*r.bord.dekker)} m² bord — ${r.rader} rader à ${fm1(r.B)} m, inkl. ${Math.round(r.svinn*100)} % svinn, fallende lengder`, estPrice:P[bordId]}),
       Catalog.make(skrueId, r.skruePk, {sourceTool:"terrasse",
         note:`${fmt(r.bordSkruer)} skruer — 2 per bord per bjelke`, estPrice:P[skrueId]}),
     ];
@@ -1694,7 +1698,7 @@ const DS = (()=>{
     const P = st.priser;
     const rows=[];
     const add=(id,antall,kom="")=>{ if(antall>0) rows.push(Catalog.make(id, antall, {note:kom, sourceTool:"dryppstop", estPrice:P[id]})); };
-    add("dryppstop_plate",r.plater,"inkl. svinn");
+    add("dryppstop_plate",r.plater,`≈ ${fm1(r.plater*0.96)} m² plate (à 0,96 m²) — inkl. svinn`);
     add("dryppstop_prof300",r.prof300);
     add("dryppstop_prof150",r.prof150);
     add("dryppstop_skjot",r.skjoter,r.med&&r.skjoter>0?"profilrader over 3 m må skjøtes også med beslag":"");
