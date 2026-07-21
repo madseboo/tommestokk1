@@ -412,6 +412,22 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Sider inn → stolper, sviller, spiler eller tette bord og port ut. Søknadsfri-sjekk mot vei og nabo, med eller uten gang- eller kjøreport.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="innemaling">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <rect x="12" y="10" width="96" height="64" rx="3" fill="#EFF1EE" stroke="#C9CFD4" stroke-width="2"/>
+            <rect x="12" y="10" width="96" height="18" fill="#8E979E" opacity=".45"/>
+            <rect x="20" y="34" width="80" height="34" fill="#E85D0F" opacity=".85"/>
+            <rect x="60" y="16" width="10" height="60" fill="#C9A96A"/>
+            <rect x="52" y="8" width="26" height="12" rx="2" fill="#1C2A33"/>
+            <path d="M24 52 h30" stroke="#C24C0A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Maling innvendig</h3>
+        <p>Rommål inn → liter vegg- og takmaling, grunning og sparkel ut. Areal for vegger, tak eller begge, med ekstra jobb regnet inn for ny gips.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -1492,6 +1508,115 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== MALING INNVENDIG -->
+<main class="view" id="view-innemaling">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Maling innvendig — <em>rommål inn, liter og sparkel ut</em></h1>
+      <p>Regner vegg- og takareal fra rommålene, liter maling etter dekkevne og strøk, og tar
+      med grunning og full sparkling når du maler på ny gips — med rekkefølge- og luftingsråd.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="mi-lengde">Romlengde <span class="hint">(m)</span></label>
+          <input type="number" id="mi-lengde" min="0.5" max="30" step="0.1" value="4.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="mi-bredde">Rombredde <span class="hint">(m)</span></label>
+          <input type="number" id="mi-bredde" min="0.5" max="30" step="0.1" value="3.0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="mi-hoyde">Takhøyde <span class="hint">(m)</span></label>
+          <input type="number" id="mi-hoyde" min="1.8" max="5" step="0.1" value="2.4" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="mi-fradrag">Fradrag <span class="hint">(dører/vinduer, m²)</span></label>
+          <input type="number" id="mi-fradrag" min="0" max="60" step="0.5" value="4" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="mi-flateLabel">Hva skal males</label>
+        <div class="segment" role="group" aria-labelledby="mi-flateLabel">
+          <button type="button" data-flate="vegger" aria-pressed="true">Vegger</button>
+          <button type="button" data-flate="begge" aria-pressed="false">Vegger + tak</button>
+          <button type="button" data-flate="tak" aria-pressed="false">Kun tak</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="mi-underlagLabel">Underlag</label>
+        <div class="segment" role="group" aria-labelledby="mi-underlagLabel">
+          <button type="button" data-underlag="malt" aria-pressed="true">Tidligere malt</button>
+          <button type="button" data-underlag="gips" aria-pressed="false">Ny gips/ubehandlet</button>
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="mi-strok">Antall strøk</label>
+          <select id="mi-strok">
+            <option value="1">1 strøk — kun oppfriskning</option>
+            <option value="2" selected>2 strøk — anbefalt</option>
+            <option value="3">3 strøk — mørk til lys farge</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="mi-dekkevne">Dekkevne <span class="hint">(m²/liter, står på spannet)</span></label>
+          <input type="number" id="mi-dekkevne" min="4" max="14" step="0.5" value="8" inputmode="decimal">
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="mi-sparkel">
+        <span>Ekstra sparkling (hull, skjøter, ujevnheter) — settes automatisk på ved ny gips</span>
+      </label>
+      <div id="mi-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="mi-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Arealoversikt">
+        <h2>Arealoversikt</h2>
+        <div id="mi-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E85D0F"></span>Vegger som males</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Tak som males</span>
+          <span><span class="swatch" style="background:#fff"></span>Fradrag (dører/vinduer)</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="mi-stats"></div>
+        <table id="mi-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="mi-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="mi-copyBtn" type="button">Kopier handleliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="mi-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="mi-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="mi-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1750,6 +1875,12 @@ const Catalog = (()=>{
     gjerde_bord_19:        {category:"kledning", title:"Gjerdebord/spile 19 mm — fritt produktvalg", unit:"lm", defaultPrice:22},
     portbeslag_gang:       {category:"beslag", title:"Portbeslag gangport — hengsler, vrider og lås", unit:"sett", defaultPrice:549},
     portbeslag_kjore:      {category:"beslag", title:"Portbeslag kjøreport — kraftige hengsler, slå og bakkeboltlås", unit:"sett", defaultPrice:1290},
+    /* --- Maling innvendig (enhet: liter/kg) --- */
+    innemaling_vegg:       {category:"maling", title:"Interiørmaling vegg — fritt produktvalg", unit:"liter", defaultPrice:159},
+    takmaling:             {category:"maling", title:"Takmaling helmatt — fritt produktvalg", unit:"liter", defaultPrice:149},
+    grunning_inne:         {category:"maling", title:"Grunning/primer for gips og ubehandlet", unit:"liter", defaultPrice:129},
+    sparkel_inne:          {category:"maling", title:"Sparkel/fyllmasse (spann à 2,5 kg)", unit:"spann", defaultPrice:169},
+    maskeringstape:        {category:"tilbehor", title:"Maskeringstape og tildekkingsplast", unit:"sett", defaultPrice:129},
   };
 
   function get(id){ return DB[id]; }
@@ -2008,7 +2139,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen", gjerde:"Gjerde"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen", gjerde:"Gjerde", innemaling:"Maling innvendig"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -2241,7 +2372,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen", gjerde:"Verktøy · Gjerde"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen", gjerde:"Verktøy · Gjerde", innemaling:"Verktøy · Maling innvendig"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -4064,6 +4195,150 @@ const GJ = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= MALING INNVENDIG ========================= */
+const MI = (()=>{
+  /* Sparkel: full skimming av ny gips ~1,5 kg/m², punktsparkling av malt flate ~0,15 kg/m².
+     Grunning kreves på ny gips/ubehandlet før maling. Spann sparkel à 2,5 kg. */
+  const SPARKEL_GIPS=1.5, SPARKEL_PUNKT=0.15, SPANN_KG=2.5, GRUNN_DEKK=10;
+  const FLATE = {vegger:{navn:"vegger",vegg:true,tak:false}, begge:{navn:"vegger + tak",vegg:true,tak:true}, tak:{navn:"kun tak",vegg:false,tak:true}};
+  const st = {flate:"vegger", underlag:"malt", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const L=Math.max(0.5,parseFloat($("mi-lengde").value)||0), B=Math.max(0.5,parseFloat($("mi-bredde").value)||0);
+    const H=Math.max(1.8,parseFloat($("mi-hoyde").value)||0);
+    const fradrag=Math.max(0,parseFloat($("mi-fradrag").value)||0);
+    const strok=parseInt($("mi-strok").value,10);
+    const dekkevne=Math.max(4,parseFloat($("mi-dekkevne").value)||8);
+    const f=FLATE[st.flate], gips=st.underlag==="gips";
+    const sparkelPaa=$("mi-sparkel").checked || gips;
+
+    const veggBrutto=2*(L+B)*H;
+    const veggAreal=f.vegg ? +Math.max(0,veggBrutto-fradrag).toFixed(1) : 0;
+    const takAreal=f.tak ? +(L*B).toFixed(1) : 0;
+    const totalAreal=+(veggAreal+takAreal).toFixed(1);
+
+    const veggLiter=f.vegg ? +(veggAreal*strok/dekkevne).toFixed(1) : 0;
+    const takLiter=f.tak ? +(takAreal*strok/dekkevne).toFixed(1) : 0;
+    const grunnLiter=gips ? +(totalAreal/GRUNN_DEKK).toFixed(1) : 0;
+    const sparkelKg=sparkelPaa ? Math.ceil(totalAreal*(gips?SPARKEL_GIPS:SPARKEL_PUNKT)) : 0;
+    const sparkelSpann=sparkelKg ? Math.ceil(sparkelKg/SPANN_KG) : 0;
+    return {L,B,H,fradrag,strok,dekkevne,f,gips,sparkelPaa,veggAreal,takAreal,totalAreal,
+            veggLiter,takLiter,grunnLiter,sparkelKg,sparkelSpann};
+  }
+
+  function render(){
+    const r=beregn();
+
+    $("mi-regelsjekk").innerHTML =
+      (r.gips
+        ? `<div class="alert ok"><b>Ny gips:</b> grunning og full sparkling er lagt inn. Grunn først, sparkle skjøter og skruehull, slip, og grunn en gang til på sparkelen før toppstrøkene.</div>`
+        : `<div class="alert ok"><b>Tidligere malt:</b> vask flatene (grovrengjøring), matt ned blanke flater med lett sliping, og flekksparkle hull og riper.</div>`);
+
+    const steps=[
+      {t:`Rom ${fm1(r.L)} × ${fm1(r.B)} m, takhøyde ${fm1(r.H)} m → ${r.f.vegg?`vegger <b>${fm1(r.veggAreal)} m²</b>`:""}${r.f.vegg&&r.f.tak?" · ":""}${r.f.tak?`tak <b>${fm1(r.takAreal)} m²</b>`:""}`,
+       s:`${r.f.vegg?`omkrets ${fm1(2*(r.L+r.B))} m × ${fm1(r.H)} m − ${fm1(r.fradrag)} m² åpninger`:"maler kun taket"}`},
+      ...(r.f.vegg?[
+      {t:`Veggmaling: ${fm1(r.veggAreal)} m² × ${r.strok} strøk ÷ ${String(r.dekkevne).replace(".",",")} m²/l = <b>${fm1(r.veggLiter)} liter</b>`,
+       s:`kjøp nærmeste hele spann — rest er verdifull reserve til senere utbedring`}]:[]),
+      ...(r.f.tak?[
+      {t:`Takmaling: ${fm1(r.takAreal)} m² × ${r.strok} strøk ÷ ${String(r.dekkevne).replace(".",",")} m²/l = <b>${fm1(r.takLiter)} liter</b>`,
+       s:`helmatt takmaling skjuler ujevnheter og gir minst gjenskinn`}]:[]),
+      ...(r.gips?[
+      {t:`Grunning <b>${fm1(r.grunnLiter)} liter</b> over ${fm1(r.totalAreal)} m² + full sparkling <b>${r.sparkelKg} kg</b> (${r.sparkelSpann} spann)`,
+       s:`ny gips suger — uten grunning slipper ikke sparkel og maling ordentlig · ~1,5 kg sparkel/m²`}]
+       :r.sparkelPaa?[
+      {t:`Punktsparkling <b>${r.sparkelKg} kg</b> (${r.sparkelSpann} spann)`,
+       s:`hull, skjøter og riper — slip og støvtørk før maling`}]:[]),
+      {t:`Rekkefølge: ${r.f.tak&&r.f.vegg?"tak først, så vegger":r.f.tak?"tak":"vegger"} — mal vått-i-vått og hold en jevn kant`,
+       s:`luft godt underveis, hold 5–18 °C, og la hvert strøk tørke før neste`},
+    ];
+    $("mi-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[];
+    if (r.f.vegg) rows.push(Catalog.make("innemaling_vegg", Math.max(1,Math.ceil(r.veggLiter)), {sourceTool:"innemaling",
+        note:`${fm1(r.veggAreal)} m² × ${r.strok} strøk — velg farge og glans fritt, ${fm1(r.veggLiter)} l netto`, estPrice:P.innemaling_vegg}));
+    if (r.f.tak) rows.push(Catalog.make("takmaling", Math.max(1,Math.ceil(r.takLiter)), {sourceTool:"innemaling",
+        note:`${fm1(r.takAreal)} m² × ${r.strok} strøk, ${fm1(r.takLiter)} l netto`, estPrice:P.takmaling}));
+    if (r.grunnLiter) rows.push(Catalog.make("grunning_inne", Math.max(1,Math.ceil(r.grunnLiter)), {sourceTool:"innemaling",
+        note:`1 strøk over ${fm1(r.totalAreal)} m² ny gips`, estPrice:P.grunning_inne}));
+    if (r.sparkelSpann) rows.push(Catalog.make("sparkel_inne", r.sparkelSpann, {sourceTool:"innemaling",
+        note:r.gips?`full sparkling ~1,5 kg/m² (${r.sparkelKg} kg)`:`punktsparkling (${r.sparkelKg} kg)`, estPrice:P.sparkel_inne}));
+    rows.push(Catalog.make("maskeringstape", 1, {sourceTool:"innemaling",
+        note:`tape mot lister/karmer og plast på gulv og møbler`, estPrice:P.maskeringstape}));
+    rows.push(Catalog.make("malerutstyr_sett", 1, {sourceTool:"innemaling",
+        note:`ruller, pensler, skaft, malebrett — gjenbrukes prosjekt etter prosjekt`, estPrice:P.malerutstyr_sett}));
+
+    MI.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("mi-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("mi-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("mi-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.totalAreal)}</b><small>m² som males</small></div>
+      ${r.f.vegg?`<div class="stat"><b>${fm1(r.veggLiter)}</b><small>l veggmaling</small></div>`:``}
+      ${r.f.tak?`<div class="stat"><b>${fm1(r.takLiter)}</b><small>l takmaling</small></div>`:``}
+      ${r.grunnLiter?`<div class="stat"><b>${fm1(r.grunnLiter)}</b><small>l grunning</small></div>`:``}
+      ${r.sparkelKg?`<div class="stat"><b>${r.sparkelKg}</b><small>kg sparkel</small></div>`:``}`;
+
+    $("mi-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg merke, farge og glans fritt — juster dekkevne og pris, så regnes literne om.`,
+      `Dekkevnen står på spannet og varierer mye — mørke og sterke farger dekker dårligere og trenger ofte 3 strøk.`,
+      `Mal tak og vegger i dagslys fra siden, så ser du gjenskinn og misser mens malingen er våt.`,
+      r.gips?`Ny gips: slip lett mellom sparkelstrøkene og støvtørk grundig — støv gir dårlig heft.`:`Vask alltid kjøkken- og badevegger for fett og såperester før maling.`,
+      `Ta vare på restmalingen med farge- og romnavn på lokket — uvurderlig ved senere utbedring.`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `HANDLELISTE — Maling innvendig, ${r.f.navn} (${fm1(r.totalAreal)} m²)`,
+      `Rom ${fm1(r.L)} × ${fm1(r.B)} m, takhøyde ${fm1(r.H)} m · ${r.strok} strøk · ${r.gips?"ny gips (grunning + sparkling)":"tidligere malt"}`,
+    ]);
+  }
+
+  /* Enkel arealoversikt: rom sett i perspektiv-lite, vegger/tak markert etter valg */
+  function tegn(r){
+    const W=660,H=300,PAD=50;
+    const rw=W-2*PAD, rh=H-2*PAD, x0=PAD, y0=PAD, dp=44;   // dp = perspektivdybde
+    let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Arealoversikt ${r.f.navn}">`;
+    const vegg=r.f.vegg?"#E85D0F":"#EFF1EE", tak=r.f.tak?"#8E979E":"#EFF1EE";
+    /* tak */
+    s+=`<polygon points="${x0},${y0} ${x0+rw},${y0} ${x0+rw-dp},${y0+dp} ${x0+dp},${y0+dp}" fill="${tak}" opacity="${r.f.tak?.85:.3}" stroke="#C9CFD4"/>`;
+    /* bakvegg */
+    s+=`<rect x="${x0+dp}" y="${y0+dp}" width="${rw-2*dp}" height="${rh-2*dp}" fill="${vegg}" opacity="${r.f.vegg?.85:.3}" stroke="#C9CFD4"/>`;
+    /* venstre og høyre vegg */
+    s+=`<polygon points="${x0},${y0} ${x0+dp},${y0+dp} ${x0+dp},${y0+rh-dp} ${x0},${y0+rh}" fill="${vegg}" opacity="${r.f.vegg?.6:.25}" stroke="#C9CFD4"/>`;
+    s+=`<polygon points="${x0+rw},${y0} ${x0+rw-dp},${y0+dp} ${x0+rw-dp},${y0+rh-dp} ${x0+rw},${y0+rh}" fill="${vegg}" opacity="${r.f.vegg?.6:.25}" stroke="#C9CFD4"/>`;
+    /* gulv (nøytralt) */
+    s+=`<polygon points="${x0},${y0+rh} ${x0+dp},${y0+rh-dp} ${x0+rw-dp},${y0+rh-dp} ${x0+rw},${y0+rh}" fill="#EFF1EE" stroke="#C9CFD4"/>`;
+    /* fradrag antydet som hvitt vindu på bakvegg hvis vegger males */
+    if (r.f.vegg && r.fradrag>0) s+=`<rect x="${x0+dp+30}" y="${y0+dp+24}" width="46" height="38" fill="#fff" stroke="#C9CFD4"/>`;
+    s+=`<text x="${W/2}" y="${H-14}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">Maler ${r.f.navn} — ${fm1(r.totalAreal)} m²</text></svg>`;
+    $("mi-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["mi-lengde","mi-bredde","mi-hoyde","mi-fradrag","mi-strok","mi-dekkevne","mi-sparkel"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-innemaling [data-flate]").forEach(b=>b.addEventListener("click",()=>{
+      st.flate=b.dataset.flate;
+      document.querySelectorAll("#view-innemaling [data-flate]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-innemaling [data-underlag]").forEach(b=>b.addEventListener("click",()=>{
+      st.underlag=b.dataset.underlag;
+      document.querySelectorAll("#view-innemaling [data-underlag]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("mi-copyBtn").addEventListener("click",()=>copy(liste,$("mi-copyStatus")));
+    $("mi-priserBtn").addEventListener("click",()=>PriceModal.open(MI.products, "Maling innvendig"));
+    $("mi-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("innemaling","Maling innvendig",readForm("innemaling"),MI.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -4076,7 +4351,8 @@ ML.init();
 BS.init();
 PL.init();
 GJ.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein / #plen / #gjerde → riktig verktøy
+MI.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein / #plen / #gjerde / #innemaling → riktig verktøy
 </script>
 </body>
 </html>
