@@ -398,6 +398,20 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Areal inn → vekstjord i m³, ferdigplen-ruller eller gressfrø, gjødsel og kalk ut — med vanning- og tidspunktråd.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="gjerde">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g stroke="#8E979E" stroke-width="6"><line x1="18" y1="20" x2="18" y2="74"/><line x1="46" y1="20" x2="46" y2="74"/><line x1="98" y1="20" x2="98" y2="74"/></g>
+            <g stroke="#E6D9B8" stroke-width="3"><line x1="24" y1="26" x2="24" y2="74"/><line x1="30" y1="26" x2="30" y2="74"/><line x1="36" y1="26" x2="36" y2="74"/><line x1="60" y1="26" x2="60" y2="74"/><line x1="86" y1="26" x2="86" y2="74"/></g>
+            <g stroke="#1C2A33" stroke-width="2.5"><line x1="14" y1="34" x2="102" y2="34"/><line x1="14" y1="66" x2="102" y2="66"/></g>
+            <path d="M52 26 L88 62 M52 62 L52 26 L88 26 L88 62 L52 62" fill="none" stroke="#E85D0F" stroke-width="2.5"/>
+          </svg>
+        </span>
+        <h3>Gjerde</h3>
+        <p>Sider inn → stolper, sviller, spiler eller tette bord og port ut. Søknadsfri-sjekk mot vei og nabo, med eller uten gang- eller kjøreport.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -1381,6 +1395,103 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== GJERDE -->
+<main class="view" id="view-gjerde">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Gjerde — <em>sider inn, stolper, bord og port ut</em></h1>
+      <p>Regner stolper og sviller, spiler eller tette bord etter utforming, og port med
+      beslag der du vil ha den — pluss søknadsfri-sjekk som skiller mellom gjerde mot vei
+      (frisikt og 1,5 m-grensen) og gjerde mot nabo (gjerdeloven).</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="field">
+        <label>Sidelengder <span class="hint">(m — sett 0 for å utelate)</span></label>
+        <div class="duo" style="grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" id="gj-sideA" min="0" max="60" step="0.1" value="15.0" inputmode="decimal" aria-label="Side A (m)">
+          <input type="number" id="gj-sideB" min="0" max="60" step="0.1" value="10.0" inputmode="decimal" aria-label="Side B (m)">
+          <input type="number" id="gj-sideC" min="0" max="60" step="0.1" value="0" inputmode="decimal" aria-label="Side C (m)">
+        </div>
+      </div>
+      <div class="field">
+        <label for="gj-hoyde">Høyde <span class="hint">(m, fra terreng)</span></label>
+        <input type="number" id="gj-hoyde" min="0.4" max="2.2" step="0.1" value="1.2" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="gj-typeLabel">Utforming <span class="hint">(styrer bordforbruk og regler)</span></label>
+        <div class="segment" role="group" aria-labelledby="gj-typeLabel">
+          <button type="button" data-gtype="apent" aria-pressed="true">Åpent spilegjerde</button>
+          <button type="button" data-gtype="tett" aria-pressed="false">Tett gjerde</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="gj-portLabel">Port</label>
+        <div class="segment" role="group" aria-labelledby="gj-portLabel">
+          <button type="button" data-port="ingen" aria-pressed="true">Ingen</button>
+          <button type="button" data-port="gang" aria-pressed="false">Gangport (1 m)</button>
+          <button type="button" data-port="kjore" aria-pressed="false">Kjøreport (3 m)</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="gj-bordbredde">Bord-/spilebredde <span class="hint">(mm)</span></label>
+        <input type="number" id="gj-bordbredde" min="45" max="150" step="1" value="98" inputmode="numeric">
+      </div>
+      <label class="check">
+        <input type="checkbox" id="gj-motvei">
+        <span>Gjerdet står mot vei (utløser frisikt- og 1,5 m-sjekk)</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="gj-vind">
+        <span>Vindutsatt tomt — tettere stolper (c/c 1,5 m) og støpt fundament</span>
+      </label>
+      <div id="gj-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="gj-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Gjerdeoppriss">
+        <h2>Gjerdeoppriss <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— lengste side</span></h2>
+        <div id="gj-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#8E979E"></span>Stolpe</span>
+          <span><span class="swatch" style="background:#E6D9B8"></span>Spiler/bord</span>
+          <span><span class="swatch" style="background:#1C2A33"></span>Sviller</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Port</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="gj-stats"></div>
+        <table id="gj-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="gj-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="gj-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="gj-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="gj-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="gj-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1635,6 +1746,10 @@ const Catalog = (()=>{
     vekstjord:             {category:"masse", title:"Vekstjord/anleggsjord (bigbag ≈ 1 m³)", unit:"m³", defaultPrice:650},
     plengjodsel:           {category:"hage", title:"Plengjødsel/startgjødsel", unit:"kg", defaultPrice:35},
     hagekalk:              {category:"hage", title:"Hagekalk", unit:"kg", defaultPrice:12},
+    /* --- Gjerde --- */
+    gjerde_bord_19:        {category:"kledning", title:"Gjerdebord/spile 19 mm — fritt produktvalg", unit:"lm", defaultPrice:22},
+    portbeslag_gang:       {category:"beslag", title:"Portbeslag gangport — hengsler, vrider og lås", unit:"sett", defaultPrice:549},
+    portbeslag_kjore:      {category:"beslag", title:"Portbeslag kjøreport — kraftige hengsler, slå og bakkeboltlås", unit:"sett", defaultPrice:1290},
   };
 
   function get(id){ return DB[id]; }
@@ -1893,7 +2008,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen", gjerde:"Gjerde"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -2126,7 +2241,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen", gjerde:"Verktøy · Gjerde"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -3768,6 +3883,187 @@ const PL = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= GJERDE ========================= */
+const GJ = (()=>{
+  /* SAK10 §4-1: gjerde/innhegning mot vei er søknadsfritt inntil 1,5 m med åpent, lett
+     uttrykk — men må aldri sperre frisikten. Mot nabo gir gjerdeloven §6 rett til å gjerde. */
+  const PORT = {ingen:{navn:"ingen port", bredde:0, blader:0}, gang:{navn:"gangport", bredde:1.0, blader:1}, kjore:{navn:"kjøreport", bredde:3.0, blader:2}};
+  const UTFORMING = {
+    apent: {navn:"Åpent spilegjerde", gap:0.030, aapen:true},   // 30 mm mellom spilene
+    tett:  {navn:"Tett gjerde",       gap:-0.010, aapen:false},  // 10 mm omlegg
+  };
+  const NEDSTOPING = 0.6;
+  const st = {gtype:"apent", port:"ingen", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const sider = ["gj-sideA","gj-sideB","gj-sideC"]
+      .map((id,i)=>({navn:"ABC"[i], L:Math.max(0,parseFloat($(id).value)||0)}))
+      .filter(s=>s.L>0.2);
+    const H = Math.max(0.4,parseFloat($("gj-hoyde").value)||0);
+    const bordB = Math.max(45,parseFloat($("gj-bordbredde").value)||98);
+    const motVei = $("gj-motvei").checked, vind = $("gj-vind").checked;
+    const u = UTFORMING[st.gtype], p = PORT[st.port];
+    const cc = vind ? 1.5 : 1.8;
+    const totalL = +(sider.reduce((a,s)=>a+s.L,0)).toFixed(1);
+
+    let stolper = sider.reduce((a,s)=>a+Math.ceil(s.L/cc)+1, 0);
+    if (sider.length>1) stolper -= (sider.length-1);        // delte hjørnestolper
+    if (p.blader) stolper += 1;                             // ekstra dedikert portstolpe
+    const stolpeL = +(H+NEDSTOPING).toFixed(2), stolpeLm = +(stolper*stolpeL).toFixed(1);
+
+    const svillRader = H>1.5 ? 3 : 2;
+    const svillLm = Math.ceil(svillRader*totalL*1.05);
+
+    const ccBord = (bordB + u.gap*1000)/1000;              // senteravstand bord/spile (m)
+    const bordAntall = Math.ceil(totalL/ccBord);           // hele løpet, porten fylles med samme bord
+    const bordLm = Math.ceil(bordAntall*H*1.05);
+    const skruer = bordAntall*svillRader*2, skruerPk = Math.ceil(skruer/250);
+
+    /* Port: egen ramme (omkrets + skråbånd per blad) + beslag */
+    const bladB = p.blader ? p.bredde/p.blader : 0;
+    const rammeLm = p.blader ? Math.ceil((2*(bladB+H) + Math.hypot(bladB,H)) * p.blader * 1.05) : 0;
+
+    /* Regelstatus */
+    let regel;
+    if (motVei){
+      if (H<=1.5 && u.aapen) regel={ok:true,  tekst:`<b>Søknadsfri mot vei:</b> åpent gjerde inntil 1,5 m er normalt unntatt — men det <b>må ikke sperre frisikten</b> mot veien.`};
+      else if (H>1.5)        regel={ok:false, tekst:`Gjerde mot vei over 1,5 m er normalt <b>søknadspliktig</b> — sjekk med kommunen.`};
+      else                   regel={ok:false, tekst:`Tett gjerde mot vei kan bryte <b>frisiktkravet</b> og være søknadspliktig — åpent uttrykk under 1,5 m er tryggest.`};
+    } else {
+      regel={ok:true, tekst:`<b>Mot nabo:</b> gjerdeloven §6 gir deg rett til å gjerde inn egen eiendom. Naboen kan protestere ved urimelig ulempe (sol/lys/sikt) — snakk sammen først.`};
+    }
+    return {sider,H,bordB,motVei,vind,u,p,cc,totalL,stolper,stolpeL,stolpeLm,svillRader,svillLm,
+            ccBord,bordAntall,bordLm,skruer,skruerPk,bladB,rammeLm,regel};
+  }
+
+  function render(){
+    const r = beregn();
+    if (!r.sider.length){
+      $("gj-dimSteps").innerHTML = `<div class="alert">Angi minst én sidelengde over 0,2 m.</div>`;
+      $("gj-planSvg").innerHTML=""; $("gj-stats").innerHTML="";
+      $("gj-matTable").querySelector("tbody").innerHTML=""; $("gj-notes").innerHTML="";
+      GJ.products = []; liste=""; return;
+    }
+
+    $("gj-regelsjekk").innerHTML =
+      `<div class="alert ${r.regel.ok?"ok":"warn"}">${r.regel.tekst}<span style="display:block;font-size:.75rem;margin-top:.25rem">Byggesaksforskriften §4-1 / gjerdeloven · arealplan og eventuelle byggegrenser gjelder uansett</span></div>`
+      + (r.vind?`<div class="alert" style="margin-top:.5rem"><b>Vindutsatt:</b> stolper c/c 1,5 m og frostfritt støpt fundament — særlig ved tett gjerde som tar mye vind.</div>`:``);
+
+    const steps=[
+      {t:`${r.sider.map(s=>`${fm1(s.L)}`).join(" + ")} = <b>${fm1(r.totalL)} m gjerde</b>, høyde ${fm1(r.H)} m → ${r.regel.ok?`<b>${r.motVei?"søknadsfri mot vei":"i orden mot nabo"}</b>`:`<b>krever tiltak</b> (se regelsjekk)`}`,
+       s:`${r.p.navn!=="ingen port"?`inkl. ${r.p.navn} (${fm1(r.p.bredde)} m)`:"uten port"}${r.sider.length>1?" · hjørnestolper deles":""}`},
+      {t:`Stolper c/c ${fm1(r.cc)} m → <b>${r.stolper} stolper</b> à ${fm1(r.stolpeL)} m (${Math.round(NEDSTOPING*100)} cm under terreng)`,
+       s:`98 × 98 imp.${r.p.blader?` · +1 ekstra portstolpe — portstolper bør alltid støpes`:""}${r.vind?" · vindutsatt c/c 1,5 m":""}`},
+      {t:`${r.svillRader} sviller 48 × 98 à ${fm1(r.totalL)} m → <b>${fmt(r.svillLm)} lm</b>`,
+       s:`${r.H>1.5?"3 sviller over 1,5 m høyde":"topp- og bunnsvill"} — skjøtes over stolpe`},
+      {t:`${r.u.navn}: bord c/c ${Math.round(r.ccBord*1000)} mm → <b>${r.bordAntall} bord</b> à ${fm1(r.H)} m = ${fmt(r.bordLm)} lm`,
+       s:r.u.aapen?`30 mm luft mellom spilene — lett uttrykk, slipper gjennom vind og lys`:`10 mm omlegg — full skjerming, men tar mer vind`},
+      ...(r.p.blader?[
+      {t:`Port: <b>${r.p.blader} portblad</b> à ${fm1(r.bladB)} m → ramme ${fmt(r.rammeLm)} lm + <b>beslagssett</b>`,
+       s:`ramme med diagonalt skråbånd mot heng — bladene kles med samme bord som gjerdet`}]:[]),
+      {t:`${fmt(r.skruer)} skruer → <b>${r.skruerPk} pk</b>`,
+       s:`2 skruer per bord per svill`},
+    ];
+    $("gj-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[
+      Catalog.make("stolpe_98x98_imp", r.stolpeLm, {sourceTool:"gjerde",
+        note:`${r.stolper} stk à ${fm1(r.stolpeL)} m — ${Math.round(NEDSTOPING*100)} cm under terreng`, estPrice:P.stolpe_98x98_imp}),
+      Catalog.make("losholt_48x98", r.svillLm, {sourceTool:"gjerde",
+        note:`${r.svillRader} sviller à ${fm1(r.totalL)} m, inkl. 5 % kapp`, estPrice:P.losholt_48x98}),
+      Catalog.make("gjerde_bord_19", r.bordLm + r.rammeLm, {sourceTool:"gjerde",
+        note:`${r.bordAntall} bord à ${fm1(r.H)} m${r.rammeLm?` + ${fmt(r.rammeLm)} lm portramme`:""} — ${r.u.navn.toLowerCase()}`, estPrice:P.gjerde_bord_19}),
+      Catalog.make("treskrue_42x55_a4", r.skruerPk, {sourceTool:"gjerde",
+        note:`${fmt(r.skruer)} skruer — varmforsinket eller rustfri`, estPrice:P.treskrue_42x55_a4}),
+      Catalog.make("konstruksjonsskrue_6x90", 1, {sourceTool:"gjerde",
+        note:`sviller mot stolper og portramme`, estPrice:P.konstruksjonsskrue_6x90}),
+    ];
+    if (st.port==="gang") rows.push(Catalog.make("portbeslag_gang", 1, {sourceTool:"gjerde",
+        note:`hengsler, vrider og lås til gangporten`, estPrice:P.portbeslag_gang}));
+    if (st.port==="kjore") rows.push(Catalog.make("portbeslag_kjore", 1, {sourceTool:"gjerde",
+        note:`kraftige hengsler, slå og bakkeboltlås til kjøreporten`, estPrice:P.portbeslag_kjore}));
+
+    GJ.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("gj-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("gj-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("gj-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.totalL)}</b><small>lm gjerde</small></div>
+      <div class="stat"><b>${r.stolper}</b><small>stolper</small></div>
+      <div class="stat"><b>${r.bordAntall}</b><small>bord/spiler</small></div>
+      <div class="stat"><b>${fmt(r.bordLm)}</b><small>lm bord</small></div>
+      <div class="stat"><b>${r.p.blader||0}</b><small>portblad</small></div>`;
+
+    $("gj-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg bordtype og behandling fritt — juster bordbredde og pris, så regnes alt om.`,
+      `Portstolper må støpes frostfritt — en port som siger, er den vanligste gjerdefeilen. Sett gjerne en diagonal jordstøtte.`,
+      r.u.aapen?`Åpent spilegjerde: hold jevn åpning med en kappet klosse som avstandslære.`:`Tett gjerde tar mye vind — vurder litt luft i bunn og støpte stolper.`,
+      `Hold bordene 5–10 cm over terreng så endeveden ikke suger fukt.`,
+      r.motVei?`Mot vei: hold frisiktsonen i kryss og avkjørsler fri — kommunen kan kreve lavere gjerde der.`:`Snakk med naboen før du setter gjerdet i eller nær grensen.`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Gjerde ${fm1(r.totalL)} lm, høyde ${fm1(r.H)} m (${r.u.navn.toLowerCase()})`,
+      `${r.sider.map(s=>`${s.navn}=${fm1(s.L)} m`).join(", ")} · ${r.p.navn} · ${r.regel.ok?(r.motVei?"søknadsfri mot vei":"mot nabo"):"OBS: se regelsjekk"}`,
+    ]);
+  }
+
+  /* Gjerdeoppriss: lengste side, med port markert til høyre hvis valgt */
+  function tegn(r){
+    const s0 = [...r.sider].sort((a,b)=>b.L-a.L)[0];
+    const visL = s0.L, W=660,PAD=52,sk=Math.min((W-2*PAD)/visL,150/r.H);
+    const bw=visL*sk,bh=r.H*sk,Hsvg=bh+2*PAD+14,x0=(W-bw)/2,y0=PAD;
+    const portPx = r.p.bredde*sk, feltPx = bw-portPx;
+    let s=`<svg viewBox="0 0 ${W} ${Hsvg}" role="img" aria-label="Gjerdeoppriss ${r.u.navn}${r.p.blader?` med ${r.p.navn}`:""}">`;
+    s+=`<line x1="${x0-20}" y1="${y0+bh}" x2="${x0+bw+20}" y2="${y0+bh}" stroke="#8E979E" stroke-width="2"/>`;
+    /* sviller */
+    const raderY = r.svillRader===2 ? [0.18,0.82] : [0.12,0.5,0.88];
+    raderY.forEach(f=>{ const y=y0+bh*f;
+      s+=`<line x1="${x0}" y1="${y}" x2="${x0+feltPx}" y2="${y}" stroke="#1C2A33" stroke-width="3"/>`; });
+    /* spiler/bord i gjerdefeltet */
+    const stepX = r.ccBord*sk, bordPx=Math.max(r.bordB/1000*sk,2);
+    for(let x=x0;x<x0+feltPx-1;x+=stepX)
+      s+=`<rect x="${x}" y="${y0}" width="${Math.min(bordPx, x0+feltPx-x)}" height="${bh}" fill="#E6D9B8" stroke="#C9CFD4" stroke-width=".5"/>`;
+    /* port til høyre */
+    if (r.p.blader){
+      s+=`<rect x="${x0+feltPx+3}" y="${y0-3}" width="${portPx-6}" height="${bh+3}" fill="none" stroke="#E85D0F" stroke-width="2.5"/>`;
+      s+=`<line x1="${x0+feltPx+3}" y1="${y0+bh}" x2="${x0+feltPx+portPx-3}" y2="${y0-3}" stroke="#E85D0F" stroke-width="1.5"/>`;
+      if (r.p.blader===2) s+=`<line x1="${x0+feltPx+portPx-3}" y1="${y0+bh}" x2="${x0+feltPx+3}" y2="${y0-3}" stroke="#E85D0F" stroke-width="1.5"/>`;
+    }
+    /* stolper */
+    const nS=Math.ceil(visL/r.cc)+1, sp=bw/(nS-1);
+    for(let i=0;i<nS;i++){ const x=x0+Math.min(i*sp,bw);
+      s+=`<rect x="${x-4}" y="${y0-5}" width="8" height="${bh+15}" fill="#8E979E" rx="2"/>`; }
+    s+=`<text x="${x0+bw/2}" y="${y0+bh+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">Side ${s0.navn}: ${fm1(s0.L)} m · ${r.u.navn}${r.p.blader?` + ${r.p.navn}`:""}</text>
+        <text x="${x0-30}" y="${y0+bh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-30} ${y0+bh/2})">${fm1(r.H)} m</text></svg>`;
+    $("gj-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["gj-sideA","gj-sideB","gj-sideC","gj-hoyde","gj-bordbredde","gj-motvei","gj-vind"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-gjerde [data-gtype]").forEach(b=>b.addEventListener("click",()=>{
+      st.gtype=b.dataset.gtype;
+      document.querySelectorAll("#view-gjerde [data-gtype]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-gjerde [data-port]").forEach(b=>b.addEventListener("click",()=>{
+      st.port=b.dataset.port;
+      document.querySelectorAll("#view-gjerde [data-port]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("gj-copyBtn").addEventListener("click",()=>copy(liste,$("gj-copyStatus")));
+    $("gj-priserBtn").addEventListener("click",()=>PriceModal.open(GJ.products, "Gjerde"));
+    $("gj-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("gjerde","Gjerde",readForm("gjerde"),GJ.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -3779,7 +4075,8 @@ PG.init();
 ML.init();
 BS.init();
 PL.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein / #plen → riktig verktøy
+GJ.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein / #plen / #gjerde → riktig verktøy
 </script>
 </body>
 </html>
