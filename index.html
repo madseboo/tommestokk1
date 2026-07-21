@@ -383,6 +383,21 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Areal inn → tonn pukk og settesand, stein, fugesand, fiberduk og kantstein ut. Lagoppbygging etter bruk — gangareal eller kjørbar oppkjørsel.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="plen">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <rect x="8" y="30" width="104" height="46" rx="3" fill="#7FB88F"/>
+            <g stroke="#1E7A46" stroke-width="2"><line x1="8" y1="45" x2="112" y2="45"/><line x1="8" y1="60" x2="112" y2="60"/></g>
+            <g stroke="#1E7A46" stroke-width="2.5" stroke-linecap="round"><line x1="20" y1="28" x2="20" y2="20"/><line x1="28" y1="28" x2="26" y2="21"/><line x1="36" y1="28" x2="38" y2="20"/><line x1="60" y1="28" x2="60" y2="20"/><line x1="68" y1="28" x2="66" y2="21"/><line x1="90" y1="28" x2="92" y2="20"/></g>
+            <circle cx="98" cy="36" r="10" fill="#E6D9B8" stroke="#C9A96A" stroke-width="2"/>
+            <path d="M98 36 m-10 0 a10 10 0 0 1 20 0" fill="none" stroke="#C9A96A" stroke-width="2"/>
+          </svg>
+        </span>
+        <h3>Plen</h3>
+        <p>Areal inn → vekstjord i m³, ferdigplen-ruller eller gressfrø, gjødsel og kalk ut — med vanning- og tidspunktråd.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -1285,6 +1300,87 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== PLEN -->
+<main class="view" id="view-plen">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Plen — <em>areal inn, jord og gress ut</em></h1>
+      <p>Regner vekstjord i m³ etter jordlaget du velger, ferdigplen i ruller eller gressfrø
+      i kilo, pluss gjødsel og kalk etter forbruksnorm — med råd om tidspunkt og vanning.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="pl-lengde">Lengde <span class="hint">(m)</span></label>
+          <input type="number" id="pl-lengde" min="1" max="100" step="0.5" value="10" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="pl-bredde">Bredde <span class="hint">(m)</span></label>
+          <input type="number" id="pl-bredde" min="1" max="100" step="0.5" value="8" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="pl-metodeLabel">Metode</label>
+        <div class="segment" role="group" aria-labelledby="pl-metodeLabel">
+          <button type="button" data-metode="ferdigplen" aria-pressed="true">Ferdigplen</button>
+          <button type="button" data-metode="saaing" aria-pressed="false">Så selv</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="pl-jordlag">Nytt jordlag <span class="hint">(cm — 10 anbefalt, 0 hvis jorda er god)</span></label>
+        <input type="number" id="pl-jordlag" min="0" max="30" step="1" value="10" inputmode="numeric">
+      </div>
+      <label class="check">
+        <input type="checkbox" id="pl-gjodsel" checked>
+        <span>Ta med startgjødsel og kalk</span>
+      </label>
+      <div id="pl-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="pl-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Leggeplan">
+        <h2>Leggeplan</h2>
+        <div id="pl-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#7FB88F"></span>Plen</span>
+          <span><span class="swatch" style="background:#1E7A46"></span>Baner/ruller i forbandt</span>
+          <span><span class="swatch" style="background:#C9A96A"></span>Vekstjord under</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="pl-stats"></div>
+        <table id="pl-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="pl-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="pl-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="pl-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="pl-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="pl-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1533,6 +1629,12 @@ const Catalog = (()=>{
     fugesand_25kg:         {category:"masse", title:"Fugesand 0–2 mm (sekk à 25 kg)", unit:"sekk", defaultPrice:89},
     fiberduk_25m2:         {category:"duk", title:"Fiberduk klasse 3 (rull à 25 m²)", unit:"rull", defaultPrice:399},
     kantstein_betong:      {category:"stein", title:"Kantstein/kantsikring betong", unit:"lm", defaultPrice:149},
+    /* --- Plen --- */
+    ferdigplen_rull:       {category:"hage", title:"Ferdigplen (rull à 1 m², 40 × 250 cm)", unit:"m²", defaultPrice:69},
+    gressfro_blanding:     {category:"hage", title:"Gressfrø plenblanding — fritt produktvalg", unit:"kg", defaultPrice:199},
+    vekstjord:             {category:"masse", title:"Vekstjord/anleggsjord (bigbag ≈ 1 m³)", unit:"m³", defaultPrice:650},
+    plengjodsel:           {category:"hage", title:"Plengjødsel/startgjødsel", unit:"kg", defaultPrice:35},
+    hagekalk:              {category:"hage", title:"Hagekalk", unit:"kg", defaultPrice:12},
   };
 
   function get(id){ return DB[id]; }
@@ -1791,7 +1893,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -2024,7 +2126,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -3535,6 +3637,137 @@ const BS = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= PLEN ========================= */
+const PL = (()=>{
+  /* Forbruksnormer: ferdigplen-ruller à 1 m² (+5 % kapp), gressfrø ~2,5 kg/100 m²,
+     gjødsel 3-4 kg/100 m², kalk 5-10 kg/100 m². Jordvolum +10 % fordi jorda setter seg. */
+  const JORD_SETTING=1.1, RULL_SVINN=1.05, FRO_KG=0.025, GJODSEL_KG=0.035, KALK_KG=0.075;
+  const st = {metode:"ferdigplen", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const L=Math.max(1,parseFloat($("pl-lengde").value)||0), B=Math.max(1,parseFloat($("pl-bredde").value)||0);
+    const areal=+(L*B).toFixed(1);
+    const jordCm=Math.max(0,parseFloat($("pl-jordlag").value)||0);
+    const jordM3=+(areal*jordCm/100*JORD_SETTING).toFixed(1);
+    const ruller=Math.ceil(areal*RULL_SVINN);
+    const froKg=Math.max(1,Math.ceil(areal*FRO_KG));
+    const medGjodsel=$("pl-gjodsel").checked;
+    const gjodselKg=medGjodsel?Math.max(1,Math.ceil(areal*GJODSEL_KG)):0;
+    const kalkKg=medGjodsel?Math.max(1,Math.ceil(areal*KALK_KG)):0;
+    return {L,B,areal,jordCm,jordM3,ruller,froKg,medGjodsel,gjodselKg,kalkKg};
+  }
+
+  function render(){
+    const r=beregn();
+
+    $("pl-regelsjekk").innerHTML =
+      `<div class="alert ok"><b>Tidspunkt:</b> mai–juni eller august–september gir best etablering. Vanning er kritisk de første 2–3 ukene.</div>`
+      + (st.metode==="ferdigplen"
+        ? `<div class="alert" style="margin-top:.5rem"><b>Ferdigplen er ferskvare:</b> legg rullene innen 24 timer etter levering — bestill til dagen du skal legge.</div>`
+        : ``);
+
+    const steps=[
+      {t:r.jordCm>0
+        ?`Areal ${fm1(r.L)} × ${fm1(r.B)} m = <b>${fm1(r.areal)} m²</b> → ${r.jordCm} cm vekstjord × 1,1 = <b>${fm1(r.jordM3)} m³</b>`
+        :`Areal ${fm1(r.L)} × ${fm1(r.B)} m = <b>${fm1(r.areal)} m²</b> — uten nytt jordlag (eksisterende jord rakes og jevnes)`,
+       s:r.jordCm>0?`+10 % fordi jorda setter seg · bigbag ≈ 1 m³ · jevnes og tromles lett før legging/såing`:`fjern stein og røtter, rak til jevn overflate og tromle lett`},
+      {t:st.metode==="ferdigplen"
+        ?`Ferdigplen: ${fm1(r.areal)} m² + 5 % kapp = <b>${r.ruller} ruller</b> à 1 m²`
+        :`Gressfrø: ${fm1(r.areal)} m² × 2,5 kg/100 m² = <b>${r.froKg} kg</b>`,
+       s:st.metode==="ferdigplen"?`ruller à 40 × 250 cm — legges i forbandt, tett kant i kant uten overlapp`:`så halvparten på langs og halvparten på tvers for jevn dekning — rak inn og tromle`},
+      ...(r.medGjodsel?[
+      {t:`Startgjødsel <b>${r.gjodselKg} kg</b> (3,5 kg/100 m²) · hagekalk <b>${r.kalkKg} kg</b> (7,5 kg/100 m²)`,
+       s:`gjødsle i vekstsesongen: vår, juni og sensommer — kalk motvirker sur jord og mose`}]:[]),
+      {t:`Vanning: grundig første dag, deretter daglig i 2–3 uker til gresset har rotfeste`,
+       s:st.metode==="ferdigplen"?`første klipp etter ca. 1 uke, på høyeste innstilling`:`første klipp når gresset er 8–10 cm`},
+    ];
+    $("pl-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[];
+    if (r.jordCm>0) rows.push(Catalog.make("vekstjord", r.jordM3, {sourceTool:"plen",
+        note:`${r.jordCm} cm lag over ${fm1(r.areal)} m², inkl. 10 % setting`, estPrice:P.vekstjord}));
+    if (st.metode==="ferdigplen") rows.push(Catalog.make("ferdigplen_rull", r.ruller, {sourceTool:"plen",
+        note:`${fm1(r.areal)} m² + 5 % kapp — bestill levering til leggedagen`, estPrice:P.ferdigplen_rull}));
+    else rows.push(Catalog.make("gressfro_blanding", r.froKg, {sourceTool:"plen",
+        note:`~2,5 kg per 100 m² — velg blanding etter sol/skygge og slitasje`, estPrice:P.gressfro_blanding}));
+    if (r.gjodselKg) rows.push(Catalog.make("plengjodsel", r.gjodselKg, {sourceTool:"plen",
+        note:`startdose — gjenta med 2 kg/100 m² i juni og på sensommeren`, estPrice:P.plengjodsel}));
+    if (r.kalkKg) rows.push(Catalog.make("hagekalk", r.kalkKg, {sourceTool:"plen",
+        note:`motvirker sur jord og mose — kan spres samtidig med gjødselen`, estPrice:P.hagekalk}));
+
+    PL.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("pl-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("pl-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("pl-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.areal)}</b><small>m² plen</small></div>
+      ${r.jordCm>0?`<div class="stat"><b>${fm1(r.jordM3)}</b><small>m³ vekstjord</small></div>`:``}
+      <div class="stat"><b>${st.metode==="ferdigplen"?r.ruller:r.froKg}</b><small>${st.metode==="ferdigplen"?"ruller":"kg frø"}</small></div>
+      ${r.gjodselKg?`<div class="stat"><b>${r.gjodselKg}</b><small>kg gjødsel</small></div>`:``}`;
+
+    $("pl-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg jord, frøblanding eller plenleverandør fritt — juster pris, så regnes totalen om.`,
+      st.metode==="ferdigplen"?`Legg rullene i forbandt (som murstein) og skjøtene tett — kapp med tapetkniv langs kanter.`:`Ikke så på varme, tørre dager — frøene trenger jevn fukt for å spire (10–20 dager).`,
+      `Gå på planker, ikke rett på ny jord eller nylagt plen.`,
+      `Skrå overganger mot bed og kanter gjør kantklippingen enklere.`,
+      r.jordCm===0?`Uten nytt jordlag: luft/vertikalskjær gammel jord og rak inn litt kompost før du ${st.metode==="ferdigplen"?"legger":"sår"}.`:``,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Plen ${fm1(r.L)} × ${fm1(r.B)} m (${fm1(r.areal)} m², ${st.metode==="ferdigplen"?"ferdigplen":"såing"})`,
+      `${r.jordCm>0?`${r.jordCm} cm vekstjord (${fm1(r.jordM3)} m³) · `:``}vanning daglig i 2–3 uker`,
+    ]);
+  }
+
+  /* Leggeplan: baner à 40 cm i forbandt (ferdigplen) eller sådd flate */
+  function tegn(r){
+    const W=660,PAD=46,sk=Math.min((W-2*PAD)/r.L,280/r.B);
+    const bw=r.L*sk,bh=r.B*sk,Hsvg=bh+2*PAD+10,x0=(W-bw)/2,y0=PAD;
+    let s=`<svg viewBox="0 0 ${W} ${Hsvg}" role="img" aria-label="Plen ${fm1(r.areal)} m²">`;
+    s+=`<rect x="${x0}" y="${y0}" width="${bw}" height="${bh}" fill="#7FB88F" stroke="#1E7A46"/>`;
+    if (st.metode==="ferdigplen"){
+      const baneH=Math.max(0.4*sk,6), rullW=Math.max(2.5*sk,20);
+      let rad=0;
+      for(let y=y0;y<y0+bh-1;y+=baneH){
+        const h=Math.min(baneH,y0+bh-y);
+        s+=`<line x1="${x0}" y1="${y+h}" x2="${x0+bw}" y2="${y+h}" stroke="#1E7A46" stroke-width="1.2"/>`;
+        const offset=(rad%2)*rullW/2;
+        for(let x=x0+offset;x<x0+bw-1;x+=rullW)
+          s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+h}" stroke="#1E7A46" stroke-width="1"/>`;
+        rad++;
+      }
+    } else {
+      for(let i=0;i<Math.min(r.areal*3,400);i++){
+        const x=x0+4+Math.random()*(bw-8), y=y0+4+Math.random()*(bh-8);
+        s+=`<circle cx="${x}" cy="${y}" r="1.1" fill="#1E7A46"/>`;
+      }
+    }
+    s+=`<text x="${x0+bw/2}" y="${y0+bh+28}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">${fm1(r.L)} m${st.metode==="ferdigplen"?` · baner à 40 cm i forbandt`:` · sås i to retninger`}</text>
+        <text x="${x0-26}" y="${y0+bh/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${x0-26} ${y0+bh/2})">${fm1(r.B)} m</text></svg>`;
+    $("pl-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["pl-lengde","pl-bredde","pl-jordlag","pl-gjodsel"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-plen [data-metode]").forEach(b=>b.addEventListener("click",()=>{
+      st.metode=b.dataset.metode;
+      document.querySelectorAll("#view-plen [data-metode]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("pl-copyBtn").addEventListener("click",()=>copy(liste,$("pl-copyStatus")));
+    $("pl-priserBtn").addEventListener("click",()=>PriceModal.open(PL.products, "Plen"));
+    $("pl-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("plen","Plen",readForm("plen"),PL.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -3545,7 +3778,8 @@ LV.init();
 PG.init();
 ML.init();
 BS.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein → riktig verktøy
+PL.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein / #plen → riktig verktøy
 </script>
 </body>
 </html>
