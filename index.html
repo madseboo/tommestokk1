@@ -366,6 +366,23 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Veggmål inn → liter og spann ut. Dekkevne etter behandling og underlag, grunning ved ubehandlet treverk, husvask og værvindu-råd.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="belegningsstein">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g fill="#E6D9B8" stroke="#C9CFD4" stroke-width="1.5">
+              <rect x="8" y="8" width="24" height="16" rx="2"/><rect x="36" y="8" width="24" height="16" rx="2"/><rect x="64" y="8" width="24" height="16" rx="2"/><rect x="92" y="8" width="20" height="16" rx="2"/>
+              <rect x="8" y="28" width="16" height="16" rx="2"/><rect x="28" y="28" width="24" height="16" rx="2"/><rect x="56" y="28" width="24" height="16" rx="2"/><rect x="84" y="28" width="28" height="16" rx="2"/>
+            </g>
+            <rect x="8" y="50" width="104" height="10" fill="#C9A96A"/>
+            <g fill="#8E979E"><circle cx="16" cy="70" r="4"/><circle cx="30" cy="74" r="3"/><circle cx="44" cy="69" r="4"/><circle cx="58" cy="73" r="3"/><circle cx="72" cy="70" r="4"/><circle cx="86" cy="74" r="3"/><circle cx="100" cy="70" r="4"/></g>
+            <line x1="8" y1="62" x2="112" y2="62" stroke="#E85D0F" stroke-width="2.5"/>
+          </svg>
+        </span>
+        <h3>Belegningsstein &amp; grus</h3>
+        <p>Areal inn → tonn pukk og settesand, stein, fugesand, fiberduk og kantstein ut. Lagoppbygging etter bruk — gangareal eller kjørbar oppkjørsel.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -1185,6 +1202,89 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== BELEGNINGSSTEIN -->
+<main class="view" id="view-belegningsstein">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Belegningsstein &amp; grus — <em>areal inn, tonn og stein ut</em></h1>
+      <p>Setter lagoppbyggingen etter bruken (gangareal eller kjørbar oppkjørsel), regner
+      utgraving i m³ og pukk og settesand i tonn med komprimeringsmonn — pluss stein,
+      fugesand, fiberduk og kantsikring.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="bs-lengde">Lengde <span class="hint">(m)</span></label>
+          <input type="number" id="bs-lengde" min="0.5" max="50" step="0.1" value="8.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="bs-bredde">Bredde <span class="hint">(m)</span></label>
+          <input type="number" id="bs-bredde" min="0.5" max="30" step="0.1" value="3.5" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="bs-brukLabel">Bruk <span class="hint">(styrer lagoppbygging og steintykkelse)</span></label>
+        <div class="segment" role="group" aria-labelledby="bs-brukLabel">
+          <button type="button" data-bruk="gang" aria-pressed="false">Gangareal/platting</button>
+          <button type="button" data-bruk="kjorbar" aria-pressed="true">Kjørbar oppkjørsel</button>
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="bs-mykgrunn">
+        <span>Myk grunn (leire/matjord) — 10 cm ekstra bærelag legges inn</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="bs-kant" checked>
+        <span>Ta med kantsikring rundt flaten (trekk selv fra sider som møter husvegg eller fast kant)</span>
+      </label>
+      <div id="bs-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="bs-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Lagoppbygging">
+        <h2>Lagoppbygging <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— tverrsnitt</span></h2>
+        <div id="bs-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E6D9B8"></span>Belegningsstein</span>
+          <span><span class="swatch" style="background:#C9A96A"></span>Settesand</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Bærelag pukk</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Fiberduk</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="bs-stats"></div>
+        <table id="bs-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="bs-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="bs-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="bs-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="bs-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="bs-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1425,6 +1525,14 @@ const Catalog = (()=>{
     grunningsolje:         {category:"maling", title:"Grunningsolje/heftgrunn", unit:"liter", defaultPrice:120},
     husvask_konsentrat:    {category:"maling", title:"Husvask/kraftvask konsentrat (flaske à 1 L)", unit:"stk", defaultPrice:149},
     malerutstyr_sett:      {category:"tilbehor", title:"Malerutstyr — ruller, pensler, skaft, presenning", unit:"sett", defaultPrice:399},
+    /* --- Belegningsstein & grus (masser i tonn — bigbag ≈ 1000 kg) --- */
+    belegningsstein_6cm:   {category:"stein", title:"Belegningsstein 6 cm (kjørbar) — fritt valg av stein og farge", unit:"m²", defaultPrice:349},
+    belegningsstein_5cm:   {category:"stein", title:"Belegningsstein/heller 5 cm (gangareal) — fritt valg", unit:"m²", defaultPrice:299},
+    pukk_0_32:             {category:"masse", title:"Pukk 0–32 mm til bærelag", unit:"tonn", defaultPrice:350},
+    settesand_0_8:         {category:"masse", title:"Settesand 0–8 mm", unit:"tonn", defaultPrice:450},
+    fugesand_25kg:         {category:"masse", title:"Fugesand 0–2 mm (sekk à 25 kg)", unit:"sekk", defaultPrice:89},
+    fiberduk_25m2:         {category:"duk", title:"Fiberduk klasse 3 (rull à 25 m²)", unit:"rull", defaultPrice:399},
+    kantstein_betong:      {category:"stein", title:"Kantstein/kantsikring betong", unit:"lm", defaultPrice:149},
   };
 
   function get(id){ return DB[id]; }
@@ -1683,7 +1791,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -1916,7 +2024,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -3279,6 +3387,154 @@ const ML = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= BELEGNINGSSTEIN ========================= */
+const BS = (()=>{
+  /* Lagoppbygging etter bruk (leverandørveiledninger): gangareal 15-20 cm bærelag,
+     kjørbar oppkjørsel 20-30 cm. Settesand 4 cm. Masser: ~1,5 t/m³, +15 % komprimeringsmonn. */
+  const BRUK = {
+    gang:    {navn:"Gangareal/platting", baerelag:0.15, steinId:"belegningsstein_5cm", steinTykk:0.05},
+    kjorbar: {navn:"Kjørbar oppkjørsel", baerelag:0.25, steinId:"belegningsstein_6cm", steinTykk:0.06},
+  };
+  const SETTESAND=0.04, KOMPRIMERING=1.15, DENSITET=1.5;
+  const FUGESAND_KG_M2=4, SEKK_KG=25, FIBERDUK_RULL=25, STEIN_SVINN=1.05;
+  const st = {bruk:"kjorbar", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const L=Math.max(0.5,parseFloat($("bs-lengde").value)||0), B=Math.max(0.5,parseFloat($("bs-bredde").value)||0);
+    const areal=+(L*B).toFixed(1);
+    const bruk=BRUK[st.bruk];
+    const myk=$("bs-mykgrunn").checked;
+    const baerelag=bruk.baerelag+(myk?0.10:0);
+    const dybde=+(baerelag+SETTESAND+bruk.steinTykk).toFixed(2);
+    const utgravM3=+(areal*dybde).toFixed(1);
+    const pukkM3=+(areal*baerelag*KOMPRIMERING).toFixed(1);
+    const pukkTonn=+(pukkM3*DENSITET).toFixed(1);
+    const sandM3=+(areal*SETTESAND*KOMPRIMERING).toFixed(1);
+    const sandTonn=+(sandM3*DENSITET).toFixed(1);
+    const steinM2=Math.ceil(areal*STEIN_SVINN);
+    const fugesandSekker=Math.max(1,Math.ceil(areal*FUGESAND_KG_M2/SEKK_KG));
+    const fiberduk=Math.max(1,Math.ceil(areal*1.1/FIBERDUK_RULL));
+    const kant=$("bs-kant").checked?Math.ceil(2*(L+B)):0;
+    return {L,B,areal,bruk,myk,baerelag,dybde,utgravM3,pukkM3,pukkTonn,sandM3,sandTonn,
+            steinM2,fugesandSekker,fiberduk,kant};
+  }
+
+  function render(){
+    const r=beregn();
+
+    $("bs-regelsjekk").innerHTML =
+      `<div class="alert ok"><b>Fall:</b> 1,5–2 cm per meter bort fra husvegg — aldri fall mot grunnmuren. Legg fallet i bærelaget, ikke i settesanden.</div>`
+      + (r.myk?`<div class="alert" style="margin-top:.5rem"><b>Myk grunn:</b> 10 cm ekstra bærelag er lagt inn. Ved ren matjord/bløt leire: grav til fast grunn og vurder geonett.</div>`:``);
+
+    const steps=[
+      {t:`${r.bruk.navn} ${fm1(r.L)} × ${fm1(r.B)} m = <b>${fm1(r.areal)} m²</b> → utgraving <b>${Math.round(r.dybde*100)} cm</b> dyp = <b>${fm1(r.utgravM3)} m³</b> masse ut`,
+       s:`${Math.round(r.baerelag*100)} cm bærelag + ${SETTESAND*100} cm settesand + ${Math.round(r.bruk.steinTykk*100)} cm stein${r.myk?" · inkl. 10 cm for myk grunn":""}`},
+      {t:`Bærelag: ${fm1(r.areal)} m² × ${Math.round(r.baerelag*100)} cm × 1,15 = <b>${fm1(r.pukkM3)} m³</b> ≈ <b>${fm1(r.pukkTonn)} tonn</b> pukk 0–32`,
+       s:`Komprimeringsmonn ~15 % · tetthet ~1,5 t/m³ · komprimeres i lag à 10–15 cm med vibroplate`},
+      {t:`Settesand: ${fm1(r.areal)} m² × ${SETTESAND*100} cm × 1,15 = <b>${fm1(r.sandM3)} m³</b> ≈ <b>${fm1(r.sandTonn)} tonn</b>`,
+       s:`Avrettes med rettholt over rør — gå aldri på ferdig avrettet sand`},
+      {t:`Stein: ${fm1(r.areal)} m² + 5 % kapp = <b>${r.steinM2} m²</b> (${Math.round(r.bruk.steinTykk*100)} cm tykkelse for ${st.bruk==="kjorbar"?"kjørbar flate":"gangareal"}) · fugesand <b>${r.fugesandSekker} sekker</b>`,
+       s:`Kjørbar flate krever minst 6 cm stein · fugesand ~${FUGESAND_KG_M2} kg/m², kostes ned og vibreres`},
+      {t:`Fiberduk <b>${r.fiberduk} rull(er)</b> under bærelaget${r.kant?` · kantsikring <b>${fmt(r.kant)} lm</b>`:``}`,
+       s:`Duken hindrer at pukken synker i grunnen — 30 cm overlapp i skjøtene`},
+    ];
+    $("bs-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[
+      Catalog.make(r.bruk.steinId, r.steinM2, {sourceTool:"belegningsstein",
+        note:`${fm1(r.areal)} m² flate + 5 % kapp — velg stein, mønster og farge fritt`, estPrice:P[r.bruk.steinId]}),
+      Catalog.make("pukk_0_32", r.pukkTonn, {sourceTool:"belegningsstein",
+        note:`${fm1(r.pukkM3)} m³ — bigbag ≈ 1 tonn, eller billigere levert løst på lass`, estPrice:P.pukk_0_32}),
+      Catalog.make("settesand_0_8", r.sandTonn, {sourceTool:"belegningsstein",
+        note:`${fm1(r.sandM3)} m³ — 4 cm avrettet lag`, estPrice:P.settesand_0_8}),
+      Catalog.make("fugesand_25kg", r.fugesandSekker, {sourceTool:"belegningsstein",
+        note:`~${FUGESAND_KG_M2} kg/m² — kostes ned i fugene og vibreres`, estPrice:P.fugesand_25kg}),
+      Catalog.make("fiberduk_25m2", r.fiberduk, {sourceTool:"belegningsstein",
+        note:`legges under bærelaget med 30 cm overlapp`, estPrice:P.fiberduk_25m2}),
+    ];
+    if (r.kant) rows.push(Catalog.make("kantstein_betong", r.kant, {sourceTool:"belegningsstein",
+        note:`settes i jordfuktig betong — trekk fra sider som møter husvegg/fast kant`, estPrice:P.kantstein_betong}));
+
+    BS.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("bs-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("bs-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("bs-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.areal)}</b><small>m² flate</small></div>
+      <div class="stat"><b>${fm1(r.utgravM3)}</b><small>m³ utgraving</small></div>
+      <div class="stat"><b>${fm1(r.pukkTonn)}</b><small>tonn pukk</small></div>
+      <div class="stat"><b>${fm1(r.sandTonn)}</b><small>tonn settesand</small></div>
+      <div class="stat"><b>${r.steinM2}</b><small>m² stein</small></div>`;
+
+    $("bs-notes").innerHTML=[
+      `Verktøyet låser deg ikke til en stein: velg type, mønster og farge fritt — juster pris per m², så regnes totalen om.`,
+      `Utgravde masser tar mer plass enn de lå: regn ~25 % ekstra volum på hengeren eller containeren.`,
+      `Lei vibroplate (min. 100 kg for kjørbar flate) — komprimér bærelaget i lag, aldri alt på én gang.`,
+      `Legg steinen fra ferdig lagt flate — gå aldri i settesanden. Kapp med vinkelsliper og diamantblad.`,
+      `Sving og kanter gir mer kapp — velg mønster som tåler tilpasning (f.eks. halvforbandt).`,
+      `Etterfyll fugesand etter noen uker — fugene setter seg, og fulle fuger er det som låser flaten.`,
+    ].map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Belegningsstein ${fm1(r.L)} × ${fm1(r.B)} m (${fm1(r.areal)} m², ${r.bruk.navn.toLowerCase()})`,
+      `Utgraving ${Math.round(r.dybde*100)} cm (${fm1(r.utgravM3)} m³ ut) · bærelag ${Math.round(r.baerelag*100)} cm · fall 1,5–2 cm/m bort fra hus`,
+    ]);
+  }
+
+  /* Tverrsnitt av lagoppbyggingen, målsatt per lag */
+  function tegn(r){
+    const W=660,PAD=46,bw=W-2*PAD-120;
+    const skala=200/r.dybde;                                 // px per meter dybde
+    const lag=[
+      {navn:`Belegningsstein ${Math.round(r.bruk.steinTykk*100)} cm`, h:r.bruk.steinTykk, fill:"#E6D9B8"},
+      {navn:`Settesand ${SETTESAND*100} cm`,                          h:SETTESAND,        fill:"#C9A96A"},
+      {navn:`Bærelag pukk ${Math.round(r.baerelag*100)} cm`,          h:r.baerelag,       fill:"#8E979E"},
+    ];
+    let y=PAD, s=`<svg viewBox="0 0 ${W} ${PAD*2+r.dybde*skala+46}" role="img" aria-label="Lagoppbygging ${Math.round(r.dybde*100)} cm">`;
+    /* fall-pil over flaten */
+    s+=`<line x1="${PAD}" y1="${y-14}" x2="${PAD+bw}" y2="${y-8}" stroke="#C24C0A" stroke-width="2"/>
+        <polygon points="${PAD+bw},${y-8} ${PAD+bw-10},${y-13} ${PAD+bw-8},${y-3}" fill="#C24C0A"/>
+        <text x="${PAD+bw/2}" y="${y-20}" font-size="11" text-anchor="middle" fill="#C24C0A" font-family="Inter,sans-serif">fall 1,5–2 cm/m bort fra hus</text>`;
+    lag.forEach(l=>{
+      const h=Math.max(l.h*skala,10);
+      s+=`<rect x="${PAD}" y="${y}" width="${bw}" height="${h}" fill="${l.fill}" stroke="#fff" stroke-width="1"/>
+          <text x="${PAD+bw+10}" y="${y+h/2+4}" font-size="11" fill="#1C2A33" font-family="Inter,sans-serif">${l.navn}</text>`;
+      if (l.fill==="#E6D9B8"){ for(let x=PAD+22;x<PAD+bw;x+=44) s+=`<line x1="${x}" y1="${y}" x2="${x}" y2="${y+h}" stroke="#C9CFD4" stroke-width="1.2"/>`; }
+      if (l.fill==="#8E979E"){ for(let x=PAD+12;x<PAD+bw-6;x+=26) s+=`<circle cx="${x}" cy="${y+h/2}" r="3" fill="#6E777E"/>`; }
+      y+=h;
+    });
+    /* fiberduk + grunn */
+    s+=`<line x1="${PAD}" y1="${y}" x2="${PAD+bw}" y2="${y}" stroke="#E85D0F" stroke-width="3"/>
+        <text x="${PAD+bw+10}" y="${y+4}" font-size="11" fill="#C24C0A" font-family="Inter,sans-serif">Fiberduk</text>
+        <rect x="${PAD}" y="${y+2}" width="${bw}" height="18" fill="#4A3B2A" opacity=".35"/>
+        <text x="${PAD+bw+10}" y="${y+16}" font-size="11" fill="#4A5A64" font-family="Inter,sans-serif">Grunn</text>`;
+    /* total dybde-mål */
+    s+=`<line x1="${PAD-14}" y1="${PAD}" x2="${PAD-14}" y2="${y}" stroke="#1C2A33" stroke-width="1.2"/>
+        <text x="${PAD-20}" y="${(PAD+y)/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${PAD-20} ${(PAD+y)/2})">${Math.round(r.dybde*100)} cm utgraving</text></svg>`;
+    $("bs-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["bs-lengde","bs-bredde","bs-mykgrunn","bs-kant"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-belegningsstein [data-bruk]").forEach(b=>b.addEventListener("click",()=>{
+      st.bruk=b.dataset.bruk;
+      document.querySelectorAll("#view-belegningsstein [data-bruk]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("bs-copyBtn").addEventListener("click",()=>copy(liste,$("bs-copyStatus")));
+    $("bs-priserBtn").addEventListener("click",()=>PriceModal.open(BS.products, "Belegningsstein og grus"));
+    $("bs-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("belegningsstein","Belegningsstein og grus",readForm("belegningsstein"),BS.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -3288,7 +3544,8 @@ KL.init();
 LV.init();
 PG.init();
 ML.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling → riktig verktøy
+BS.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling / #belegningsstein → riktig verktøy
 </script>
 </body>
 </html>
