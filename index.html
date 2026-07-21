@@ -337,6 +337,20 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Veggmål inn → løpemeter kledning etter profil, sløyfer og lekter, spiker og musebånd ut. Dekkbredde-regning for tømmermann og dobbeltfals.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="pergola">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <g stroke="#E6D9B8" stroke-width="4"><line x1="16" y1="14" x2="16" y2="6"/><line x1="30" y1="14" x2="30" y2="6"/><line x1="44" y1="14" x2="44" y2="6"/><line x1="58" y1="14" x2="58" y2="6"/><line x1="72" y1="14" x2="72" y2="6"/><line x1="86" y1="14" x2="86" y2="6"/><line x1="100" y1="14" x2="100" y2="6"/></g>
+            <g stroke="#E85D0F" stroke-width="5"><line x1="6" y1="16" x2="114" y2="16"/><line x1="6" y1="24" x2="114" y2="24"/></g>
+            <g stroke="#8E979E" stroke-width="6"><line x1="20" y1="24" x2="20" y2="78"/><line x1="100" y1="24" x2="100" y2="78"/></g>
+            <g stroke="#8E979E" stroke-width="3"><line x1="20" y1="38" x2="34" y2="24"/><line x1="100" y1="38" x2="86" y2="24"/></g>
+          </svg>
+        </span>
+        <h3>Pergola</h3>
+        <p>Stolper, doble bærebjelker og sperrer med utstikk — bjelkedimensjon velges automatisk etter spennet, med søknadsfri-sjekk for både frittstående og inntil vegg.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -964,6 +978,96 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== PERGOLA -->
+<main class="view" id="view-pergola">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Pergola — <em>stolper, bjelker og sperrer med utstikk</em></h1>
+      <p>Dimensjonerer bærebjelkene automatisk etter stolpeavstanden, regner doble bjelker,
+      sperrer c/c 60 med klassisk utstikk, skråbånd og fundament — og sjekker målene mot
+      søknadsfri-grensene for frittstående pergola og tilbygg.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="pg-lengde">Lengde <span class="hint">(m, langs bjelkene)</span></label>
+          <input type="number" id="pg-lengde" min="1.5" max="12" step="0.1" value="3.6" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="pg-bredde">Bredde <span class="hint">(m, sperreretning)</span></label>
+          <input type="number" id="pg-bredde" min="1.5" max="6" step="0.1" value="3.0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="pg-hoyde">Høyde <span class="hint">(m, under bjelke)</span></label>
+        <input type="number" id="pg-hoyde" min="1.9" max="3.5" step="0.1" value="2.4" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="pg-typeLabel">Plassering</label>
+        <div class="segment" role="group" aria-labelledby="pg-typeLabel">
+          <button type="button" data-ptype="fritt" aria-pressed="true">Frittstående</button>
+          <button type="button" data-ptype="vegg" aria-pressed="false">Inntil vegg</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="pg-takLabel">Overdekning</label>
+        <div class="segment" role="group" aria-labelledby="pg-takLabel">
+          <button type="button" data-tak="aapen" aria-pressed="true">Åpen (kun sperrer)</button>
+          <button type="button" data-tak="tak" aria-pressed="false">Forberedt for tak</button>
+        </div>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="pg-vind">
+        <span>Vindutsatt tomt — kortere spenn og støpt fundament anbefales</span>
+      </label>
+      <div id="pg-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="pg-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Konstruksjonsplan">
+        <h2>Konstruksjonsplan <span class="hint" style="font-weight:400;text-transform:none;letter-spacing:0">— sett ovenfra</span></h2>
+        <div id="pg-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E85D0F"></span>Doble bærebjelker</span>
+          <span><span class="swatch" style="background:#E6D9B8"></span>Sperrer</span>
+          <span><span class="swatch" style="background:#1C2A33"></span>Stolpe</span>
+          <span><span class="swatch" style="background:#8E979E"></span>Vegg (ved tilbygg)</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="pg-stats"></div>
+        <table id="pg-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="pg-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="pg-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="pg-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="pg-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="pg-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1193,6 +1297,10 @@ const Catalog = (()=>{
     levegg_bord_19:        {category:"kledning", title:"Leveggsbord 19 mm — fritt produktvalg", unit:"lm", defaultPrice:26},
     losholt_48x98:         {category:"svill", title:"Losholt/spikerslag 48 × 98 imp.", dimensions:"48x98", unit:"lm", defaultPrice:42},
     jordspyd_98:           {category:"beslag", title:"Jordspyd/stolpespyd 98 × 98", unit:"stk", defaultPrice:249},
+    /* --- Pergola (generisk konstruksjonsvirke, delbart med fremtidige verktøy) --- */
+    kvirke_48x98_c24:      {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 98 C24 imp.",  dimensions:"48x98",  quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:38},
+    kvirke_48x148_c24:     {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 148 C24 imp.", dimensions:"48x148", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:55},
+    kvirke_48x198_c24:     {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 198 C24 imp.", dimensions:"48x198", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:65},
   };
 
   function get(id){ return DB[id]; }
@@ -1451,7 +1559,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -1684,7 +1792,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -2717,6 +2825,181 @@ const LV = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= PERGOLA ========================= */
+const PG = (()=>{
+  /* SAK10 §4-1: frittstående byggverk inntil 50 m² / tilbygg inntil 15 m² er normalt
+     unntatt søknadsplikt. Åpen pergola uten tak regnes vanligvis ikke som bygning —
+     med tett tak teller den som bebygd areal (BYA) og kan kreve søknad. */
+  const UTSTIKK = 0.3, CC_SPERRE = 0.6, STOLPE_MARGIN = 0.1;
+  /* Veiledende maks stolpeavstand per bjelkedimensjon (doble bjelker, lett last) */
+  const FELT = {kvirke_48x148_c24:{dim:"48 × 148", maks:3.0}, kvirke_48x198_c24:{dim:"48 × 198", maks:4.0}};
+  const st = {ptype:"fritt", tak:"aapen", priser:{}};
+  let liste = "";
+
+  function beregn(){
+    const L=Math.max(1.5,parseFloat($("pg-lengde").value)||0), B=Math.max(1.5,parseFloat($("pg-bredde").value)||0);
+    const H=Math.max(1.9,parseFloat($("pg-hoyde").value)||0);
+    const vind=$("pg-vind").checked, vegg=st.ptype==="vegg", tak=st.tak==="tak";
+    const areal=+(L*B).toFixed(1);
+    /* Auto bjelkedimensjon: minst virke som ikke gir flere stolper enn nødvendig */
+    const f=vind?0.8:1.0;
+    const perRad148=Math.ceil(L/(FELT.kvirke_48x148_c24.maks*f))+1;
+    const perRad198=Math.ceil(L/(FELT.kvirke_48x198_c24.maks*f))+1;
+    const bjelkeId=perRad198<perRad148?"kvirke_48x198_c24":"kvirke_48x148_c24";
+    const perRad=Math.min(perRad148,perRad198);
+    const feltSpenn=+(L/(perRad-1)).toFixed(2);
+    const rader=vegg?1:2;
+    const stolper=rader*perRad, stolpeL=+(H+STOLPE_MARGIN).toFixed(2);
+    const bjelkeLstk=+(L+2*UTSTIKK).toFixed(1);
+    const bjelkeLm=Math.ceil(rader*2*bjelkeLstk);                 // doble bjelker per rad
+    const vegglektLm=vegg?Math.ceil(L):0;
+    /* Sperrer på tvers, c/c 60, med utstikk */
+    const sperrer=Math.floor(L/CC_SPERRE)+1;
+    const sperreId=B<=3.7?"kvirke_48x148_c24":"kvirke_48x198_c24";
+    const sperreLstk=+(B+(vegg?UTSTIKK:2*UTSTIKK)).toFixed(1);    // ved vegg: utstikk kun ut fra bjelken
+    const sperreLm=Math.ceil(sperrer*sperreLstk);
+    const skrabaandLm=Math.ceil(stolper*2*0.7);                    // 2 per stolpe à ~70 cm (45°)
+    const bolter=stolper*4;                                        // doble bjelker klemmer stolpen
+    const sperreSkruer=sperrer*2*2;                                // 2 fester à 2 skruer
+    const skruePk=Math.ceil(sperreSkruer/100);
+    /* Regelstatus */
+    let regel;
+    if (vegg) regel = areal<=15
+      ? {ok:true,  tekst:`<b>Normalt søknadsfri:</b> tilbygg inntil 15 m² (her ${fm1(areal)} m²).`}
+      : {ok:false, tekst:`Tilbygg over 15 m² (her ${fm1(areal)} m²) er normalt <b>søknadspliktig</b>.`};
+    else regel = areal<=50
+      ? {ok:true,  tekst:`<b>Normalt søknadsfri:</b> frittstående inntil 50 m² (her ${fm1(areal)} m²). Hold minst 1,0 m til nabogrensen.`}
+      : {ok:false, tekst:`Frittstående over 50 m² (her ${fm1(areal)} m²) er <b>søknadspliktig</b>.`};
+    return {L,B,H,areal,vind,vegg,tak,bjelkeId,perRad,feltSpenn,rader,stolper,stolpeL,
+            bjelkeLstk,bjelkeLm,vegglektLm,sperrer,sperreId,sperreLstk,sperreLm,
+            skrabaandLm,bolter,sperreSkruer,skruePk,regel};
+  }
+
+  function render(){
+    const r=beregn();
+
+    $("pg-regelsjekk").innerHTML =
+      `<div class="alert ${r.regel.ok?"ok":"warn"}">${r.regel.tekst}<span style="display:block;font-size:.75rem;margin-top:.25rem">Åpen pergola uten tak regnes normalt ikke som bygning · arealplan og byggegrenser gjelder uansett</span></div>`
+      + (r.tak?`<div class="alert warn" style="margin-top:.5rem"><b>Forberedt for tak:</b> med tett tak (plater/lameller) teller pergolaen som bebygd areal og kan kreve søknad — sjekk utnyttelsesgraden og kommunen. Husk også snølast på taket.</div>`:``)
+      + (r.vind?`<div class="alert" style="margin-top:.5rem"><b>Vindutsatt:</b> kortere spenn er lagt inn — bruk frostfritt støpt fundament, ikke jordspyd.</div>`:``);
+
+    const steps=[
+      {t:`${r.vegg?"Tilbygg":"Frittstående"} ${fm1(r.L)} × ${fm1(r.B)} m = <b>${fm1(r.areal)} m²</b> → ${r.regel.ok?`<b>normalt søknadsfri</b>`:`<b>søknadspliktig</b>`}`,
+       s:`SAK10 §4-1: frittstående ≤ 50 m² · tilbygg ≤ 15 m² · tett tak teller som BYA`},
+      {t:`Bærebjelke <b>${FELT[r.bjelkeId].dim} C24</b> (valgt automatisk) → stolpeavstand maks ${fm1(FELT[r.bjelkeId].maks*(r.vind?0.8:1))} m → <b>${r.perRad} stolper per rad</b> (faktisk spenn ${fm1(r.feltSpenn)} m)`,
+       s:`Minste dimensjon som ikke koster ekstra stolper${r.vind?" · vindutsatt: spenn × 0,8":""}`},
+      {t:`<b>Doble bærebjelker:</b> ${r.rader*2} stk à ${fm1(r.bjelkeLstk)} m (${UTSTIKK*100} cm utstikk per ende) = ${fmt(r.bjelkeLm)} lm${r.vegg?` · vegglekte ${fmt(r.vegglektLm)} lm boltet i husveggen`:``}`,
+       s:`Én bjelke på hver side av stolpen, boltet gjennom med M10`},
+      {t:`<b>${r.sperrer} sperrer</b> ${FELT[r.sperreId].dim} c/c ${CC_SPERRE*100} cm à ${fm1(r.sperreLstk)} m = ${fmt(r.sperreLm)} lm`,
+       s:`Spenn ${fm1(r.B)} m${r.B>3.7?" — over 3,7 m: 48 × 198 valgt":" — 48 × 148 holder"} · utstikket gir det klassiske pergola-uttrykket, endene kan skråkappes`},
+      {t:`Avstivning: <b>${fmt(r.skrabaandLm)} lm skråbånd</b> 48 × 98 (2 per stolpe) · ${r.stolper} stolpesko · ${r.bolter} bolter`,
+       s:`Uten skråbånd blir en åpen pergola ustabil sideveis — aldri hopp over dette`},
+    ];
+    $("pg-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[
+      Catalog.make("stolpe_98x98_imp", +(r.stolper*r.stolpeL).toFixed(1), {sourceTool:"pergola",
+        note:`${r.stolper} stk à ${fm1(r.stolpeL)} m — på justerbar stolpesko over fundament`, estPrice:P.stolpe_98x98_imp}),
+      Catalog.make(r.bjelkeId, r.bjelkeLm+r.vegglektLm, {sourceTool:"pergola",
+        note:`${r.rader*2} bærebjelker à ${fm1(r.bjelkeLstk)} m (doble)${r.vegg?` + vegglekte à ${fm1(r.L)} m`:``}`, estPrice:P[r.bjelkeId]}),
+    ];
+    if (r.sperreId!==r.bjelkeId) rows.push(Catalog.make(r.sperreId, r.sperreLm, {sourceTool:"pergola",
+        note:`${r.sperrer} sperrer à ${fm1(r.sperreLstk)} m, c/c ${CC_SPERRE*100} cm`, estPrice:P[r.sperreId]}));
+    else rows[1]=Catalog.make(r.bjelkeId, r.bjelkeLm+r.vegglektLm+r.sperreLm, {sourceTool:"pergola",
+        note:`${r.rader*2} bærebjelker à ${fm1(r.bjelkeLstk)} m (doble)${r.vegg?` + vegglekte`:``} + ${r.sperrer} sperrer à ${fm1(r.sperreLstk)} m`, estPrice:P[r.bjelkeId]});
+    rows.push(Catalog.make("kvirke_48x98_c24", r.skrabaandLm, {sourceTool:"pergola",
+        note:`skråbånd — 2 per stolpe à ca. 70 cm, 45°`, estPrice:P.kvirke_48x98_c24}));
+    rows.push(Catalog.make("stolpesko_98", r.stolper, {sourceTool:"pergola",
+        note:`én per stolpe — på frostfritt støpt eller ferdigstøpt fundament`, estPrice:P.stolpesko_98}));
+    rows.push(Catalog.make("bolt_m10", r.bolter, {sourceTool:"pergola",
+        note:`4 per stolpe — doble bjelker klemmer stolpetoppen`, estPrice:P.bolt_m10}));
+    rows.push(Catalog.make("konstruksjonsskrue_6x90", r.skruePk, {sourceTool:"pergola",
+        note:`${fmt(r.sperreSkruer)} skruer — sperrer skråskrus i bjelkene`, estPrice:P.konstruksjonsskrue_6x90}));
+
+    PG.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("pg-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("pg-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("pg-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.areal)}</b><small>m² pergola</small></div>
+      <div class="stat"><b>${r.stolper}</b><small>stolper</small></div>
+      <div class="stat"><b>${r.sperrer}</b><small>sperrer</small></div>
+      <div class="stat"><b>${FELT[r.bjelkeId].dim}</b><small>bærebjelke</small></div>
+      <div class="stat"><b>${fmt(r.bjelkeLm+r.vegglektLm+r.sperreLm+r.skrabaandLm)}</b><small>lm virke</small></div>`;
+
+    $("pg-notes").innerHTML=[
+      `Fundament er ikke priset: frostfritt støpt punkt eller ferdigstøpt blokk under hver stolpesko.`,
+      `Skråkapp sperreendene (f.eks. 30°) for det klassiske pergola-uttrykket — kappes før montering.`,
+      r.tak?`Til taket: bruk DryppStop-verktøyet for plater og skruer — sperreavstanden her (c/c 60) passer platene direkte.`:`Åpen pergola kan senere få tak — men da endres både søknadsstatus og snølastkrav.`,
+      `Klatreplanter holder fukt mot treverket — bruk impregnert virke og hold planter unna endeved.`,
+      `Sjekk kommunens arealplan og byggegrenser før du setter i gang, selv når tiltaket er søknadsfritt.`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `BESTILLINGSLISTE — Pergola ${fm1(r.L)} × ${fm1(r.B)} m (${r.vegg?"inntil vegg":"frittstående"}${r.tak?", forberedt for tak":""})`,
+      `Bærebjelke ${FELT[r.bjelkeId].dim} · ${r.stolper} stolper · ${r.sperrer} sperrer c/c ${CC_SPERRE*100} cm · ${r.regel.ok?"normalt søknadsfri":"OBS: se regelsjekk"}`,
+    ]);
+  }
+
+  /* Plan ovenfra: bjelkelinjer langs L, sperrer på tvers med utstikk */
+  function tegn(r){
+    const W=660,PAD=52;
+    const totB=r.B+(r.vegg?UTSTIKK:2*UTSTIKK);
+    const sk=Math.min((W-2*PAD)/(r.L+2*UTSTIKK),300/totB);
+    const bw=r.L*sk,x0=(W-(r.L+2*UTSTIKK)*sk)/2+UTSTIKK*sk,y0=PAD;
+    const yTopp=r.vegg?y0:y0+UTSTIKK*sk;                  // øvre bjelkelinje/vegg
+    const yBunn=yTopp+r.B*sk;                             // nedre bjelkelinje
+    const hSvg=yBunn+(r.vegg?UTSTIKK:UTSTIKK)*sk+PAD+14;
+    let s=`<svg viewBox="0 0 ${W} ${hSvg}" role="img" aria-label="Pergolaplan: ${r.stolper} stolper, ${r.sperrer} sperrer">`;
+    /* sperrer (vertikale, med utstikk) */
+    const sperreY1=r.vegg?yTopp:yTopp-UTSTIKK*sk, sperreY2=yBunn+UTSTIKK*sk;
+    for(let i=0;i<r.sperrer;i++){
+      const x=x0+Math.min(i*CC_SPERRE,r.L)*sk;
+      s+=`<line x1="${x}" y1="${sperreY1}" x2="${x}" y2="${sperreY2}" stroke="#E6D9B8" stroke-width="4"/>`;
+    }
+    /* bjelkelinjer (doble, med utstikk) */
+    const bx1=x0-UTSTIKK*sk, bx2=x0+bw+UTSTIKK*sk;
+    const linjer=r.vegg?[yBunn]:[yTopp,yBunn];
+    linjer.forEach(y=>{
+      s+=`<line x1="${bx1}" y1="${y-3}" x2="${bx2}" y2="${y-3}" stroke="#E85D0F" stroke-width="4"/>
+          <line x1="${bx1}" y1="${y+3}" x2="${bx2}" y2="${y+3}" stroke="#E85D0F" stroke-width="4"/>`;
+      for(let p=0;p<r.perRad;p++){
+        const x=x0+Math.min(p*r.feltSpenn,r.L)*sk;
+        s+=`<rect x="${x-6}" y="${y-6}" width="12" height="12" fill="#1C2A33" rx="2"/>`;
+      }
+    });
+    /* vegg ved tilbygg */
+    if (r.vegg) s+=`<rect x="${bx1-8}" y="${yTopp-12}" width="${bx2-bx1+16}" height="9" fill="#8E979E"/>
+        <text x="${bx1-8}" y="${yTopp-18}" font-size="11" fill="#4A5A64" font-family="Inter,sans-serif">Husvegg (vegglekte)</text>`;
+    s+=`<text x="${x0+bw/2}" y="${sperreY2+30}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">${fm1(r.L)} m · ${r.sperrer} sperrer c/c ${CC_SPERRE*100} cm</text>
+        <text x="${bx1-24}" y="${(yTopp+yBunn)/2}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600" transform="rotate(-90 ${bx1-24} ${(yTopp+yBunn)/2})">${fm1(r.B)} m · spenn</text></svg>`;
+    $("pg-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["pg-lengde","pg-bredde","pg-hoyde","pg-vind"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-pergola [data-ptype]").forEach(b=>b.addEventListener("click",()=>{
+      st.ptype=b.dataset.ptype;
+      document.querySelectorAll("#view-pergola [data-ptype]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-pergola [data-tak]").forEach(b=>b.addEventListener("click",()=>{
+      st.tak=b.dataset.tak;
+      document.querySelectorAll("#view-pergola [data-tak]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("pg-copyBtn").addEventListener("click",()=>copy(liste,$("pg-copyStatus")));
+    $("pg-priserBtn").addEventListener("click",()=>PriceModal.open(PG.products, "Pergola"));
+    $("pg-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("pergola","Pergola",readForm("pergola"),PG.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -2724,7 +3007,8 @@ RK.init();
 PK.init();
 KL.init();
 LV.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg → riktig verktøy
+PG.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola → riktig verktøy
 </script>
 </body>
 </html>
