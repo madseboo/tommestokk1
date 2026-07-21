@@ -351,6 +351,21 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <p>Stolper, doble bærebjelker og sperrer med utstikk — bjelkedimensjon velges automatisk etter spennet, med søknadsfri-sjekk for både frittstående og inntil vegg.</p>
         <span class="go">Åpne verktøyet →</span>
       </button>
+
+      <button class="tool-card" data-nav="utemaling">
+        <span class="icon" aria-hidden="true">
+          <svg viewBox="0 0 120 84">
+            <rect x="10" y="14" width="66" height="60" fill="#E6D9B8" stroke="#C9CFD4" stroke-width="2"/>
+            <rect x="10" y="14" width="66" height="34" fill="#E85D0F" opacity=".85"/>
+            <rect x="84" y="8" width="26" height="18" rx="3" fill="#8E979E"/>
+            <rect x="94" y="26" width="6" height="26" fill="#1C2A33"/>
+            <path d="M18 48 h50" stroke="#C24C0A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <h3>Maling utvendig</h3>
+        <p>Veggmål inn → liter og spann ut. Dekkevne etter behandling og underlag, grunning ved ubehandlet treverk, husvask og værvindu-råd.</p>
+        <span class="go">Åpne verktøyet →</span>
+      </button>
     </div>
 
     <section class="card" id="projectsCard" aria-label="Dine prosjekter" style="display:none;margin-top:2rem">
@@ -1068,6 +1083,108 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </div>
 </main>
 
+<!-- ==================================================== MALING UTVENDIG -->
+<main class="view" id="view-utemaling">
+<div class="wrap">
+  <button class="back" data-nav="home">← Alle verktøy</button>
+  <div class="tool-head">
+    <div>
+      <h1>Maling utvendig — <em>veggmål inn, liter og spann ut</em></h1>
+      <p>Regner liter etter behandlingstype, underlag og antall strøk, foreslår spann-fordeling,
+      og tar med husvask og grunning der det trengs — pluss værvindu-råd så resultatet varer.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="field">
+        <label>Vegglengder <span class="hint">(m — sett 0 for å utelate)</span></label>
+        <div class="duo" style="grid-template-columns:1fr 1fr 1fr;gap:.5rem">
+          <input type="number" id="ml-veggA" min="0" max="40" step="0.1" value="8.0" inputmode="decimal" aria-label="Vegg A (m)">
+          <input type="number" id="ml-veggB" min="0" max="40" step="0.1" value="6.0" inputmode="decimal" aria-label="Vegg B (m)">
+          <input type="number" id="ml-veggC" min="0" max="40" step="0.1" value="0" inputmode="decimal" aria-label="Vegg C (m)">
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="ml-hoyde">Vegghøyde <span class="hint">(m, til raft)</span></label>
+          <input type="number" id="ml-hoyde" min="1" max="12" step="0.1" value="2.5" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="ml-fradrag">Fradrag <span class="hint">(vinduer/dører, m²)</span></label>
+          <input type="number" id="ml-fradrag" min="0" max="100" step="0.5" value="4" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label id="ml-behandlingLabel">Behandling <span class="hint">(styrer dekkevne)</span></label>
+        <div class="segment" role="group" aria-labelledby="ml-behandlingLabel">
+          <button type="button" data-behandling="maling" aria-pressed="true">Maling</button>
+          <button type="button" data-behandling="dekkbeis" aria-pressed="false">Oljedekkbeis</button>
+          <button type="button" data-behandling="beis" aria-pressed="false">Beis</button>
+        </div>
+      </div>
+      <div class="field">
+        <label id="ml-underlagLabel">Underlag</label>
+        <div class="segment" role="group" aria-labelledby="ml-underlagLabel">
+          <button type="button" data-underlag="behandlet" aria-pressed="true">Tidligere behandlet</button>
+          <button type="button" data-underlag="ubehandlet" aria-pressed="false">Ubehandlet treverk</button>
+        </div>
+      </div>
+      <div class="duo">
+        <div class="field">
+          <label for="ml-strok">Antall strøk</label>
+          <select id="ml-strok">
+            <option value="1">1 strøk — kun oppfriskning</option>
+            <option value="2" selected>2 strøk — anbefalt</option>
+            <option value="3">3 strøk — sterkt værutsatt</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="ml-dekkevne">Dekkevne <span class="hint">(m²/liter, står på spannet)</span></label>
+          <input type="number" id="ml-dekkevne" min="2" max="16" step="0.5" value="9" inputmode="decimal">
+        </div>
+      </div>
+      <div id="ml-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="ml-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Arealoversikt">
+        <h2>Arealoversikt</h2>
+        <div id="ml-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#E85D0F"></span>Flate som skal behandles</span>
+          <span><span class="swatch" style="background:#fff"></span>Fradrag (vinduer/dører)</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="ml-stats"></div>
+        <table id="ml-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="ml-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="ml-copyBtn" type="button">Kopier handleliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="ml-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="ml-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="ml-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
 <!-- ==================================================== PRISMODAL (arkitektur-stub) -->
 <div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
   <div class="modal-box">
@@ -1301,6 +1418,13 @@ const Catalog = (()=>{
     kvirke_48x98_c24:      {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 98 C24 imp.",  dimensions:"48x98",  quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:38},
     kvirke_48x148_c24:     {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 148 C24 imp.", dimensions:"48x148", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:55},
     kvirke_48x198_c24:     {category:"konstruksjonsvirke", title:"Konstruksjonsvirke 48 × 198 C24 imp.", dimensions:"48x198", quality:"C24", treatment:"impregnert", unit:"lm", defaultPrice:65},
+    /* --- Maling utvendig (enhet: liter — spann-fordeling står i noten) --- */
+    utemaling_dekkende:    {category:"maling", title:"Utendørs maling, dekkende — fritt produktvalg", unit:"liter", defaultPrice:189},
+    oljedekkbeis:          {category:"maling", title:"Oljedekkbeis — fritt produktvalg", unit:"liter", defaultPrice:165},
+    beis_transparent:      {category:"maling", title:"Beis/transparent treolje — fritt produktvalg", unit:"liter", defaultPrice:155},
+    grunningsolje:         {category:"maling", title:"Grunningsolje/heftgrunn", unit:"liter", defaultPrice:120},
+    husvask_konsentrat:    {category:"maling", title:"Husvask/kraftvask konsentrat (flaske à 1 L)", unit:"stk", defaultPrice:149},
+    malerutstyr_sett:      {category:"tilbehor", title:"Malerutstyr — ruller, pensler, skaft, presenning", unit:"sett", defaultPrice:399},
   };
 
   function get(id){ return DB[id]; }
@@ -1559,7 +1683,7 @@ AUTH.init();
    PROSJEKTER — "Lagre i prosjekt" og prosjektoversikt på forsiden
    ======================================================================== */
 const Projects = (()=>{
-  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola"};
+  const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk", parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola", utemaling:"Maling utvendig"};
   let pending = null; // {verktoy, label, inndata, resultat}
 
   async function list(){
@@ -1792,7 +1916,7 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola"};
+const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig"};
 
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
@@ -3000,6 +3124,161 @@ const PG = (()=>{
   return {init, products:[]};
 })();
 
+/* ========================= MALING UTVENDIG ========================= */
+const ML = (()=>{
+  /* Typiske dekkevner per strøk (leverandørtall): dekkende maling 8-10 m²/l,
+     oljedekkbeis ~7, transparent beis 5-8 (suger mer). Grunning ~9 m²/l, ett strøk. */
+  const BEHANDLING = {
+    maling:   {navn:"Dekkende maling",   id:"utemaling_dekkende", dekkevne:9},
+    dekkbeis: {navn:"Oljedekkbeis",      id:"oljedekkbeis",       dekkevne:7},
+    beis:     {navn:"Transparent beis",  id:"beis_transparent",   dekkevne:6},
+  };
+  const GRUNNING_DEKKEVNE = 9, VASK_M2_PER_FLASKE = 75;
+  const st = {behandling:"maling", underlag:"behandlet", priser:{}};
+  let liste = "";
+
+  /* Fordel liter på vanlige spannstørrelser (10 L + 3 L) */
+  function spann(liter){
+    let n10=Math.floor(liter/10), rest=liter-n10*10, n3=0;
+    if (rest>0){ if (rest<=3) n3=1; else n10+=1; }
+    return {n10, n3, tekst:[n10?`${n10} × 10 L`:null, n3?`${n3} × 3 L`:null].filter(Boolean).join(" + ")||"1 × 3 L"};
+  }
+
+  function beregn(){
+    const vegger = ["ml-veggA","ml-veggB","ml-veggC"]
+      .map((id,i)=>({navn:"ABC"[i], L:Math.max(0,parseFloat($(id).value)||0)}))
+      .filter(v=>v.L>0.2);
+    const H = Math.max(1,parseFloat($("ml-hoyde").value)||0);
+    const brutto = +(vegger.reduce((a,v)=>a+v.L*H,0)).toFixed(1);
+    const fradrag = Math.min(brutto*0.9, Math.max(0,parseFloat($("ml-fradrag").value)||0));
+    const netto = +(brutto-fradrag).toFixed(1);
+    const strok = parseInt($("ml-strok").value,10);
+    const dekkevne = Math.max(2,parseFloat($("ml-dekkevne").value)||9);
+    const b = BEHANDLING[st.behandling];
+    const ubehandlet = st.underlag==="ubehandlet";
+    const malingL = Math.ceil(netto/dekkevne*strok);
+    const malingSpann = spann(malingL);
+    const grunningL = ubehandlet ? Math.ceil(netto/GRUNNING_DEKKEVNE) : 0;
+    const grunningSpann = spann(grunningL);
+    const vask = Math.max(1,Math.ceil(netto/VASK_M2_PER_FLASKE));
+    return {vegger,H,brutto,fradrag,netto,strok,dekkevne,b,ubehandlet,malingL,malingSpann,
+            grunningL,grunningSpann,vask};
+  }
+
+  function render(){
+    const r = beregn();
+    if (!r.vegger.length){
+      $("ml-dimSteps").innerHTML = `<div class="alert">Angi minst én vegglengde over 0,2 m.</div>`;
+      $("ml-planSvg").innerHTML=""; $("ml-stats").innerHTML="";
+      $("ml-matTable").querySelector("tbody").innerHTML=""; $("ml-notes").innerHTML="";
+      ML.products = []; liste=""; return;
+    }
+
+    $("ml-regelsjekk").innerHTML =
+      `<div class="alert ok"><b>Værvindu:</b> mal ved 10–25 °C på tørt treverk, aldri under +5 °C (husk natt-temperaturen) og ikke i direkte sol.</div>`
+      + (r.ubehandlet ? `<div class="alert" style="margin-top:.5rem"><b>Ubehandlet treverk:</b> grunn innen 4 uker etter montering — ubehandlet kledning gråner og trekker vann.</div>` : ``)
+      + (st.behandling==="beis" && !r.ubehandlet ? `<div class="alert warn" style="margin-top:.5rem"><b>Beis over gammel behandling:</b> transparent beis kan ikke legges over dekkende maling/beis — da må du velge dekkende, eller fjerne gammel behandling.</div>` : ``);
+
+    const steps=[
+      {t:`Veggareal ${r.vegger.map(v=>`${fm1(v.L)} × ${fm1(r.H)}`).join(" + ")} = ${fm1(r.brutto)} m² − ${fm1(r.fradrag)} m² åpninger → <b>${fm1(r.netto)} m²</b>`,
+       s:`Trekk kun store åpninger — karmer og gerikter skal ofte også behandles`},
+      {t:`${r.b.navn}: ${fm1(r.netto)} m² ÷ ${String(r.dekkevne).replace(".",",")} m²/l × ${r.strok} strøk → <b>${r.malingL} liter</b> (${r.malingSpann.tekst})`,
+       s:`Dekkevnen står på spannet — juster feltet når du har valgt produkt`},
+      ...(r.ubehandlet?[
+      {t:`Grunning: ${fm1(r.netto)} m² ÷ ${GRUNNING_DEKKEVNE} m²/l → <b>${r.grunningL} liter</b> (${r.grunningSpann.tekst}), ett strøk`,
+       s:`Grunningsolje metter sugende treverk og gir toppstrøkene feste`}]:[]),
+      {t:`Husvask: <b>${r.vask} flaske(r)</b> konsentrat — alltid vask før behandling`,
+       s:`Ca. én flaske per ${VASK_M2_PER_FLASKE} m² · skyll godt og la veggen tørke helt`},
+      {t:`Tørketid mellom strøkene — sjekk spannet (typisk 12–24 timer)`,
+       s:`Mal på formiddagen så veggen rekker å tørke før duggfallet`},
+    ];
+    $("ml-dimSteps").innerHTML=steps.map((s,i)=>`<div class="dim-step"><span class="no">${i+1}</span><div>${s.t}<span class="src">${s.s}</span></div></div>`).join("");
+
+    const P=st.priser;
+    const rows=[
+      Catalog.make(r.b.id, r.malingL, {sourceTool:"utemaling",
+        note:`${r.strok} strøk på ${fm1(r.netto)} m² — kjøp ${r.malingSpann.tekst}`, estPrice:P[r.b.id]}),
+    ];
+    if (r.grunningL) rows.push(Catalog.make("grunningsolje", r.grunningL, {sourceTool:"utemaling",
+        note:`ett strøk på ubehandlet treverk — kjøp ${r.grunningSpann.tekst}`, estPrice:P.grunningsolje}));
+    rows.push(Catalog.make("husvask_konsentrat", r.vask, {sourceTool:"utemaling",
+        note:`vask, skyll og la tørke før behandling`, estPrice:P.husvask_konsentrat}));
+    rows.push(Catalog.make("malerutstyr_sett", 1, {sourceTool:"utemaling",
+        note:`ruller til flaten, pensel til detaljer og endeved`, estPrice:P.malerutstyr_sett}));
+
+    ML.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    $("ml-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
+    $("ml-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
+      st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
+    }));
+
+    $("ml-stats").innerHTML=`
+      <div class="stat"><b>${fm1(r.netto)}</b><small>m² vegg</small></div>
+      <div class="stat"><b>${r.malingL}</b><small>liter ${st.behandling==="maling"?"maling":"beis"}</small></div>
+      <div class="stat"><b>${r.malingSpann.n10+r.malingSpann.n3}</b><small>spann</small></div>
+      <div class="stat"><b>${r.strok}</b><small>strøk</small></div>
+      ${r.grunningL?`<div class="stat"><b>${r.grunningL}</b><small>liter grunning</small></div>`:``}`;
+
+    $("ml-notes").innerHTML=[
+      `Verktøyet låser deg ikke til et produkt: velg merke og kvalitet fritt — juster dekkevnen til tallet på spannet, så regnes literne om.`,
+      `Bland spannene (fargebland) hvis de har ulike produksjonsnummer — unngår fargeforskjell midt på veggen.`,
+      `Sørvegg og værside slites raskest — der er tre strøk vel anvendte penger.`,
+      `Behandle endeved og skjøter ekstra nøye — det er der råten starter.`,
+      r.ubehandlet?``:`Skrap og puss løs maling før vask — ny maling fester ikke bedre enn underlaget den står på.`,
+    ].filter(Boolean).map(n=>`<li>${n}</li>`).join("");
+
+    tegn(r);
+    liste = Renderer.toPlainText(rows, [
+      `HANDLELISTE — Maling utvendig ${fm1(r.netto)} m² (${r.vegger.map(v=>`${v.navn}=${fm1(v.L)} m`).join(", ")} × ${fm1(r.H)} m)`,
+      `${r.b.navn}, ${r.strok} strøk à ${String(r.dekkevne).replace(".",",")} m²/l · underlag: ${r.ubehandlet?"ubehandlet":"tidligere behandlet"}`,
+    ]);
+  }
+
+  /* Arealoversikt: veggene side om side, målsatt, med antydet fradrag */
+  function tegn(r){
+    const W=660,PAD=40,GAP=14;
+    const sumL=r.vegger.reduce((a,v)=>a+v.L,0);
+    const sk=Math.min((W-2*PAD-GAP*(r.vegger.length-1))/sumL,200/r.H);
+    const bh=r.H*sk,Hsvg=bh+2*PAD+20;
+    let s=`<svg viewBox="0 0 ${W} ${Hsvg}" role="img" aria-label="Arealoversikt: ${fm1(r.netto)} m² som skal behandles">`;
+    let x=PAD + (W-2*PAD-(sumL*sk+GAP*(r.vegger.length-1)))/2;
+    const fradragAndel=r.brutto>0?r.fradrag/r.brutto:0;
+    r.vegger.forEach(v=>{
+      const bw=v.L*sk;
+      s+=`<rect x="${x}" y="${PAD}" width="${bw}" height="${bh}" fill="#E85D0F" opacity=".8" stroke="#C24C0A"/>`;
+      /* antydet fradrag: hvitt "vindu" proporsjonalt med andelen */
+      if (fradragAndel>0.01){
+        const fw=Math.min(bw*0.35,Math.sqrt(fradragAndel*v.L*r.H)*sk), fh=Math.min(bh*0.45,fw*0.8);
+        s+=`<rect x="${x+bw*0.18}" y="${PAD+bh*0.22}" width="${fw}" height="${fh}" fill="#fff" stroke="#C9CFD4"/>`;
+      }
+      s+=`<text x="${x+bw/2}" y="${PAD+bh+22}" font-size="12" text-anchor="middle" fill="#1C2A33" font-family="Inter" font-weight="600">Vegg ${v.navn}: ${fm1(v.L)} m · ${fm1(v.L*r.H)} m²</text>`;
+      x+=bw+GAP;
+    });
+    s+=`<text x="${W/2}" y="${PAD-14}" font-size="12" text-anchor="middle" fill="#4A5A64" font-family="Inter,sans-serif">Netto ${fm1(r.netto)} m² (${fm1(r.brutto)} m² − ${fm1(r.fradrag)} m² åpninger) · høyde ${fm1(r.H)} m</text></svg>`;
+    $("ml-planSvg").innerHTML=s;
+  }
+
+  function init(){
+    ["ml-veggA","ml-veggB","ml-veggC","ml-hoyde","ml-fradrag","ml-strok","ml-dekkevne"].forEach(id=>{
+      $(id).addEventListener("input",render); $(id).addEventListener("change",render);
+    });
+    document.querySelectorAll("#view-utemaling [data-behandling]").forEach(b=>b.addEventListener("click",()=>{
+      st.behandling=b.dataset.behandling;
+      $("ml-dekkevne").value=BEHANDLING[st.behandling].dekkevne;   // typisk dekkevne følger behandlingen — kan justeres etterpå
+      document.querySelectorAll("#view-utemaling [data-behandling]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    document.querySelectorAll("#view-utemaling [data-underlag]").forEach(b=>b.addEventListener("click",()=>{
+      st.underlag=b.dataset.underlag;
+      document.querySelectorAll("#view-utemaling [data-underlag]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
+    }));
+    $("ml-copyBtn").addEventListener("click",()=>copy(liste,$("ml-copyStatus")));
+    $("ml-priserBtn").addEventListener("click",()=>PriceModal.open(ML.products, "Maling utvendig"));
+    $("ml-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("utemaling","Maling utvendig",readForm("utemaling"),ML.products));
+    render();
+  }
+  return {init, products:[]};
+})();
+
 /* ========================= Oppstart ========================= */
 TE.init();
 DS.init();
@@ -3008,7 +3287,8 @@ PK.init();
 KL.init();
 LV.init();
 PG.init();
-route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola → riktig verktøy
+ML.init();
+route();   // ren URL → forsiden; #terrasse / #dryppstop / #rekkverk / #parkett / #kledning / #levegg / #pergola / #utemaling → riktig verktøy
 </script>
 </body>
 </html>
