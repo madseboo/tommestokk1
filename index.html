@@ -162,6 +162,10 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .modal-result.show{display:block}
 .modal-result table{font-size:.82rem}
 .modal-result .stub-note{background:#FCF2EA;border-left:4px solid var(--signal);border-radius:0 6px 6px 0;padding:.5rem .7rem;font-size:.78rem;margin-bottom:.8rem}
+.project-total{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--ink);color:#fff;border-radius:var(--radius);padding:.9rem 1.1rem;margin-top:1rem}
+.project-total span{font-weight:600;font-size:.92rem}
+.project-total small{display:block;font-weight:400;font-size:.72rem;color:var(--alu)}
+.project-total b{font-family:var(--font-display);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ================= Innlogging (header) ================= */
 .header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
@@ -2374,9 +2378,15 @@ const Projects = (()=>{
   }
 
   function renderCalcsList(){
-    $("projectModalCalcs").innerHTML = currentCalcs.length
-      ? currentCalcs.map(calcCard).join("")
-      : `<p style="color:var(--ink-soft);font-size:.88rem;margin-top:1rem">Ingen beregninger lagret i dette prosjektet ennå.</p>`;
+    if (!currentCalcs.length){
+      $("projectModalCalcs").innerHTML = `<p style="color:var(--ink-soft);font-size:.88rem;margin-top:1rem">Ingen beregninger lagret i dette prosjektet ennå.</p>`;
+      return;
+    }
+    const prosjektTotal = currentCalcs.reduce((sum,c)=>sum + Renderer.total(c.resultat||[]), 0);
+    const totalBanner = currentCalcs.length>1
+      ? `<div class="project-total"><span>Prosjektets totalpris <small>(${currentCalcs.length} beregninger, veiledende)</small></span><b>${kr(prosjektTotal)}</b></div>`
+      : "";
+    $("projectModalCalcs").innerHTML = totalBanner + currentCalcs.map(calcCard).join("");
   }
 
   async function openProjectModal(project){
