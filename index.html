@@ -26,7 +26,7 @@
   --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{background:var(--bg)}
+html{background:var(--bg);overflow-x:hidden}   /* ingen sidelengs sidescroll; brede tabeller scroller i egen boks */
 body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;min-height:100vh}
 a{color:var(--signal-dark)}
 input,select,button{color-scheme:light}
@@ -83,6 +83,7 @@ header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);
 .back:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
 .grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:1.25rem;margin-top:1.25rem;align-items:start}
+.grid>*{min-width:0}   /* hindrer at bred segment-tekst/tabell sprenger rutenettet på smale skjermer */
 @media(max-width:880px){.grid{grid-template-columns:1fr}}
 
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem}
@@ -175,6 +176,33 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .header-user{font-size:.8rem;color:var(--alu);display:flex;align-items:center;gap:.6rem}
 
 footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(--ink-soft);border-top:1px solid var(--line);background:var(--bg)}
+
+/* Brede tabeller scroller inni sin egen boks i stedet for å dra hele siden sidelengs */
+.card table,.modal-box table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+
+/* ================= Mobil (telefon) ================= */
+@media(max-width:600px){
+  .wrap{padding:1rem}
+  header{padding:.8rem 1rem;gap:.5rem .8rem}
+  .brand{font-size:1.35rem}
+  header .crumb{font-size:.7rem;padding:.15rem .55rem}
+  .grid{gap:1rem;margin-top:1rem}
+  .card{padding:1.05rem}
+  .card+.card{margin-top:1rem}
+  .hero h1{font-size:clamp(1.9rem,8vw,2.6rem)}
+  .tool-head h1{font-size:clamp(1.6rem,6.5vw,2.1rem)}
+  .segment button{padding:.7rem .35rem}                 /* større tap-target */
+  .field input[type=number],.field select{padding:.65rem .7rem}
+  .check{gap:.6rem}
+  .check input{width:1.15rem;height:1.15rem}
+  .btn{padding:.7rem 1rem}
+  .actions{gap:.5rem}
+  .actions .btn{flex:1 1 auto}                           /* knapper fyller bredden, lettere å treffe */
+  th,td{padding:.55rem .4rem}
+  td input.price{width:5rem}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.5rem}
+  .project-total{flex-direction:column;align-items:flex-start;gap:.35rem}
+}
 
 @media print{
   header,.inputs-card,.actions,.back{display:none}
