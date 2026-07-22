@@ -167,6 +167,11 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .project-total span{font-weight:600;font-size:.92rem}
 .project-total small{display:block;font-weight:400;font-size:.72rem;color:var(--alu)}
 .project-total b{font-family:var(--font-display);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.save-items{max-height:210px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:.3rem .7rem}
+.save-items label{display:flex;gap:.55rem;align-items:flex-start;font-size:.85rem;padding:.4rem 0;border-bottom:1px dashed var(--line);margin:0}
+.save-items label:last-child{border-bottom:none}
+.save-items input{margin-top:.2rem;accent-color:var(--signal);flex:none}
+.save-items .q{color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
 
 /* ================= Innlogging (header) ================= */
 .header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
@@ -1838,6 +1843,11 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
     <h2 id="saveModalTitle">Lagre i prosjekt</h2>
     <p class="sub" id="saveModalSub"></p>
     <div class="field" style="margin-top:1rem">
+      <label>Hva skal lagres <span class="hint">— hak bort det du ikke trenger</span></label>
+      <div class="save-items" id="saveItems"></div>
+      <p class="hint" style="margin-top:.45rem">Du overstyrer den beregnede lista — sjekk selv at du får med alt du faktisk trenger.</p>
+    </div>
+    <div class="field">
       <label for="saveProjectSelect">Velg prosjekt</label>
       <select id="saveProjectSelect"></select>
     </div>
@@ -2481,6 +2491,9 @@ const Projects = (()=>{
     $("saveModalSub").textContent = `Lagrer beregningen fra ${label}.`;
     $("saveOkNote").style.display="none"; $("saveErrNote").style.display="none";
     $("saveNewProjectName").value = "";
+    $("saveItems").innerHTML = resultat.map((p,i)=>
+      `<label><input type="checkbox" class="save-item" data-idx="${i}" checked>
+        <span>${p.title} <span class="q">— ${fmt(p.quantity)} ${p.unit}</span></span></label>`).join("");
     const projects = await list();
     $("saveProjectSelect").innerHTML = projects.length
       ? projects.map(p=>`<option value="${p.id}">${p.navn}</option>`).join("")
@@ -2500,7 +2513,10 @@ const Projects = (()=>{
       const newName = $("saveNewProjectName").value.trim();
       if (newName) projectId = (await create(newName)).id;
       if (!projectId) throw new Error("Velg eller opprett et prosjekt.");
-      await saveCalculation(projectId, pending.verktoy, pending.inndata, pending.resultat);
+      const valgte = pending.resultat.filter((_,i)=>
+        document.querySelector(`#saveItems .save-item[data-idx="${i}"]`)?.checked);
+      if (!valgte.length) throw new Error("Velg minst én vare å lagre.");
+      await saveCalculation(projectId, pending.verktoy, pending.inndata, valgte);
       $("saveOkNote").style.display = "block";
       renderHomeProjects();
       setTimeout(closeSaveModal, 1200);
