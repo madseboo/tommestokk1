@@ -172,6 +172,12 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .save-items label:last-child{border-bottom:none}
 .save-items input{margin-top:.2rem;accent-color:var(--signal);flex:none}
 .save-items .q{color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.project-images{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:.6rem}
+.project-images .thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.project-images .thumb img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.project-images .thumb button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:999px;border:none;background:rgba(28,42,51,.75);color:#fff;font-size:.85rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.project-images .thumb button:hover{background:var(--signal-dark)}
+.project-images .empty{grid-column:1/-1;color:var(--ink-soft);font-size:.85rem}
 
 /* ================= Innlogging (header) ================= */
 .header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
@@ -1870,6 +1876,16 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
     <h2 id="projectModalTitle">Prosjekt</h2>
     <p class="sub" id="projectModalSub"></p>
     <button class="btn secondary" id="projectDeleteBtn" type="button" style="margin-top:.75rem">Slett prosjekt</button>
+    <section class="card" style="margin-top:1rem">
+      <h2>Bilder</h2>
+      <div id="projectImages" class="project-images"></div>
+      <div class="actions" style="margin-top:.75rem">
+        <label class="btn secondary" style="cursor:pointer">Last opp bilde
+          <input type="file" id="projectImageInput" accept="image/*" multiple style="display:none">
+        </label>
+        <span id="projectImageStatus" class="copy-status" role="status"></span>
+      </div>
+    </section>
     <div id="projectModalCalcs"></div>
   </div>
 </div>
@@ -2432,12 +2448,61 @@ const Projects = (()=>{
     $("projectModalTitle").textContent = project.navn;
     $("projectModalSub").textContent = "Laster lagrede beregninger …";
     $("projectModalCalcs").innerHTML = "";
+    $("projectImages").innerHTML = "";
+    $("projectImageStatus").textContent = "";
     $("projectModal").classList.add("open");
     currentCalcs = await listCalculations(project.id);
     $("projectModalSub").textContent = currentCalcs.length
       ? `${currentCalcs.length} lagret beregning(er) i dette prosjektet.`
       : "Ingen beregninger lagret i dette prosjektet ennå.";
     renderCalcsList();
+    renderImages();
+  }
+
+  /* ---- Prosjektbilder (Supabase Storage, privat bucket "prosjektbilder") ---- */
+  const BILDE_BUCKET = "prosjektbilder";
+  function imgDir(){ return `${AUTH.getUser().id}/${currentProject.id}`; }
+
+  async function listImages(){
+    const {data, error} = await AUTH.sb.storage.from(BILDE_BUCKET).list(imgDir(), {sortBy:{column:"created_at",order:"desc"}});
+    if (error){ console.warn(error); return []; }
+    return (data||[]).filter(f=>f.name!==".emptyFolderPlaceholder");
+  }
+  async function signedUrl(name){
+    const {data, error} = await AUTH.sb.storage.from(BILDE_BUCKET).createSignedUrl(`${imgDir()}/${name}`, 3600);
+    return error ? "" : data.signedUrl;
+  }
+
+  async function renderImages(){
+    const files = await listImages();
+    if (!files.length){ $("projectImages").innerHTML = `<p class="empty">Ingen bilder ennå — last opp bilder av tomta, skisser eller framdrift.</p>`; return; }
+    const urls = await Promise.all(files.map(f=>signedUrl(f.name)));
+    $("projectImages").innerHTML = files.map((f,i)=>
+      `<div class="thumb"><img src="${urls[i]}" alt="Prosjektbilde" data-full="${urls[i]}">
+        <button type="button" class="img-del" data-name="${f.name}" aria-label="Slett bilde">✕</button></div>`).join("");
+  }
+
+  async function uploadImages(fileList){
+    const files = [...fileList].filter(f=>f.type.startsWith("image/"));
+    if (!files.length) return;
+    $("projectImageStatus").textContent = `Laster opp …`;
+    let feil = 0;
+    for (const file of files){
+      const safe = file.name.replace(/[^\w.\-]/g,"_");
+      const path = `${imgDir()}/${Date.now()}-${safe}`;
+      const {error} = await AUTH.sb.storage.from(BILDE_BUCKET).upload(path, file, {upsert:false});
+      if (error){ console.warn(error); feil++; }
+    }
+    $("projectImageStatus").textContent = feil ? `${feil} bilde(r) feilet` : `Lastet opp ✓`;
+    setTimeout(()=>$("projectImageStatus").textContent="", 2500);
+    renderImages();
+  }
+
+  async function deleteImage(name){
+    if (!confirm("Slette dette bildet?")) return;
+    const {error} = await AUTH.sb.storage.from(BILDE_BUCKET).remove([`${imgDir()}/${name}`]);
+    if (error){ console.warn(error); return; }
+    renderImages();
   }
   function closeProjectModal(){ $("projectModal").classList.remove("open"); }
 
@@ -2557,6 +2622,13 @@ const Projects = (()=>{
     $("projectModal").addEventListener("click", e=>{ if(e.target.id==="projectModal") closeProjectModal(); });
     $("projectDeleteBtn").addEventListener("click", handleDeleteProject);
     $("projectModalCalcs").addEventListener("click", handleCalcsClick);
+    $("projectImageInput").addEventListener("change", e=>{ uploadImages(e.target.files); e.target.value=""; });
+    $("projectImages").addEventListener("click", e=>{
+      const del = e.target.closest(".img-del");
+      if (del){ deleteImage(del.dataset.name); return; }
+      const img = e.target.closest("img[data-full]");
+      if (img) window.open(img.dataset.full, "_blank", "noopener");
+    });
     $("authProjectsBtn").addEventListener("click", async ()=>{
       nav("home");
       await renderHomeProjects();
