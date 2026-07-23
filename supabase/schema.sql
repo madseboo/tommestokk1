@@ -52,3 +52,16 @@ create policy "calculations_update_own" on public.calculations
   ) with check (
     exists (select 1 from public.projects p where p.id = calculations.project_id and p.user_id = auth.uid())
   );
+
+-- verktoy_visninger: anonym telling av hvilke verktøy som åpnes (ingen personopplysninger).
+-- Kun innsending er tillatt for alle — ingen kan lese via anon-nøkkelen; eieren leser via SQL Editor.
+create table if not exists public.verktoy_visninger (
+  id bigint generated always as identity primary key,
+  verktoy text not null,
+  opprettet_at timestamptz not null default now()
+);
+
+alter table public.verktoy_visninger enable row level security;
+
+create policy "verktoy_visninger_insert_alle" on public.verktoy_visninger
+  for insert to anon, authenticated with check (true);

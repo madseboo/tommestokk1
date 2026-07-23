@@ -2645,11 +2645,19 @@ Projects.init();
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
 const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen", gjerde:"Verktøy · Gjerde", innemaling:"Verktøy · Maling innvendig", flis:"Verktøy · Flis til bad"};
 
+/* Anonym telling av hvilke verktøy som faktisk åpnes — ingen personopplysninger,
+   kun verktøynavn + tidspunkt. Feiler stille hvis Supabase ikke er konfigurert. */
+function trackToolView(v){
+  if (!AUTH.sb) return;
+  AUTH.sb.from("verktoy_visninger").insert({verktoy:v}).then(({error})=>{ if(error) console.warn("trackToolView:",error.message); });
+}
+
 function visView(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
   $("view-"+v).classList.add("active");
   $("crumb").textContent = VIEWS[v];
   window.scrollTo({top:0});
+  if (v !== "home") trackToolView(v);
 }
 
 function nav(v){
