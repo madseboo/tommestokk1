@@ -186,6 +186,50 @@ td input.price:focus{outline:2px solid var(--signal);border-style:solid}
 .header-btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 .header-user{font-size:.8rem;color:var(--alu);display:flex;align-items:center;gap:.6rem}
 
+/* ================= Butikksammenligning ================= */
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.testdata-note{background:#FBEFE2;border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.8rem;color:var(--ink);margin-bottom:1rem}
+.shop-summary{font-size:.85rem;color:var(--ink-soft);margin:1rem 0 .5rem}
+.store-list{display:grid;gap:.9rem;margin-top:1rem}
+.store-card{border:1px solid var(--line);border-radius:var(--radius);padding:1rem;background:var(--panel)}
+.store-card.is-best{border-color:var(--signal);box-shadow:0 0 0 1px var(--signal)}
+.store-card.is-blocked{background:#FCFBFA}
+.store-card h3{font-family:var(--font-display);font-weight:700;font-size:1.2rem;text-transform:uppercase;letter-spacing:.03em;line-height:1.15}
+.store-card .chain{font-size:.75rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.15rem}
+.store-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.store-price{font-family:var(--font-display);font-size:1.85rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.store-price small{display:block;font-family:var(--font-body);font-size:.7rem;font-weight:500;color:var(--ink-soft);letter-spacing:.02em;margin-top:.2rem;white-space:normal}
+.store-facts{list-style:none;margin:.75rem 0 0;font-size:.85rem;display:grid;gap:.3rem}
+.store-facts li{display:flex;gap:.5rem;align-items:baseline}
+.store-facts li>*{min-width:0;overflow-wrap:anywhere}
+.store-facts .k{color:var(--ink-soft);min-width:8.5rem;flex:none}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:999px;padding:.15rem .6rem;white-space:nowrap}
+.badge.ok{background:#EAF4EE;color:var(--ok)}
+.badge.warn{background:#FBEFE2;color:var(--warn)}
+.badge.stop{background:#F6E3E3;color:#8E2020}
+.badge.info{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.badge.best{background:var(--signal);color:#fff}
+.datakilde{font-size:.72rem;color:var(--ink-soft);margin-top:.6rem;border-top:1px dashed var(--line);padding-top:.5rem}
+.store-card .actions{margin-top:.8rem}
+/* Handleliste per varehus */
+.shop-lines{display:grid;gap:.6rem;margin-top:1rem}
+.shop-line{border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}
+.shop-line[open]{border-color:var(--alu-dark)}
+.shop-line summary{cursor:pointer;padding:.7rem .85rem;display:flex;justify-content:space-between;gap:.75rem;align-items:baseline;font-size:.88rem;list-style:none}
+.shop-line summary::-webkit-details-marker{display:none}
+.shop-line summary:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.shop-line .line-name{font-weight:600}
+.shop-line .line-meta{display:block;font-size:.74rem;color:var(--ink-soft);font-weight:400;margin-top:.15rem}
+.shop-line .line-sum{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.line-facts{padding:0 .85rem .85rem;font-size:.83rem;display:grid;gap:.25rem;border-top:1px dashed var(--line);margin-top:.1rem;padding-top:.7rem}
+.line-facts div{display:flex;justify-content:space-between;gap:1rem}
+.line-facts div>*{min-width:0;overflow-wrap:anywhere}
+.line-facts .k{color:var(--ink-soft)}
+.line-facts .v{font-variant-numeric:tabular-nums;text-align:right}
+.line-link{display:inline-block;margin-top:.5rem;font-size:.8rem;font-weight:600}
+.approve-box{background:#FBEFE2;border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:.55rem .7rem;font-size:.8rem;margin-top:.5rem}
+.store-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;margin-top:1rem}
+
 footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(--ink-soft);border-top:1px solid var(--line);background:var(--bg)}
 
 /* Brede tabeller scroller inni sin egen boks i stedet for å dra hele siden sidelengs */
@@ -212,7 +256,18 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
   th,td{padding:.55rem .4rem}
   td input.price{width:5rem}
   .stats{grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.5rem}
+  .stat small{overflow-wrap:anywhere}   /* lange ord som «bærebjelkelinjer» skal brytes, ikke sprenge rutenettet */
   .project-total{flex-direction:column;align-items:flex-start;gap:.35rem}
+  /* Butikksammenligning på liten skjerm: hierarki pris → dekning → avstand → handling */
+  .store-top{flex-direction:column;gap:.4rem}
+  .store-price{font-size:1.6rem}
+  .store-facts li{flex-direction:column;gap:.1rem}
+  .store-facts .k{min-width:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  .store-card .actions .btn{width:100%}
+  .shop-line summary{flex-direction:column;gap:.25rem}
+  .line-facts div{flex-direction:column;gap:.05rem}
+  .line-facts .v{text-align:left}
+  .store-picker{grid-template-columns:1fr}
 }
 
 @media print{
@@ -627,6 +682,36 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
           <button class="btn secondary" id="te-lagreBtn" type="button">Lagre i prosjekt</button>
           <span id="te-copyStatus" class="copy-status" role="status"></span>
         </div>
+      </section>
+
+      <!-- Butikksammenligning (pilot). Markup er generisk og gjenbrukes av
+           andre verktøy ved å kalle ShopCompare.mount() med ny prefiks. -->
+      <section class="card" id="te-shop" aria-labelledby="te-shopTitle">
+        <h2 id="te-shopTitle">Hvor vil du handle?</h2>
+        <p class="testdata-note" role="note">
+          <b>Testdata – ikke sanntidsinformasjon.</b>
+          Priser, lagerantall og avstander er oppdiktede eksempler for å vise hvordan
+          sammenligningen regner. Ingenting hentes fra butikkene ennå.
+        </p>
+        <div class="duo" style="align-items:end">
+          <div class="field" style="margin-bottom:0">
+            <label for="te-shopPostnr">Postnummer <span class="hint">(for avstand)</span></label>
+            <input type="text" id="te-shopPostnr" value="1440" inputmode="numeric"
+                   maxlength="4" autocomplete="postal-code">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <span class="hint" id="te-shopSted" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="field" style="margin-top:1rem">
+          <span id="te-shopModeLabel" class="visually-hidden">Sorter varehus</span>
+          <div class="segment" role="group" aria-labelledby="te-shopModeLabel">
+            <button type="button" data-shopmode="billigst" aria-pressed="true">Billigst</button>
+            <button type="button" data-shopmode="naermest" aria-pressed="false">Nærmest</button>
+            <button type="button" data-shopmode="velg" aria-pressed="false">Velg varehus</button>
+          </div>
+        </div>
+        <div id="te-shopResult" aria-live="polite"></div>
       </section>
     </div>
   </div>
@@ -1901,6 +1986,10 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Butikksammenligning: testdata og logikk er skilt fra UI-et, så datakilden
+     kan byttes uten å røre kalkulatorene. Se retail.js for provider-API-et. -->
+<script src="retail-mockdata.js"></script>
+<script src="retail.js"></script>
 <script>
 "use strict";
 
@@ -1966,6 +2055,10 @@ const Product = {
       note: spec.note || "",                 // forklaring til kunden (kappliste, montering)
       estPrice: spec.estPrice ?? null,        // veiledende pris per enhet, redigerbar
       sourceTool: spec.sourceTool || null,    // hvilket verktøy produktet kom fra
+      /* Råbehov før svinn, når kalkulatoren kjenner det. quantity over inneholder
+         ALLEREDE svinn — need brukes kun til å vise regnestykket og til å regne
+         mot butikkenes faktiske pakningsstørrelser. {quantity, unit, wastePercentage} */
+      need: spec.need || null,
       lookup: {
         nobb: spec.lookup?.nobb || "",
         ean: spec.lookup?.ean || "",
@@ -2100,6 +2193,7 @@ const Catalog = (()=>{
       estPrice: extra.estPrice ?? base?.defaultPrice ?? 0,
       note: extra.note || "",
       sourceTool: extra.sourceTool || null,
+      need: extra.need || null,
       lookup: base?.lookup || {},
     });
   }
@@ -2221,6 +2315,301 @@ const PriceModal = (()=>{
   return {open, close, init};
 })();
 PriceModal.init();
+
+/* ========================================================================
+   SHOPCOMPARE — «Hvor vil du handle?»
+   UI-laget for butikksammenligning. Kjenner ikke testdataene: alle data og
+   all beregning kommer fra retail.js via provideren, slik at datakilden kan
+   byttes uten at denne modulen endres.
+
+   Monteres per verktøy:  ShopCompare.mount("te", ()=>TE.products)
+   ======================================================================== */
+const ShopCompare = (()=>{
+  const TR = window.TommestokkRetail;
+  const harMotor = !!(TR && window.TommestokkMockData);
+  const motor = harMotor ? TR.createEngine(TR.createMockProvider(window.TommestokkMockData)) : null;
+
+  const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  const instanser = {};
+
+  /* ---------- Lagerstatus: alltid tekst, farge kun som støtte ---------- */
+  function lagerBadge(linje){
+    const kart = {
+      [TR.LAGER.PA_LAGER]:      "ok",
+      [TR.LAGER.BEGRENSET]:     "warn",
+      [TR.LAGER.IKKE_NOK]:      "stop",
+      [TR.LAGER.IKKE_PA_LAGER]: "stop",
+      [TR.LAGER.UKJENT]:        "info",
+    };
+    return `<span class="badge ${kart[linje.stockStatus]}">${esc(linje.stockText)}</span>`;
+  }
+
+  /* ---------- Ett varehus-kort ---------- */
+  function storeCard(q, ctx){
+    const { billigst, referanse } = ctx;
+    const diff = q.total - billigst.total;
+    const erBilligst = diff === 0;
+
+    const diffTekst = erBilligst
+      ? (referanse
+          ? `<span class="badge best">Billigst</span> ${esc(TR.fmt.kr(referanse.total - q.total))} billigere enn ${esc(referanse.store.name)}`
+          : `<span class="badge best">Billigst</span>`)
+      : `${esc(TR.fmt.kr(diff))} dyrere enn ${esc(billigst.store.name)}`;
+
+    const dekning = `${q.linesInStock} av ${q.lineCount} varelinjer på lager (${q.coveragePct} %)`;
+    const status = q.linesMissing > 0
+      ? `<span class="badge stop">${q.linesMissing} vare${q.linesMissing===1?"":"r"} mangler</span>`
+      : (q.linesUnknownStock > 0
+          ? `<span class="badge info">${q.linesUnknownStock} med ukjent lager</span>`
+          : `<span class="badge ok">Hele listen på lager</span>`);
+
+    const godkjenning = q.linesNeedingApproval > 0
+      ? `<li><span class="k">Merk</span><span class="badge warn">${q.linesNeedingApproval} vare${q.linesNeedingApproval===1?"":"r"} krever godkjenning</span></li>` : "";
+    const prisMangler = q.linesWithoutPrice > 0
+      ? `<li><span class="k">Pris</span><span class="badge warn">Ufullstendig — ${q.linesWithoutPrice} vare mangler pris</span></li>` : "";
+    const frakt = q.shippingFee != null
+      ? `<li><span class="k">Frakt</span><span>fra ${esc(TR.fmt.kr(q.shippingFee))} ved levering</span></li>` : "";
+    const utdatert = q.linesStale > 0
+      ? `<li><span class="k">Datakvalitet</span><span class="badge warn">${q.linesStale} varelinje(r) med utdaterte data</span></li>` : "";
+
+    return `<article class="store-card${erBilligst && q.isComplete ? " is-best":""}${q.isComplete?"":" is-blocked"}">
+      <div class="store-top">
+        <div>
+          <span class="chain">${esc(q.retailer ? q.retailer.name : "")}</span>
+          <h3>${esc(q.store.name)}</h3>
+        </div>
+        <div class="store-price">${esc(TR.fmt.kr(q.total))}
+          <small>${q.priceIsPartial ? "ufullstendig sum" : "hele handlelisten"}</small></div>
+      </div>
+      <ul class="store-facts">
+        <li><span class="k">Lagerdekning</span><span>${esc(dekning)}</span></li>
+        <li><span class="k">Status</span>${status}</li>
+        <li><span class="k">Avstand</span><span>${esc(TR.fmt.km(q.distanceKm))}</span></li>
+        <li><span class="k">Pris</span><span>${diffTekst}</span></li>
+        ${frakt}${godkjenning}${prisMangler}${utdatert}
+      </ul>
+      <p class="datakilde">Testdata — ikke sanntidsinformasjon · sist oppdatert ${esc(TR.fmt.klokke(q.lastUpdated))}</p>
+      <div class="actions">
+        <button class="btn secondary" type="button" data-open-store="${esc(q.store.id)}"
+          aria-label="Se handleliste for ${esc(q.store.name)}">Se handleliste</button>
+      </div>
+    </article>`;
+  }
+
+  /* ---------- Én varelinje ---------- */
+  function lineRow(l){
+    if (!l.matched){
+      return `<details class="shop-line">
+        <summary><span><span class="line-name">${esc(l.name)}</span>
+          <span class="line-meta">${esc(l.category)}${l.dimensions?` · ${esc(l.dimensions)}`:""}</span></span>
+          <span class="line-sum"><span class="badge stop">Ikke matchet</span></span></summary>
+        <div class="line-facts">
+          <div><span class="k">Beregnet behov</span><span class="v">${esc(TR.fmt.num(l.totalNeed))} ${esc(l.totalNeedUnit)}</span></div>
+          <div><span class="k">Status</span><span class="v">${esc(l.issueText)}</span></div>
+        </div></details>`;
+    }
+    const p = l.produkt;
+    const enhetsnavn = l.packageQuantity > 1 ? `pakke à ${l.packageQuantity}` : l.salesUnit;
+    const godkjenning = l.requiresApproval
+      ? `<div class="approve-box"><b>Krever godkjenning.</b> Alternativt produkt i en konstruksjons- eller
+          sikkerhetskritisk kategori: ${esc(l.differences.join(". "))}. Kontroller at det er egnet før kjøp —
+          systemet bytter ikke slike varer automatisk.</div>` : "";
+    const avvik = !l.requiresApproval && l.differences.length
+      ? `<div><span class="k">Avvik</span><span class="v">${esc(l.differences.join(". "))}</span></div>` : "";
+
+    return `<details class="shop-line">
+      <summary>
+        <span><span class="line-name">${esc(p.name)}</span>
+          <span class="line-meta">${esc(l.category)}${l.dimensions?` · ${esc(l.dimensions)}`:""} ·
+            ${l.units} ${esc(enhetsnavn)} · ${esc(l.stockText)}</span></span>
+        <span class="line-sum">${esc(TR.fmt.kr(l.lineSum))}</span>
+      </summary>
+      <div class="line-facts">
+        <div><span class="k">Beregnet behov</span><span class="v">${esc(TR.fmt.num(l.baseQuantity))} ${esc(l.baseUnit)}</span></div>
+        <div><span class="k">Svinn</span><span class="v">${l.wastePercentage} %</span></div>
+        <div><span class="k">Totalt behov</span><span class="v">${esc(TR.fmt.num(l.totalNeed))} ${esc(l.totalNeedUnit)}</span></div>
+        <div><span class="k">Antall å kjøpe</span><span class="v"><b>${l.units} ${esc(enhetsnavn)}</b></span></div>
+        <div><span class="k">Regnestykke</span><span class="v">${esc(l.unitsForklaring)}</span></div>
+        ${l.productLength?`<div><span class="k">Produktlengde</span><span class="v">${esc(TR.fmt.num(l.productLength))} m</span></div>`:""}
+        <div><span class="k">Pris per ${esc(l.salesUnit)}</span><span class="v">${esc(TR.fmt.kr(l.unitPrice))}${l.campaign?` <span class="badge warn">Kampanje</span>`:""}</span></div>
+        <div><span class="k">Linjesum</span><span class="v"><b>${esc(TR.fmt.kr(l.lineSum))}</b></span></div>
+        <div><span class="k">Lagerantall</span><span class="v">${l.stockQuantity==null?"ukjent":l.stockQuantity+" stk"}</span></div>
+        <div><span class="k">Lagerstatus</span><span class="v">${lagerBadge(l)}</span></div>
+        ${l.shortfallText?`<div><span class="k">Mangler</span><span class="v">${esc(l.shortfallText)}</span></div>`:""}
+        ${l.issueText?`<div><span class="k">Merknad</span><span class="v">${esc(l.issueText)}</span></div>`:""}
+        <div><span class="k">Produktmatch</span><span class="v">${esc(l.matchType)}</span></div>
+        ${avvik}
+        <div><span class="k">Varenummer</span><span class="v">${esc(p.retailerProductId)}${p.nobbNumber?` · NOBB ${esc(p.nobbNumber)}`:""}</span></div>
+        <div><span class="k">Sist kontrollert</span><span class="v">${esc(TR.fmt.datoTid(l.lastUpdated))}${l.stale?` <span class="badge warn">Utdatert</span>`:""}</span></div>
+        ${godkjenning}
+        ${p.productUrl?`<a class="line-link" href="${esc(p.productUrl)}" target="_blank" rel="noopener">Åpne produktside ↗</a>`:""}
+      </div>
+    </details>`;
+  }
+
+  /* ---------- Full handleliste for ett varehus ---------- */
+  function storeDetail(q){
+    const rekkefolge = { [TR.LAGER.IKKE_PA_LAGER]:0, [TR.LAGER.IKKE_NOK]:1, [TR.LAGER.UKJENT]:2,
+                         [TR.LAGER.BEGRENSET]:3, [TR.LAGER.PA_LAGER]:4 };
+    const linjer = q.lines.slice().sort((a,b)=>
+      (a.matched?1:0)-(b.matched?1:0) ||
+      (rekkefolge[a.stockStatus]??9)-(rekkefolge[b.stockStatus]??9));
+
+    const advarsel = !q.isComplete
+      ? `<div class="alert warn"><b>Ikke alt kan kjøpes her.</b>
+          ${q.linesInStock} av ${q.lineCount} varelinjer er på lager${q.linesWithoutPrice?`, og ${q.linesWithoutPrice} vare mangler pris`:""}${q.linesUnknownStock?`. ${q.linesUnknownStock} varelinje har ukjent lagerstatus`:""}.
+          De aktuelle varelinjene ligger øverst i listen.</div>`
+      : `<div class="alert ok"><b>Hele handlelisten er på lager her</b> etter testdataene.${q.linesNeedingApproval?` Merk at ${q.linesNeedingApproval} varelinje krever din godkjenning.`:""}</div>`;
+
+    return `<div class="shop-detail">
+      <div class="actions" style="margin:0 0 1rem">
+        <button class="btn secondary" type="button" data-shopback="1">← Tilbake til varehusene</button>
+      </div>
+      <div class="store-top">
+        <div><span class="chain">${esc(q.retailer?q.retailer.name:"")}</span>
+          <h3>${esc(q.store.name)}</h3>
+          <span class="hint">${esc(q.store.address)}, ${esc(q.store.postalCode)} ${esc(q.store.city)} · ${esc(TR.fmt.km(q.distanceKm))}</span></div>
+        <div class="store-price">${esc(TR.fmt.kr(q.total))}
+          <small>${q.priceIsPartial?"ufullstendig sum":"hele handlelisten"}</small></div>
+      </div>
+      ${advarsel}
+      <div class="stats" style="margin-top:1rem">
+        <div class="stat"><b>${q.lineCount}</b><small>varelinjer</small></div>
+        <div class="stat"><b>${q.coveragePct} %</b><small>lagerdekning</small></div>
+        <div class="stat"><b>${q.linesMissing}</b><small>mangler</small></div>
+        ${q.shippingFee!=null?`<div class="stat"><b>${esc(TR.fmt.kr(q.shippingFee))}</b><small>frakt fra</small></div>`:""}
+      </div>
+      <div class="shop-lines">${linjer.map(lineRow).join("")}</div>
+      <p class="datakilde">Testdata — ikke sanntidsinformasjon. Alle priser og lagertall i denne listen
+        er oppdiktet. Sist «oppdatert» ${esc(TR.fmt.datoTid(q.lastUpdated))}.</p>
+    </div>`;
+  }
+
+  /* ---------- Velg varehus ---------- */
+  function pickerView(res){
+    return `<div>
+      <p class="shop-summary">Velg kjede eller varehus for å se hele materiallisten med pris og
+        lagerstatus der. Sammenligningen gjelder én butikk av gangen.</p>
+      <div class="store-picker">
+        ${res.quotes.map(q=>`<button class="store-pick" type="button" data-open-store="${esc(q.store.id)}">
+          <b>${esc(q.store.name)}</b><br>
+          <span class="hint">${esc(q.retailer?q.retailer.name:"")} · ${esc(q.store.postalCode)} ${esc(q.store.city)}<br>
+          ${esc(TR.fmt.km(q.distanceKm))} · ${esc(TR.fmt.kr(q.total))}${q.isComplete?"":" · mangler varer"}</span>
+        </button>`).join("")}
+      </div>
+      <p class="datakilde">${res.quotes.length} varehus i testdataene. En ekte integrasjon vil hente
+        varehus ut fra postnummeret ditt.</p>
+    </div>`;
+  }
+
+  /* ---------- Hovedvisning ---------- */
+  function render(prefix){
+    const inst = instanser[prefix];
+    const vert = $(`${prefix}-shopResult`);
+    if (!vert) return;
+    if (!harMotor){
+      vert.innerHTML = `<div class="alert warn">Butikksammenligningen kunne ikke lastes
+        (retail.js mangler). Materiallisten over fungerer som før.</div>`;
+      return;
+    }
+
+    const krav = motor.requirementsFrom(inst.getProducts() || []);
+    if (!krav.length){
+      vert.innerHTML = `<div class="alert">Fyll inn mål over for å få en materialliste å sammenligne.</div>`;
+      return;
+    }
+
+    const postnr = $(`${prefix}-shopPostnr`).value.trim();
+    const stedFelt = $(`${prefix}-shopSted`);
+    const origo = motor.resolveOrigin(postnr);
+    if (!origo.ok){
+      if (stedFelt) stedFelt.textContent = "";
+      vert.innerHTML = `<div class="alert warn"><b>Ugyldig postnummer.</b> ${esc(origo.errorText)}.
+        Testdataene dekker blant annet 1440 Drøbak, 1407 Vinterbro, 1400 Ski, 1430 Ås og 2034 Holter.</div>`;
+      return;
+    }
+    if (stedFelt) stedFelt.textContent = `${origo.origin.sted} — avstander regnes herfra`;
+
+    const res = motor.quoteAll(krav, {origin: origo.origin});
+    if (!res.ok){
+      vert.innerHTML = `<div class="alert warn">${esc(res.errorText)}.</div>`;
+      return;
+    }
+
+    if (inst.apenButikk){
+      const q = res.quotes.find(x=>x.store.id===inst.apenButikk);
+      if (q){ vert.innerHTML = storeDetail(q); return; }
+      inst.apenButikk = null;
+    }
+
+    if (inst.modus === "velg"){ vert.innerHTML = pickerView(res); return; }
+
+    const etterPris = TR.Ranking.cheapest(res.quotes);
+    const billigst = etterPris[0];
+    const ctx = {billigst, referanse: etterPris[1] || null};
+    const sortert = inst.modus === "naermest" ? TR.Ranking.nearest(res.quotes) : etterPris;
+
+    let topp;
+    if (!res.anyComplete){
+      const best = res.bestCoverage;
+      topp = `<div class="alert warn"><b>Ingen butikker har hele handlelisten på lager.</b>
+        ${esc(best.store.name)} har best dekning med ${best.linesInStock} av ${best.lineCount} varelinjer.</div>`;
+    } else if (inst.modus === "naermest"){
+      const naermest = sortert[0];
+      const naermestKomplett = TR.Ranking.nearestComplete(res.quotes)[0];
+      topp = naermest.isComplete
+        ? `<div class="alert ok"><b>${esc(naermest.store.name)}</b> er nærmest og har hele listen på lager.</div>`
+        : `<div class="alert"><b>${esc(naermest.store.name)}</b> er nærmest, men mangler
+            ${naermest.linesMissing} varelinje(r). Nærmeste varehus med alt på lager er
+            <b>${esc(naermestKomplett.store.name)}</b> (${esc(TR.fmt.km(naermestKomplett.distanceKm))},
+            ${esc(TR.fmt.kr(naermestKomplett.total - billigst.total))} dyrere enn billigste alternativ).</div>`;
+    } else {
+      const billigstKomplett = TR.Ranking.cheapestComplete(res.quotes)[0];
+      topp = billigst.isComplete
+        ? `<div class="alert ok"><b>${esc(billigst.store.name)}</b> er billigst og har hele listen på lager.</div>`
+        : `<div class="alert"><b>${esc(billigst.store.name)}</b> er billigst, men mangler
+            ${billigst.linesMissing} varelinje(r). Billigste varehus med alt på lager er
+            <b>${esc(billigstKomplett.store.name)}</b> til ${esc(TR.fmt.kr(billigstKomplett.total))}
+            — ${esc(TR.fmt.kr(billigstKomplett.total - billigst.total))} mer.</div>`;
+    }
+
+    vert.innerHTML = topp +
+      `<p class="shop-summary">${krav.length} varelinjer sammenlignet hos ${res.quotes.length} varehus.
+        Hele listen prises hos én butikk av gangen — varene fordeles ikke mellom kjeder i denne versjonen.</p>` +
+      `<div class="store-list">${sortert.map(q=>storeCard(q, ctx)).join("")}</div>`;
+  }
+
+  /* ---------- Montering ---------- */
+  function mount(prefix, getProducts){
+    if (!$(`${prefix}-shopResult`)) return;
+    instanser[prefix] = {modus:"billigst", apenButikk:null, getProducts};
+
+    document.querySelectorAll(`#${prefix}-shop [data-shopmode]`).forEach(b=>
+      b.addEventListener("click",()=>{
+        instanser[prefix].modus = b.dataset.shopmode;
+        instanser[prefix].apenButikk = null;
+        document.querySelectorAll(`#${prefix}-shop [data-shopmode]`)
+          .forEach(x=>x.setAttribute("aria-pressed", x===b));
+        render(prefix);
+      }));
+
+    $(`${prefix}-shopPostnr`).addEventListener("input", ()=>render(prefix));
+
+    $(`${prefix}-shopResult`).addEventListener("click", e=>{
+      const apne = e.target.closest("[data-open-store]");
+      if (apne){ instanser[prefix].apenButikk = apne.dataset.openStore; render(prefix); return; }
+      if (e.target.closest("[data-shopback]")){ instanser[prefix].apenButikk = null; render(prefix); }
+    });
+
+    render(prefix);
+  }
+
+  /** Kalles av kalkulatoren når materiallisten er regnet på nytt. */
+  function refresh(prefix){ if (instanser[prefix]) render(prefix); }
+
+  return {mount, refresh};
+})();
+window.ShopCompare = ShopCompare;   // eksponeres eksplisitt: const skaper ikke window-egenskap
 
 /* ========================================================================
    AUTH — innlogging med engangskode på e-post (Supabase Auth, åpen registrering)
@@ -2755,9 +3144,11 @@ const TE = (()=>{
       Catalog.make("stolpesko_98", r.stolper, {sourceTool:"terrasse",
         note:`én per stolpe — alt.: støpt fundament med søylesko`, estPrice:P.stolpesko_98}),
       Catalog.make(bordId, r.bordLm, {sourceTool:"terrasse",
-        note:`≈ ${fm1(r.bordLm*r.bord.dekker)} m² bord — ${r.rader} rader à ${fm1(r.B)} m, inkl. ${Math.round(r.svinn*100)} % svinn, fallende lengder`, estPrice:P[bordId]}),
+        note:`≈ ${fm1(r.bordLm*r.bord.dekker)} m² bord — ${r.rader} rader à ${fm1(r.B)} m, inkl. ${Math.round(r.svinn*100)} % svinn, fallende lengder`,
+        need:{quantity:+(r.rader*r.B).toFixed(1), unit:"lm", wastePercentage:Math.round(r.svinn*100)}, estPrice:P[bordId]}),
       Catalog.make(skrueId, r.skruePk, {sourceTool:"terrasse",
-        note:`${fmt(r.bordSkruer)} skruer — 2 per bord per bjelke`, estPrice:P[skrueId]}),
+        note:`${fmt(r.bordSkruer)} skruer — 2 per bord per bjelke`,
+        need:{quantity:r.bordSkruer, unit:"stk", wastePercentage:0}, estPrice:P[skrueId]}),
     ];
     if (r.bjelkesko) rows.push(Catalog.make("bjelkesko_48", r.bjelkesko, {sourceTool:"terrasse",
         note:`2 per bjelke per innfesting`, estPrice:P.bjelkesko_48}));
@@ -2767,6 +3158,7 @@ const TE = (()=>{
         note:`2 per stolpe, bærebjelke → stolpe`, estPrice:P.bolt_m10}));
 
     TE.products = rows;   // eksponert for "Finn priser"-modalen og fremtidig CSV/PDF-eksport
+    if (window.ShopCompare) ShopCompare.refresh("te");   // butikksammenligningen følger materiallisten
     $("te-matTable").querySelector("tbody").innerHTML = Renderer.renderRows(rows) + Renderer.renderSumRow(rows);
     $("te-matTable").querySelectorAll("input.price").forEach(inp=>inp.addEventListener("change",e=>{
       st.priser[e.target.dataset.key]=Math.max(0,parseFloat(e.target.value)||0); render();
@@ -2828,7 +3220,9 @@ const TE = (()=>{
       document.querySelectorAll("#view-terrasse [data-fest]").forEach(x=>x.setAttribute("aria-pressed",x===b)); render();
     }));
     $("te-copyBtn").addEventListener("click",()=>copy(liste,$("te-copyStatus")));
-    $("te-priserBtn").addEventListener("click",()=>PriceModal.open(TE.products, "Terrasse"));
+    $("te-priserBtn").addEventListener("click",()=>{
+      $("te-shop").scrollIntoView({behavior:"smooth", block:"start"});
+    });
     $("te-lagreBtn").addEventListener("click",()=>Projects.openSaveModal("terrasse","Terrasse",readForm("terrasse"),TE.products));
     render();
   }
@@ -4782,6 +5176,7 @@ const FB = (()=>{
 
 /* ========================= Oppstart ========================= */
 TE.init();
+if (window.ShopCompare) ShopCompare.mount("te", ()=>TE.products);
 DS.init();
 RK.init();
 PK.init();

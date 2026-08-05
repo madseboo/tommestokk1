@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<title>Tommestokk1 · Tester for butikksammenligning</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EFF1EE; --panel:#FFFFFF; --ink:#1C2A33; --ink-soft:#4A5A64;
+  --alu-dark:#8E979E; --signal:#E85D0F; --ok:#1E7A46; --warn:#9A4B00;
+  --line:#DCE0DD; --radius:10px;
+  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5}
+header{background:var(--ink);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
+.brand em{font-style:normal;color:var(--signal)}
+.crumb{font-size:.8rem;color:#C9CFD4;border:1px solid var(--alu-dark);border-radius:999px;padding:.15rem .7rem}
+.wrap{max-width:900px;margin:0 auto;padding:1.5rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem}
+h2{font-family:var(--font-display);font-weight:600;font-size:1.15rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--signal);display:inline-block;padding-bottom:.15rem;margin-bottom:1rem}
+.sum{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.6rem 1rem;min-width:110px}
+.stat b{display:block;font-family:var(--font-display);font-size:1.8rem;font-weight:700;line-height:1.1}
+.stat small{font-size:.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+.stat.pass b{color:var(--ok)} .stat.fail b{color:#8E2020}
+.res{list-style:none;font-size:.88rem}
+.res li{padding:.5rem .1rem;border-bottom:1px dashed var(--line);display:flex;gap:.7rem;align-items:flex-start}
+.res li:last-child{border-bottom:none}
+.tag{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:999px;padding:.15rem .55rem;flex:none}
+.tag.ok{background:#EAF4EE;color:var(--ok)} .tag.no{background:#F6E3E3;color:#8E2020}
+.feil{display:block;color:#8E2020;font-size:.8rem;margin-top:.2rem}
+.note{background:#FBEFE2;border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.82rem;margin-bottom:1.25rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th,td{padding:.5rem .4rem;text-align:left;border-bottom:1px solid var(--line)}
+th{font-family:var(--font-display);text-transform:uppercase;letter-spacing:.05em;font-size:.78rem;color:var(--ink-soft)}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <span class="brand">Tommestokk<em>1</em></span>
+  <span class="crumb">Tester · butikksammenligning</span>
+</header>
+
+<div class="wrap">
+  <p class="note"><b>Testdata — ikke sanntidsinformasjon.</b> Denne siden kjører testsuiten for
+  butikksammenligningen mot de lokale mockdataene i <code>retail-mockdata.js</code>.
+  Ingen priser eller lagertall her er ekte.</p>
+
+  <section class="card">
+    <h2>Testresultat</h2>
+    <div class="sum" id="sum"></div>
+    <ul class="res" id="res"></ul>
+  </section>
+
+  <section class="card">
+    <h2>Demo: Terrasse 20 m², postnummer 1440</h2>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin-bottom:1rem">
+      Hele handlelisten priset hos hvert varehus, sortert etter totalpris.</p>
+    <table id="demo">
+      <thead><tr><th>Varehus</th><th class="num">Totalpris</th><th class="num">Avstand</th>
+        <th class="num">Dekning</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Terrassebord: stykkpris mot totalpris</h2>
+    <p style="font-size:.85rem;color:var(--ink-soft);margin-bottom:1rem">
+      Viser hvorfor stykkpris alene ikke holder — kortere bord gir flere enheter.</p>
+    <table id="bord">
+      <thead><tr><th>Varehus</th><th class="num">Lengde</th><th class="num">Pris/stk</th>
+        <th class="num">Antall</th><th class="num">Linjesum</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </section>
+</div>
+
+<script src="retail-mockdata.js"></script>
+<script src="retail.js"></script>
+<script src="retail.tests.js"></script>
+<script>
+(function(){
+  const r = TommestokkRetailTests.run();
+  document.getElementById("sum").innerHTML =
+    `<div class="stat"><b>${r.totalt}</b><small>tester</small></div>
+     <div class="stat pass"><b>${r.bestått}</b><small>bestått</small></div>
+     <div class="stat ${r.feilet?"fail":""}"><b>${r.feilet}</b><small>feilet</small></div>`;
+  document.getElementById("res").innerHTML = r.resultater.map(x=>
+    `<li><span class="tag ${x.ok?"ok":"no"}">${x.ok?"OK":"FEIL"}</span>
+      <span>${x.navn}${x.ok?"":`<span class="feil">${x.feil}</span>`}</span></li>`).join("");
+
+  const TR = TommestokkRetail;
+  const motor = TR.createEngine(TR.createMockProvider(TommestokkMockData));
+  const krav = motor.requirementsFrom(TommestokkRetailTests.TERRASSE_20M2);
+  const origo = motor.resolveOrigin("1440").origin;
+  const res = motor.quoteAll(krav, {origin: origo});
+
+  document.querySelector("#demo tbody").innerHTML =
+    TR.Ranking.cheapest(res.quotes).map(q=>`<tr>
+      <td>${q.store.name}</td>
+      <td class="num">${TR.fmt.kr(q.total)}</td>
+      <td class="num">${TR.fmt.km(q.distanceKm)}</td>
+      <td class="num">${q.coveragePct} %</td>
+      <td>${q.isComplete ? "Komplett" : `${q.linesMissing} mangler${q.linesUnknownStock?", "+q.linesUnknownStock+" ukjent":""}`}${q.linesNeedingApproval?" · krever godkjenning":""}${q.linesWithoutPrice?" · pris mangler":""}</td>
+    </tr>`).join("");
+
+  document.querySelector("#bord tbody").innerHTML = res.quotes.map(q=>{
+    const l = q.lines.find(x=>x.genericId==="terrassebord_28x120_imp");
+    return `<tr><td>${q.store.name}</td>
+      <td class="num">${TR.fmt.num(l.productLength)} m</td>
+      <td class="num">${TR.fmt.kr(l.unitPrice)}</td>
+      <td class="num">${l.units}</td>
+      <td class="num">${TR.fmt.kr(l.lineSum)}</td></tr>`;
+  }).join("");
+})();
+</script>
+</body>
+</html>
