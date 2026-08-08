@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /tests.html
+
+Sitemap: https://tommestokk1.no/sitemap.xml

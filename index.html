@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
-<title>Tommestokk1 · Digitale verktøy for deg som bygger</title>
+<!-- Tittel, beskrivelse og canonical settes per visning i visView() -->
+<title>Tommestokk1 — byggekalkulatorer med materialliste og kappliste</title>
+<meta name="description" content="Legg inn mål og få komplett materialliste, kappliste og handleliste. Dimensjonert etter norske spenntabeller og produsentenes monteringsregler.">
+<link rel="canonical" href="https://tommestokk1.no/">
+<meta property="og:site_name" content="Tommestokk1">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nb_NO">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -33,7 +39,7 @@ input,select,button{color-scheme:light}
 
 /* ================= Header ================= */
 header{background:var(--ink);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
-.brand{display:flex;align-items:center;gap:.7rem;cursor:pointer;background:none;border:none;color:#fff;font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
+.brand{text-decoration:none;display:flex;align-items:center;gap:.7rem;cursor:pointer;background:none;border:none;color:#fff;font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
 .brand svg{height:30px;width:auto;display:block}
 .brand em{font-style:normal;color:var(--signal)}
 header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);border-radius:999px;padding:.15rem .7rem}
@@ -58,7 +64,7 @@ header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);
 .tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem;margin-top:1rem}
 .tool-group{margin-top:2rem}
 .tool-group>h2{font-family:var(--font-display);font-weight:600;font-size:1.05rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding-bottom:.35rem;border-bottom:1px solid var(--line)}
-.tool-card{
+.tool-card{text-decoration:none;
   background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
   padding:1.15rem;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
   display:flex;flex-direction:column;gap:.7rem;transition:transform .12s ease, box-shadow .12s ease;
@@ -79,7 +85,7 @@ header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);
 .tool-head h1{font-family:var(--font-display);font-weight:700;font-size:clamp(1.8rem,4vw,2.5rem);text-transform:uppercase;letter-spacing:.02em;line-height:1.05}
 .tool-head h1 em{font-style:normal;color:var(--signal)}
 .tool-head p{max-width:64ch;color:var(--ink-soft);margin-top:.4rem;font-size:.93rem}
-.back{font:inherit;font-size:.85rem;font-weight:600;background:none;border:none;color:var(--signal-dark);cursor:pointer;padding:.3rem 0}
+.back{text-decoration:none;display:inline-block;font:inherit;font-size:.85rem;font-weight:600;background:none;border:none;color:var(--signal-dark);cursor:pointer;padding:.3rem 0}
 .back:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
 
 .grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:1.25rem;margin-top:1.25rem;align-items:start}
@@ -285,11 +291,11 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <body>
 
 <header>
-  <button class="brand" data-nav="home" aria-label="Til forsiden">
+  <a class="brand" href="/" data-nav="home" aria-label="Til forsiden">
     <!-- tommestokk-ikon -->
     <svg viewBox="0 0 64 34" aria-hidden="true"><g stroke="#E85D0F" stroke-width="6" stroke-linecap="round" fill="none"><path d="M5 29 L24 6 L43 29 L59 10"/></g><g fill="#fff"><circle cx="5" cy="29" r="3"/><circle cx="24" cy="6" r="3"/><circle cx="43" cy="29" r="3"/><circle cx="59" cy="10" r="3"/></g></svg>
     Tommestokk<em>1</em>
-  </button>
+  </a>
   <span class="crumb" id="crumb">Digitale verktøy for deg som bygger</span>
   <div class="header-auth">
     <button class="header-btn" id="authLoginBtn" type="button">Logg inn</button>
@@ -353,7 +359,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
     <section class="tool-group">
       <h2>Terrasse & uterom</h2>
       <div class="tools">
-      <button class="tool-card" data-nav="terrasse">
+      <a class="tool-card" href="/terrasse" data-nav="terrasse">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <rect x="6" y="4" width="108" height="8" fill="#1C2A33" rx="2"/>
@@ -366,9 +372,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Terrasse</h3>
         <p>Dimensjonerer bjelkelag fra spenntabell (C24, snølast 4,5 kN/m²) og regner bjelker, bærebjelker, stolper, bord, skruer og beslag — med kappliste.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="dryppstop">
+      <a class="tool-card" href="/dryppstop" data-nav="dryppstop">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g stroke="#E6D9B8" stroke-width="5"><line x1="8" y1="8" x2="112" y2="8"/><line x1="8" y1="17" x2="112" y2="17"/></g>
@@ -381,9 +387,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>DryppStop undertak</h3>
         <p>Tørr uteplass under terrassen. Plater, profiler, beslag, skruer og fugemasse etter Plastmos monteringsveiledning — med varenummer klare for disken.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="rekkverk">
+      <a class="tool-card" href="/rekkverk" data-nav="rekkverk">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <line x1="10" y1="74" x2="110" y2="74" stroke="#1C2A33" stroke-width="4"/>
@@ -395,9 +401,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Rekkverk</h3>
         <p>TEK17-sikkert spilerekkverk: riktig høyde ut fra fallhøyden, eksakt spileavstand per felt (aldri over 10 cm åpning), stolper, sviller og festemidler.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="pergola">
+      <a class="tool-card" href="/pergola" data-nav="pergola">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g stroke="#E6D9B8" stroke-width="4"><line x1="16" y1="14" x2="16" y2="6"/><line x1="30" y1="14" x2="30" y2="6"/><line x1="44" y1="14" x2="44" y2="6"/><line x1="58" y1="14" x2="58" y2="6"/><line x1="72" y1="14" x2="72" y2="6"/><line x1="86" y1="14" x2="86" y2="6"/><line x1="100" y1="14" x2="100" y2="6"/></g>
@@ -409,14 +415,14 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Pergola</h3>
         <p>Stolper, doble bærebjelker og sperrer med utstikk — bjelkedimensjon velges automatisk etter spennet, med søknadsfri-sjekk for både frittstående og inntil vegg.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
       </div>
     </section>
 
     <section class="tool-group">
       <h2>Skjerming & gjerde</h2>
       <div class="tools">
-      <button class="tool-card" data-nav="levegg">
+      <a class="tool-card" href="/levegg" data-nav="levegg">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g stroke="#E6D9B8" stroke-width="6"><line x1="14" y1="10" x2="14" y2="74"/><line x1="28" y1="10" x2="28" y2="74"/><line x1="42" y1="10" x2="42" y2="74"/><line x1="56" y1="10" x2="56" y2="74"/><line x1="70" y1="10" x2="70" y2="74"/><line x1="84" y1="10" x2="84" y2="74"/><line x1="98" y1="10" x2="98" y2="74"/></g>
@@ -426,9 +432,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Levegg</h3>
         <p>Søknadsfri-sjekk mot byggereglene, stolper og fundament etter vindutsatthet, bord etter utforming — tett, tosidig eller spilevegg.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="gjerde">
+      <a class="tool-card" href="/gjerde" data-nav="gjerde">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g stroke="#8E979E" stroke-width="6"><line x1="18" y1="20" x2="18" y2="74"/><line x1="46" y1="20" x2="46" y2="74"/><line x1="98" y1="20" x2="98" y2="74"/></g>
@@ -440,14 +446,14 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Gjerde</h3>
         <p>Sider inn → stolper, sviller, spiler eller tette bord og port ut. Søknadsfri-sjekk mot vei og nabo, med eller uten gang- eller kjøreport.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
       </div>
     </section>
 
     <section class="tool-group">
       <h2>Grunn & hage</h2>
       <div class="tools">
-      <button class="tool-card" data-nav="belegningsstein">
+      <a class="tool-card" href="/belegningsstein" data-nav="belegningsstein">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g fill="#E6D9B8" stroke="#C9CFD4" stroke-width="1.5">
@@ -462,9 +468,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Belegningsstein &amp; grus</h3>
         <p>Areal inn → tonn pukk og settesand, stein, fugesand, fiberduk og kantstein ut. Lagoppbygging etter bruk — gangareal eller kjørbar oppkjørsel.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="plen">
+      <a class="tool-card" href="/plen" data-nav="plen">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <rect x="8" y="30" width="104" height="46" rx="3" fill="#7FB88F"/>
@@ -477,14 +483,14 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Plen</h3>
         <p>Areal inn → vekstjord i m³, ferdigplen-ruller eller gressfrø, gjødsel og kalk ut — med vanning- og tidspunktråd.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
       </div>
     </section>
 
     <section class="tool-group">
       <h2>Utvendig kledning & maling</h2>
       <div class="tools">
-      <button class="tool-card" data-nav="kledning">
+      <a class="tool-card" href="/kledning" data-nav="kledning">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <polygon points="60,6 112,34 8,34" fill="#8E979E"/>
@@ -496,9 +502,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Kledning</h3>
         <p>Veggmål inn → løpemeter kledning etter profil, sløyfer og lekter, spiker og musebånd ut. Dekkbredde-regning for tømmermann og dobbeltfals.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="utemaling">
+      <a class="tool-card" href="/utemaling" data-nav="utemaling">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <rect x="10" y="14" width="66" height="60" fill="#E6D9B8" stroke="#C9CFD4" stroke-width="2"/>
@@ -511,14 +517,14 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Maling utvendig</h3>
         <p>Veggmål inn → liter og spann ut. Dekkevne etter behandling og underlag, grunning ved ubehandlet treverk, husvask og værvindu-råd.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
       </div>
     </section>
 
     <section class="tool-group">
       <h2>Innvendig</h2>
       <div class="tools">
-      <button class="tool-card" data-nav="parkett">
+      <a class="tool-card" href="/parkett" data-nav="parkett">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g fill="#E6D9B8" stroke="#C9CFD4" stroke-width="1.5">
@@ -533,9 +539,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Parkett &amp; laminat</h3>
         <p>Rom-mål inn → pakker, underlag, fuktsperre og lister ut. Svinn etter leggemønster, siste rad-sjekk og ekspansjonsfuge etter produsentreglene.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="innemaling">
+      <a class="tool-card" href="/innemaling" data-nav="innemaling">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <rect x="12" y="10" width="96" height="64" rx="3" fill="#EFF1EE" stroke="#C9CFD4" stroke-width="2"/>
@@ -549,9 +555,9 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Maling innvendig</h3>
         <p>Rommål inn → liter vegg- og takmaling, grunning og sparkel ut. Areal for vegger, tak eller begge, med ekstra jobb regnet inn for ny gips.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
 
-      <button class="tool-card" data-nav="flis">
+      <a class="tool-card" href="/flis" data-nav="flis">
         <span class="icon" aria-hidden="true">
           <svg viewBox="0 0 120 84">
             <g fill="#E6D9B8" stroke="#8E979E" stroke-width="1.5">
@@ -566,7 +572,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
         <h3>Flis til bad</h3>
         <p>Gulv- og veggmål inn → fliser, lim og fug etter flisstørrelse, membran med remser og silikon ut. Med våtromsnorm-sjekk og fagansvar-påminnelse.</p>
         <span class="go">Åpne verktøyet →</span>
-      </button>
+      </a>
       </div>
     </section>
 
@@ -580,7 +586,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== TERRASSE -->
 <main class="view" id="view-terrasse">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Terrasse — <em>fra mål til komplett bestilling</em></h1>
@@ -721,7 +727,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== DRYPPSTOP -->
 <main class="view" id="view-dryppstop">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>DryppStop undertak — <em>mål inn, handleliste ut</em></h1>
@@ -815,7 +821,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== REKKVERK -->
 <main class="view" id="view-rekkverk">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Rekkverk — <em>TEK17-sikkert, med eksakt spileavstand</em></h1>
@@ -924,7 +930,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== PARKETT -->
 <main class="view" id="view-parkett">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Parkett &amp; laminat — <em>rom-mål inn, pakker og lister ut</em></h1>
@@ -1031,7 +1037,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== KLEDNING -->
 <main class="view" id="view-kledning">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Kledning — <em>veggmål inn, løpemeter og lekter ut</em></h1>
@@ -1136,7 +1142,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== LEVEGG -->
 <main class="view" id="view-levegg">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Levegg — <em>søknadsfri-sjekk, stolper og bord</em></h1>
@@ -1228,7 +1234,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== PERGOLA -->
 <main class="view" id="view-pergola">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Pergola — <em>stolper, bjelker og sperrer med utstikk</em></h1>
@@ -1318,7 +1324,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== MALING UTVENDIG -->
 <main class="view" id="view-utemaling">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Maling utvendig — <em>veggmål inn, liter og spann ut</em></h1>
@@ -1420,7 +1426,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== BELEGNINGSSTEIN -->
 <main class="view" id="view-belegningsstein">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Belegningsstein &amp; grus — <em>areal inn, tonn og stein ut</em></h1>
@@ -1503,7 +1509,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== PLEN -->
 <main class="view" id="view-plen">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Plen — <em>areal inn, jord og gress ut</em></h1>
@@ -1584,7 +1590,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== GJERDE -->
 <main class="view" id="view-gjerde">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Gjerde — <em>sider inn, stolper, bord og port ut</em></h1>
@@ -1681,7 +1687,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== MALING INNVENDIG -->
 <main class="view" id="view-innemaling">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Maling innvendig — <em>rommål inn, liter og sparkel ut</em></h1>
@@ -1790,7 +1796,7 @@ footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(
 <!-- ==================================================== FLIS TIL BAD -->
 <main class="view" id="view-flis">
 <div class="wrap">
-  <button class="back" data-nav="home">← Alle verktøy</button>
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
   <div class="tool-head">
     <div>
       <h1>Flis til bad — <em>mål inn, fliser, lim, fug og membran ut</em></h1>
@@ -3032,7 +3038,52 @@ Projects.init();
 
 /* ========================= Navigasjon ========================= */
 /* Forsiden ligger på ren URL uten hash. Verktøyene bruker #terrasse, #dryppstop osv. */
-const VIEWS = {home:"Digitale verktøy for deg som bygger", terrasse:"Verktøy · Terrasse", dryppstop:"Verktøy · DryppStop undertak", rekkverk:"Verktøy · Rekkverk", parkett:"Verktøy · Parkett og laminat", kledning:"Verktøy · Kledning", levegg:"Verktøy · Levegg", pergola:"Verktøy · Pergola", utemaling:"Verktøy · Maling utvendig", belegningsstein:"Verktøy · Belegningsstein og grus", plen:"Verktøy · Plen", gjerde:"Verktøy · Gjerde", innemaling:"Verktøy · Maling innvendig", flis:"Verktøy · Flis til bad"};
+/* Hver visning har egen URL, tittel og beskrivelse — det er dette Google indekserer.
+   crumb = merkelappen i toppen, title/desc = <title> og meta description per side. */
+const VIEWS = {
+  home:            {crumb:"Digitale verktøy for deg som bygger", sti:"/",
+                    title:"Tommestokk1 — byggekalkulatorer med materialliste og kappliste",
+                    desc:"Legg inn mål og få komplett materialliste, kappliste og handleliste. Dimensjonert etter norske spenntabeller og produsentenes monteringsregler."},
+  terrasse:        {crumb:"Verktøy · Terrasse", sti:"/terrasse",
+                    title:"Terrassekalkulator — bjelkelag, materialliste og kappliste | Tommestokk1",
+                    desc:"Regn ut bjelkelag, bærebjelker, stolper og terrassebord fra målene dine. Spenntabell for C24, kappliste i standardlengder og komplett materialliste."},
+  dryppstop:       {crumb:"Verktøy · DryppStop undertak", sti:"/dryppstop",
+                    title:"DryppStop undertak — materialliste for tett terrassetak | Tommestokk1",
+                    desc:"Komplett handleliste for DryppStop under terrasse eller balkong: plater, profiler, beslag, skruer og fugemasse med varenummer."},
+  rekkverk:        {crumb:"Verktøy · Rekkverk", sti:"/rekkverk",
+                    title:"Rekkverkskalkulator — TEK17-høyde og spileavstand | Tommestokk1",
+                    desc:"Riktig rekkverkshøyde etter fallhøyden og eksakt spileavstand per felt — aldri over 10 cm åpning. Med stolper, sviller og festemidler."},
+  parkett:         {crumb:"Verktøy · Parkett og laminat", sti:"/parkett",
+                    title:"Parkett- og laminatkalkulator — pakker, underlag og lister | Tommestokk1",
+                    desc:"Rommål inn, antall pakker ut. Svinn etter leggemønster, siste rad-sjekk, underlag og fuktsperre, gulvlister og ekspansjonsfuge."},
+  kledning:        {crumb:"Verktøy · Kledning", sti:"/kledning",
+                    title:"Kledningskalkulator — løpemeter, sløyfer og lekter | Tommestokk1",
+                    desc:"Løpemeter kledning fra profilens faktiske dekkbredde. Tømmermann og dobbeltfals, med sløyfer, lekter, spiker og musebånd."},
+  levegg:          {crumb:"Verktøy · Levegg", sti:"/levegg",
+                    title:"Leveggkalkulator — søknadsfri-sjekk, stolper og bord | Tommestokk1",
+                    desc:"Sjekk om leveggen er søknadsfri etter byggesaksforskriften, og få stolper, losholter og bord etter utforming og vindutsatthet."},
+  pergola:         {crumb:"Verktøy · Pergola", sti:"/pergola",
+                    title:"Pergolakalkulator — stolper, bjelker og sperrer | Tommestokk1",
+                    desc:"Bjelkedimensjon velges automatisk etter spennet. Doble bærebjelker, sperrer med utstikk, skråbånd og fundament — med søknadsfri-sjekk."},
+  utemaling:       {crumb:"Verktøy · Maling utvendig", sti:"/utemaling",
+                    title:"Malingskalkulator utvendig — liter, strøk og grunning | Tommestokk1",
+                    desc:"Veggmål inn, liter og spann ut. Dekkevne etter maling, oljedekkbeis eller beis, med grunning på ubehandlet treverk og husvask."},
+  belegningsstein: {crumb:"Verktøy · Belegningsstein og grus", sti:"/belegningsstein",
+                    title:"Belegningsstein-kalkulator — pukk og settesand i tonn | Tommestokk1",
+                    desc:"Areal inn, tonn pukk og settesand ut. Lagoppbygging etter bruk, utgraving i kubikk, fugesand, fiberduk og kantstein."},
+  plen:            {crumb:"Verktøy · Plen", sti:"/plen",
+                    title:"Plenkalkulator — vekstjord, ferdigplen og gressfrø | Tommestokk1",
+                    desc:"Areal inn, vekstjord i kubikk og ferdigplen eller gressfrø ut. Med gjødsel, kalk og råd om tidspunkt og vanning."},
+  gjerde:          {crumb:"Verktøy · Gjerde", sti:"/gjerde",
+                    title:"Gjerdekalkulator — stolper, bord og port | Tommestokk1",
+                    desc:"Stolper, sviller og spiler eller tette bord, med eller uten gang- eller kjøreport. Søknadsfri-sjekk mot vei og nabo."},
+  innemaling:      {crumb:"Verktøy · Maling innvendig", sti:"/innemaling",
+                    title:"Malingskalkulator innvendig — liter, sparkel og grunning | Tommestokk1",
+                    desc:"Rommål inn, liter vegg- og takmaling ut. Grunning og full sparkling på ny gips, med rekkefølge- og luftingsråd."},
+  flis:            {crumb:"Verktøy · Flis til bad", sti:"/flis",
+                    title:"Fliskalkulator bad — fliser, lim, fug og membran | Tommestokk1",
+                    desc:"Fliser, lim og fug etter flisstørrelse, pluss membran med remser. Med våtromsnorm-sjekk og påminnelse om lovpålagt fagansvar."},
+};
 
 /* Anonym telling av hvilke verktøy som faktisk åpnes — ingen personopplysninger,
    kun verktøynavn + tidspunkt. Feiler stille hvis Supabase ikke er konfigurert. */
@@ -3042,30 +3093,54 @@ function trackToolView(v){
 }
 
 function visView(v){
+  const info = VIEWS[v];
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
   $("view-"+v).classList.add("active");
-  $("crumb").textContent = VIEWS[v];
+  $("crumb").textContent = info.crumb;
+  document.title = info.title;
+  const md = document.querySelector('meta[name="description"]');
+  if (md) md.setAttribute("content", info.desc);
+  const kan = document.querySelector('link[rel="canonical"]');
+  if (kan) kan.setAttribute("href", location.origin + info.sti);
   window.scrollTo({top:0});
   if (v !== "home") trackToolView(v);
 }
 
+/* Hver visning har sin egen adresse (/terrasse, /parkett …) slik at Google kan
+   indeksere dem hver for seg og lenker kan deles direkte. Serveren må svare med
+   index.html for alle stier — se _redirects (Cloudflare) og serve.py (lokalt). */
+function viewFromPath(sti){
+  const seg = String(sti || "/").replace(/^\/+|\/+$/g, "");
+  return VIEWS[seg] ? seg : "home";
+}
+
 function nav(v){
   visView(v);
-  if (v === "home"){
-    // ren URL — fjern ev. hash uten å laste siden på nytt
-    if (location.hash) history.pushState(null,"",location.pathname + location.search);
-  } else {
-    if (location.hash !== "#"+v) history.pushState(null,"","#"+v);
-  }
+  const sti = VIEWS[v].sti;
+  if (location.pathname !== sti) history.pushState({view:v}, "", sti + location.search);
 }
 
 function route(){
-  const v = location.hash.slice(1);
-  visView(VIEWS[v] ? v : "home");   // ingen/ukjent hash → forsiden, uten å røre adresselinjen
+  /* Gamle #-lenker (#terrasse) skrives om til ekte sti, så delte lenker fortsatt virker. */
+  const hash = location.hash.slice(1);
+  if (hash && VIEWS[hash]){
+    history.replaceState({view:hash}, "", VIEWS[hash].sti + location.search);
+    visView(hash);
+    return;
+  }
+  visView(viewFromPath(location.pathname));
 }
 
-document.querySelectorAll("[data-nav]").forEach(b=>b.addEventListener("click",()=>nav(b.dataset.nav)));
-window.addEventListener("popstate", route);   // dekker tilbake/frem og manuell hash-endring
+/* Navigasjonen er ekte <a href> så den kan krypes av søkemotorer og åpnes i ny
+   fane. Vanlig venstreklikk fanges for å bytte visning uten sidelast. */
+document.addEventListener("click", e=>{
+  const lenke = e.target.closest("a[data-nav]");
+  if (!lenke) return;
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+  e.preventDefault();
+  nav(lenke.dataset.nav);
+});
+window.addEventListener("popstate", route);   // tilbake/frem i nettleseren
 
 /* ========================= TERRASSE ========================= */
 const TE = (()=>{
