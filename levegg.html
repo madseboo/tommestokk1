@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<!-- Generert av build.py fra index.html — ikke rediger direkte -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<!-- Tittel, beskrivelse og canonical settes per visning i visView() -->
+<title>Leveggkalkulator — søknadsfri-sjekk, stolper og bord | Tommestokk1</title>
+<meta name="description" content="Sjekk om leveggen er søknadsfri etter byggesaksforskriften, og få stolper, losholter og bord etter utforming og vindutsatthet.">
+<link rel="canonical" href="https://tommestokk1.no/levegg">
+<meta property="og:site_name" content="Tommestokk1">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nb_NO">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;               /* hindrer mørk modus i å style skjemafelt og bakgrunner */
+  --bg:#EFF1EE;
+  --panel:#FFFFFF;
+  --ink:#1C2A33;
+  --ink-soft:#4A5A64;
+  --alu:#C9CFD4;
+  --alu-dark:#8E979E;
+  --signal:#E85D0F;
+  --signal-dark:#C24C0A;
+  --tre:#E6D9B8;
+  --ok:#1E7A46;
+  --warn:#9A4B00;
+  --line:#DCE0DD;
+  --radius:10px;
+  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);overflow-x:hidden}   /* ingen sidelengs sidescroll; brede tabeller scroller i egen boks */
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;min-height:100vh}
+a{color:var(--signal-dark)}
+input,select,button{color-scheme:light}
+
+/* ================= Header ================= */
+header{background:var(--ink);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{text-decoration:none;display:flex;align-items:center;gap:.7rem;cursor:pointer;background:none;border:none;color:#fff;font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
+.brand svg{height:30px;width:auto;display:block}
+.brand em{font-style:normal;color:var(--signal)}
+header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);border-radius:999px;padding:.15rem .7rem}
+.brand:focus-visible{outline:2px solid var(--signal);outline-offset:3px}
+
+.wrap{max-width:1180px;margin:0 auto;padding:1.5rem}
+.view{display:none}
+.view.active{display:block}
+
+/* ================= Forside ================= */
+.hero{padding:1.5rem 0 .5rem;text-align:left}
+.hero h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2.2rem,5.5vw,3.4rem);text-transform:uppercase;letter-spacing:.02em;line-height:1.02;max-width:20ch}
+.hero h1 em{font-style:normal;color:var(--signal)}
+.hero p{max-width:58ch;color:var(--ink-soft);margin-top:.7rem;font-size:1rem}
+.hero .rule{margin-top:1.2rem;max-width:520px}
+.hero .rule svg{width:100%;height:auto;display:block}
+
+.promise{display:flex;gap:1.5rem;flex-wrap:wrap;margin-top:1.4rem}
+.promise div{display:flex;align-items:center;gap:.5rem;font-size:.85rem;font-weight:600}
+.promise svg{width:22px;height:22px;flex:none}
+
+.tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1.1rem;margin-top:1rem}
+.tool-group{margin-top:2rem}
+.tool-group>h2{font-family:var(--font-display);font-weight:600;font-size:1.05rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);padding-bottom:.35rem;border-bottom:1px solid var(--line)}
+.tool-card{text-decoration:none;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+  padding:1.15rem;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
+  display:flex;flex-direction:column;gap:.7rem;transition:transform .12s ease, box-shadow .12s ease;
+}
+.tool-card:hover{transform:translateY(-3px);box-shadow:0 6px 18px rgba(28,42,51,.12)}
+.tool-card:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.tool-card .icon{height:84px;display:flex;align-items:center}
+.tool-card .icon svg{height:100%;width:auto;max-width:100%}
+.tool-card h3{font-family:var(--font-display);font-weight:700;font-size:1.35rem;text-transform:uppercase;letter-spacing:.04em}
+.tool-card p{font-size:.83rem;color:var(--ink-soft);flex:1}
+.tool-card .go{font-size:.85rem;font-weight:700;color:var(--signal-dark)}
+.tool-card.soon{cursor:default;opacity:.75}
+.tool-card.soon:hover{transform:none;box-shadow:none}
+.badge-soon{align-self:flex-start;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;background:var(--tre);border-radius:999px;padding:.15rem .6rem}
+
+/* ================= Verktøysider (delt) ================= */
+.tool-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tool-head h1{font-family:var(--font-display);font-weight:700;font-size:clamp(1.8rem,4vw,2.5rem);text-transform:uppercase;letter-spacing:.02em;line-height:1.05}
+.tool-head h1 em{font-style:normal;color:var(--signal)}
+.tool-head p{max-width:64ch;color:var(--ink-soft);margin-top:.4rem;font-size:.93rem}
+.back{text-decoration:none;display:inline-block;font:inherit;font-size:.85rem;font-weight:600;background:none;border:none;color:var(--signal-dark);cursor:pointer;padding:.3rem 0}
+.back:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+
+.grid{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:1.25rem;margin-top:1.25rem;align-items:start}
+.grid>*{min-width:0}   /* hindrer at bred segment-tekst/tabell sprenger rutenettet på smale skjermer */
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem}
+.card+.card{margin-top:1.25rem}
+.card h2{font-family:var(--font-display);font-weight:600;font-size:1.15rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--signal);display:inline-block;padding-bottom:.15rem;margin-bottom:1rem}
+
+.field{margin-bottom:1rem}
+.field label{display:block;font-weight:600;font-size:.85rem;margin-bottom:.25rem}
+.field .hint{font-size:.75rem;color:var(--ink-soft);font-weight:400}
+.field input[type=number],.field select{width:100%;padding:.55rem .7rem;font:inherit;font-variant-numeric:tabular-nums;border:1px solid var(--alu-dark);border-radius:6px;background:#fff;color:var(--ink)}
+.field input:focus,.field select:focus{outline:2px solid var(--signal);outline-offset:1px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+
+.segment{display:flex;border:1px solid var(--alu-dark);border-radius:6px;overflow:hidden}
+.segment button{flex:1;padding:.5rem .3rem;font:inherit;font-size:.82rem;font-weight:600;background:#fff;color:var(--ink-soft);border:none;cursor:pointer}
+.segment button[aria-pressed=true]{background:var(--ink);color:#fff}
+.segment button:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+
+.check{display:flex;gap:.5rem;align-items:flex-start;font-size:.85rem;margin-bottom:1rem}
+.check input{margin-top:.2rem;accent-color:var(--signal)}
+
+.alert{border-left:4px solid var(--signal);background:#FCF2EA;border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.83rem;margin-top:.75rem}
+.alert.ok{border-color:var(--ok);background:#EAF4EE}
+.alert.warn{border-color:var(--warn);background:#FBEFE2}
+
+.dim-step{display:flex;gap:.8rem;padding:.75rem 0;border-bottom:1px dashed var(--line);font-size:.88rem}
+.dim-step:last-child{border-bottom:none}
+.dim-step .no{font-family:var(--font-display);font-weight:700;font-size:1.3rem;color:var(--signal);min-width:1.6rem;line-height:1.2}
+.dim-step b{font-variant-numeric:tabular-nums}
+.dim-step .src{display:block;font-size:.73rem;color:var(--ink-soft);margin-top:.15rem}
+
+.plan-card svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:1rem;flex-wrap:wrap;font-size:.75rem;color:var(--ink-soft);margin-top:.6rem}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.swatch{width:14px;height:14px;border-radius:3px;display:inline-block;border:1px solid var(--line)}
+
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th,td{padding:.55rem .5rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--font-display);font-weight:600;text-transform:uppercase;letter-spacing:.05em;font-size:.8rem;color:var(--ink-soft)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td .art{display:block;font-size:.72rem;color:var(--ink-soft)}
+tr.sum td{border-top:2px solid var(--ink);border-bottom:none;font-weight:700;font-size:.95rem}
+td input.price{width:6rem;padding:.3rem .4rem;font:inherit;font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right;border:1px dashed var(--alu-dark);border-radius:5px;background:#FAFBFA;color:var(--ink)}
+td input.price:focus{outline:2px solid var(--signal);border-style:solid}
+.qty-badge{display:inline-block;background:var(--ink);color:#fff;font-weight:700;font-variant-numeric:tabular-nums;border-radius:6px;padding:.1rem .55rem;min-width:2.4rem;text-align:center}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:.75rem;margin-bottom:1.25rem}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:.6rem .75rem}
+.stat b{display:block;font-family:var(--font-display);font-size:1.5rem;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums}
+.stat small{font-size:.72rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.04em}
+
+.notes{margin-top:1rem;font-size:.8rem;color:var(--ink-soft)}
+.notes li{margin:.35rem 0 .35rem 1.1rem}
+.notes li::marker{color:var(--signal)}
+
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.1rem}
+.btn{font:inherit;font-weight:600;font-size:.88rem;padding:.6rem 1.1rem;border-radius:7px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn.secondary{background:#fff;color:var(--ink)}
+.btn:hover{background:var(--signal);border-color:var(--signal)}
+.btn.secondary:hover{background:#F6E9DF;border-color:var(--signal);color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.copy-status{font-size:.8rem;color:var(--ok);align-self:center}
+
+/* ================= Prismodal (arkitektur-stub, ingen live priser) ================= */
+.modal-overlay{position:fixed;inset:0;background:rgba(28,42,51,.55);display:none;align-items:center;justify-content:center;padding:1rem;z-index:100}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--panel);border-radius:var(--radius);max-width:520px;width:100%;max-height:85vh;overflow-y:auto;padding:1.5rem}
+.modal-box h2{font-family:var(--font-display);font-weight:700;font-size:1.3rem;text-transform:uppercase;letter-spacing:.04em}
+.modal-box .sub{font-size:.83rem;color:var(--ink-soft);margin-top:.3rem}
+.store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:.6rem;margin-top:1.2rem}
+.store-pick{border:1px solid var(--alu-dark);border-radius:8px;background:#fff;padding:.7rem;font:inherit;font-weight:600;font-size:.88rem;cursor:pointer;text-align:left}
+.store-pick:hover{border-color:var(--signal);background:#FCF2EA}
+.store-pick.combo{grid-column:1/-1;background:var(--bg);border-style:dashed}
+.modal-close{float:right;background:none;border:none;font-size:1.3rem;line-height:1;color:var(--ink-soft);cursor:pointer;padding:.1rem .4rem}
+.modal-close:hover{color:var(--signal-dark)}
+.modal-result{margin-top:1.2rem;display:none}
+.modal-result.show{display:block}
+.modal-result table{font-size:.82rem}
+.modal-result .stub-note{background:#FCF2EA;border-left:4px solid var(--signal);border-radius:0 6px 6px 0;padding:.5rem .7rem;font-size:.78rem;margin-bottom:.8rem}
+.project-total{display:flex;align-items:center;justify-content:space-between;gap:1rem;background:var(--ink);color:#fff;border-radius:var(--radius);padding:.9rem 1.1rem;margin-top:1rem}
+.project-total span{font-weight:600;font-size:.92rem}
+.project-total small{display:block;font-weight:400;font-size:.72rem;color:var(--alu)}
+.project-total b{font-family:var(--font-display);font-size:1.5rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.save-items{max-height:210px;overflow-y:auto;border:1px solid var(--line);border-radius:6px;padding:.3rem .7rem}
+.save-items label{display:flex;gap:.55rem;align-items:flex-start;font-size:.85rem;padding:.4rem 0;border-bottom:1px dashed var(--line);margin:0}
+.save-items label:last-child{border-bottom:none}
+.save-items input{margin-top:.2rem;accent-color:var(--signal);flex:none}
+.save-items .q{color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.project-images{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:.6rem}
+.project-images .thumb{position:relative;aspect-ratio:1;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--bg)}
+.project-images .thumb img{width:100%;height:100%;object-fit:cover;display:block;cursor:pointer}
+.project-images .thumb button{position:absolute;top:3px;right:3px;width:22px;height:22px;border-radius:999px;border:none;background:rgba(28,42,51,.75);color:#fff;font-size:.85rem;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.project-images .thumb button:hover{background:var(--signal-dark)}
+.project-images .empty{grid-column:1/-1;color:var(--ink-soft);font-size:.85rem}
+
+/* ================= Innlogging (header) ================= */
+.header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap}
+.header-btn{font:inherit;font-weight:600;font-size:.82rem;padding:.4rem .9rem;border-radius:999px;border:1px solid var(--alu-dark);background:transparent;color:#fff;cursor:pointer}
+.header-btn:hover{background:var(--signal);border-color:var(--signal)}
+.header-btn:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.header-user{font-size:.8rem;color:var(--alu);display:flex;align-items:center;gap:.6rem}
+
+/* ================= Butikksammenligning ================= */
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.testdata-note{background:#FBEFE2;border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.8rem;color:var(--ink);margin-bottom:1rem}
+.shop-summary{font-size:.85rem;color:var(--ink-soft);margin:1rem 0 .5rem}
+.store-list{display:grid;gap:.9rem;margin-top:1rem}
+.store-card{border:1px solid var(--line);border-radius:var(--radius);padding:1rem;background:var(--panel)}
+.store-card.is-best{border-color:var(--signal);box-shadow:0 0 0 1px var(--signal)}
+.store-card.is-blocked{background:#FCFBFA}
+.store-card h3{font-family:var(--font-display);font-weight:700;font-size:1.2rem;text-transform:uppercase;letter-spacing:.03em;line-height:1.15}
+.store-card .chain{font-size:.75rem;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.15rem}
+.store-top{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.store-price{font-family:var(--font-display);font-size:1.85rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1;white-space:nowrap}
+.store-price small{display:block;font-family:var(--font-body);font-size:.7rem;font-weight:500;color:var(--ink-soft);letter-spacing:.02em;margin-top:.2rem;white-space:normal}
+.store-facts{list-style:none;margin:.75rem 0 0;font-size:.85rem;display:grid;gap:.3rem}
+.store-facts li{display:flex;gap:.5rem;align-items:baseline}
+.store-facts li>*{min-width:0;overflow-wrap:anywhere}
+.store-facts .k{color:var(--ink-soft);min-width:8.5rem;flex:none}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:999px;padding:.15rem .6rem;white-space:nowrap}
+.badge.ok{background:#EAF4EE;color:var(--ok)}
+.badge.warn{background:#FBEFE2;color:var(--warn)}
+.badge.stop{background:#F6E3E3;color:#8E2020}
+.badge.info{background:var(--bg);color:var(--ink-soft);border:1px solid var(--line)}
+.badge.best{background:var(--signal);color:#fff}
+.datakilde{font-size:.72rem;color:var(--ink-soft);margin-top:.6rem;border-top:1px dashed var(--line);padding-top:.5rem}
+.store-card .actions{margin-top:.8rem}
+/* Handleliste per varehus */
+.shop-lines{display:grid;gap:.6rem;margin-top:1rem}
+.shop-line{border:1px solid var(--line);border-radius:8px;background:var(--panel);overflow:hidden}
+.shop-line[open]{border-color:var(--alu-dark)}
+.shop-line summary{cursor:pointer;padding:.7rem .85rem;display:flex;justify-content:space-between;gap:.75rem;align-items:baseline;font-size:.88rem;list-style:none}
+.shop-line summary::-webkit-details-marker{display:none}
+.shop-line summary:focus-visible{outline:2px solid var(--signal);outline-offset:-2px}
+.shop-line .line-name{font-weight:600}
+.shop-line .line-meta{display:block;font-size:.74rem;color:var(--ink-soft);font-weight:400;margin-top:.15rem}
+.shop-line .line-sum{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.line-facts{padding:0 .85rem .85rem;font-size:.83rem;display:grid;gap:.25rem;border-top:1px dashed var(--line);margin-top:.1rem;padding-top:.7rem}
+.line-facts div{display:flex;justify-content:space-between;gap:1rem}
+.line-facts div>*{min-width:0;overflow-wrap:anywhere}
+.line-facts .k{color:var(--ink-soft)}
+.line-facts .v{font-variant-numeric:tabular-nums;text-align:right}
+.line-link{display:inline-block;margin-top:.5rem;font-size:.8rem;font-weight:600}
+.approve-box{background:#FBEFE2;border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:.55rem .7rem;font-size:.8rem;margin-top:.5rem}
+.store-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;margin-top:1rem}
+
+/* ================= Fagtekst på verktøysidene ================= */
+.artikkel{margin-top:1.25rem;max-width:70ch}
+.artikkel h3{font-family:var(--font-display);font-weight:600;font-size:1.05rem;text-transform:uppercase;letter-spacing:.05em;margin:1.4rem 0 .4rem}
+.artikkel h3:first-of-type{margin-top:1rem}
+.artikkel p{font-size:.92rem;color:var(--ink-soft);margin-bottom:.7rem}
+.artikkel .artikkel-ingress{font-size:1rem;color:var(--ink);font-weight:500}
+
+footer{margin-top:2.5rem;padding:1.25rem 1.5rem 2rem;font-size:.75rem;color:var(--ink-soft);border-top:1px solid var(--line);background:var(--bg)}
+
+/* Brede tabeller scroller inni sin egen boks i stedet for å dra hele siden sidelengs */
+.card table,.modal-box table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+
+/* ================= Mobil (telefon) ================= */
+@media(max-width:600px){
+  .wrap{padding:1rem}
+  header{padding:.8rem 1rem;gap:.5rem .8rem}
+  .brand{font-size:1.35rem}
+  header .crumb{font-size:.7rem;padding:.15rem .55rem}
+  .grid{gap:1rem;margin-top:1rem}
+  .card{padding:1.05rem}
+  .card+.card{margin-top:1rem}
+  .hero h1{font-size:clamp(1.9rem,8vw,2.6rem)}
+  .tool-head h1{font-size:clamp(1.6rem,6.5vw,2.1rem)}
+  .segment button{padding:.7rem .35rem}                 /* større tap-target */
+  .field input[type=number],.field select{padding:.65rem .7rem}
+  .check{gap:.6rem}
+  .check input{width:1.15rem;height:1.15rem}
+  .btn{padding:.7rem 1rem}
+  .actions{gap:.5rem}
+  .actions .btn{flex:1 1 auto}                           /* knapper fyller bredden, lettere å treffe */
+  th,td{padding:.55rem .4rem}
+  td input.price{width:5rem}
+  .stats{grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:.5rem}
+  .stat small{overflow-wrap:anywhere}   /* lange ord som «bærebjelkelinjer» skal brytes, ikke sprenge rutenettet */
+  .project-total{flex-direction:column;align-items:flex-start;gap:.35rem}
+  /* Butikksammenligning på liten skjerm: hierarki pris → dekning → avstand → handling */
+  .store-top{flex-direction:column;gap:.4rem}
+  .store-price{font-size:1.6rem}
+  .store-facts li{flex-direction:column;gap:.1rem}
+  .store-facts .k{min-width:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.04em}
+  .store-card .actions .btn{width:100%}
+  .shop-line summary{flex-direction:column;gap:.25rem}
+  .line-facts div{flex-direction:column;gap:.05rem}
+  .line-facts .v{text-align:left}
+  .store-picker{grid-template-columns:1fr}
+}
+
+@media print{
+  header,.inputs-card,.actions,.back{display:none}
+  body,html{background:#fff}
+  .grid{grid-template-columns:1fr}
+  .card{border:none;padding:0}
+}
+@media (prefers-reduced-motion:reduce){
+  .tool-card{transition:none}
+  .tool-card:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/" data-nav="home" aria-label="Til forsiden">
+    <!-- tommestokk-ikon -->
+    <svg viewBox="0 0 64 34" aria-hidden="true"><g stroke="#E85D0F" stroke-width="6" stroke-linecap="round" fill="none"><path d="M5 29 L24 6 L43 29 L59 10"/></g><g fill="#fff"><circle cx="5" cy="29" r="3"/><circle cx="24" cy="6" r="3"/><circle cx="43" cy="29" r="3"/><circle cx="59" cy="10" r="3"/></g></svg>
+    Tommestokk<em>1</em>
+  </a>
+  <span class="crumb" id="crumb">Digitale verktøy for deg som bygger</span>
+  <div class="header-auth">
+    <button class="header-btn" id="authLoginBtn" type="button">Logg inn</button>
+    <div class="header-user" id="authUserBox" style="display:none">
+      <span id="authUserEmail"></span>
+      <button class="header-btn" id="authProjectsBtn" type="button">Mine prosjekter</button>
+      <button class="header-btn" id="authLogoutBtn" type="button">Logg ut</button>
+    </div>
+  </div>
+</header>
+
+<!-- ==================================================== FORSIDE -->
+
+
+<!-- ==================================================== TERRASSE -->
+
+
+<!-- ==================================================== DRYPPSTOP -->
+
+
+<!-- ==================================================== REKKVERK -->
+
+
+<!-- ==================================================== PARKETT -->
+
+
+<!-- ==================================================== KLEDNING -->
+
+
+<!-- ==================================================== LEVEGG -->
+<main class="view active" id="view-levegg">
+<div class="wrap">
+  <a class="back" href="/" data-nav="home">← Alle verktøy</a>
+  <div class="tool-head">
+    <div>
+      <h1>Levegg — <em>søknadsfri-sjekk, stolper og bord</em></h1>
+      <p>Sjekker mål og plassering mot byggesaksforskriften (søknadsfri inntil 1,8 m høyde),
+      setter stolpeavstand etter vindutsatthet, og regner bord etter utforming —
+      tett, tosidig forskjøvet eller spilevegg.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <section class="card inputs-card" aria-label="Mål og valg">
+      <h2>Mål og valg</h2>
+      <div class="duo">
+        <div class="field">
+          <label for="lv-lengde">Lengde <span class="hint">(m)</span></label>
+          <input type="number" id="lv-lengde" min="0.5" max="30" step="0.1" value="4.0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label for="lv-hoyde">Høyde <span class="hint">(m, fra terreng)</span></label>
+          <input type="number" id="lv-hoyde" min="0.5" max="3" step="0.1" value="1.8" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label for="lv-avstand">Avstand til nabogrense <span class="hint">(m)</span></label>
+        <input type="number" id="lv-avstand" min="0" max="50" step="0.1" value="1.0" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label id="lv-utformingLabel">Utforming <span class="hint">(styrer bordforbruk og le-effekt)</span></label>
+        <div class="segment" role="group" aria-labelledby="lv-utformingLabel">
+          <button type="button" data-utforming="tett" aria-pressed="true">Tett</button>
+          <button type="button" data-utforming="tosidig" aria-pressed="false">Tosidig forskjøvet</button>
+          <button type="button" data-utforming="spile" aria-pressed="false">Spilevegg</button>
+        </div>
+      </div>
+      <div class="field">
+        <label for="lv-bordbredde">Bordbredde <span class="hint">(mm)</span></label>
+        <input type="number" id="lv-bordbredde" min="70" max="200" step="1" value="120" inputmode="numeric">
+      </div>
+      <label class="check">
+        <input type="checkbox" id="lv-vind">
+        <span>Vindutsatt tomt — tettere stolper (c/c 1,2 m) og støpt fundament anbefales</span>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="lv-toppbord" checked>
+        <span>Toppbord 28 × 120 over veggen (beskytter endeved, gir ryddig avslutning)</span>
+      </label>
+      <div id="lv-regelsjekk"></div>
+    </section>
+
+    <div>
+      <section class="card" aria-label="Dimensjonering">
+        <h2>Slik er det regnet</h2>
+        <div id="lv-dimSteps"></div>
+      </section>
+
+      <section class="card plan-card" aria-label="Veggoppriss">
+        <h2>Veggoppriss</h2>
+        <div id="lv-planSvg"></div>
+        <div class="legend">
+          <span><span class="swatch" style="background:#8E979E"></span>Stolpe</span>
+          <span><span class="swatch" style="background:#E6D9B8"></span>Bord/spiler</span>
+          <span><span class="swatch" style="background:#1C2A33"></span>Losholt</span>
+          <span><span class="swatch" style="background:#E85D0F"></span>Toppbord</span>
+        </div>
+      </section>
+
+      <section class="card" aria-label="Materialliste">
+        <h2>Materialliste</h2>
+        <p class="hint" style="margin:-.5rem 0 1rem">Prisene er veiledende utgangspunkt, ikke live butikkpriser — klikk på en pris og legg inn dagens pris fra din forhandler, så regnes totalen om.</p>
+        <div class="stats" id="lv-stats"></div>
+        <table id="lv-matTable">
+          <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Enhetspris (kr)</th><th class="num">Sum</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <ul class="notes" id="lv-notes"></ul>
+        <div class="actions no-print">
+          <button class="btn" id="lv-copyBtn" type="button">Kopier bestillingsliste</button>
+          <button class="btn secondary" type="button" onclick="window.print()">Skriv ut / PDF</button>
+          <button class="btn secondary" id="lv-priserBtn" type="button">Finn priser</button>
+          <button class="btn secondary" id="lv-lagreBtn" type="button">Lagre i prosjekt</button>
+          <span id="lv-copyStatus" class="copy-status" role="status"></span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</main>
+
+<!-- ==================================================== PERGOLA -->
+
+
+<!-- ==================================================== MALING UTVENDIG -->
+
+
+<!-- ==================================================== BELEGNINGSSTEIN -->
+
+
+<!-- ==================================================== PLEN -->
+
+
+<!-- ==================================================== GJERDE -->
+
+
+<!-- ==================================================== MALING INNVENDIG -->
+
+
+<!-- ==================================================== FLIS TIL BAD -->
+
+
+<!-- ==================================================== PRISMODAL (arkitektur-stub) -->
+<div class="modal-overlay" id="priceModal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="priceModalClose" aria-label="Lukk">✕</button>
+    <h2 id="priceModalTitle">Finn priser</h2>
+    <p class="sub" id="priceModalSub">Velg butikk for prissammenligning av handlelisten.</p>
+    <div class="store-grid" id="priceModalStores"></div>
+    <div class="modal-result" id="priceModalResult">
+      <div class="stub-note">Dette er ikke live butikkpriser — tallene under er de veiledende prisene fra materiallisten din. Ekte prisoppslag kobles på senere. Rediger prisene i materiallisten når du har fått tilbud fra forhandleren.</div>
+      <table>
+        <thead><tr><th>Vare</th><th class="num">Antall</th><th class="num">Pris</th><th class="num">Sum</th></tr></thead>
+        <tbody id="priceModalRows"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ==================================================== INNLOGGING (magisk lenke) -->
+<div class="modal-overlay" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="authModalClose" aria-label="Lukk">✕</button>
+    <h2 id="authModalTitle">Logg inn</h2>
+    <p class="sub" id="authStep1Sub">Få tilgang til dine lagrede prosjekter og beregninger. Vi sender deg en engangskode på e-post — ikke noe passord å huske.</p>
+    <div id="authStep1">
+      <div class="field" style="margin-top:1rem">
+        <label for="authEmail">E-postadresse</label>
+        <input type="email" id="authEmail" placeholder="din@epost.no" autocomplete="email">
+      </div>
+      <div class="actions">
+        <button class="btn" id="authSendBtn" type="button">Send kode</button>
+      </div>
+    </div>
+    <div id="authStep2" style="display:none">
+      <p class="sub" style="margin-top:1rem">Vi har sendt en kode til <b id="authSentEmail"></b>. Skriv den inn under.</p>
+      <div class="field" style="margin-top:1rem">
+        <label for="authCode">Engangskode</label>
+        <input type="text" id="authCode" placeholder="123456" inputmode="numeric" autocomplete="one-time-code" maxlength="12">
+      </div>
+      <div class="actions">
+        <button class="btn" id="authVerifyBtn" type="button">Bekreft kode</button>
+        <button class="btn secondary" id="authResendBtn" type="button">Send kode på nytt</button>
+      </div>
+    </div>
+    <div class="alert warn" id="authErrorNote" style="display:none;margin-top:1rem"></div>
+  </div>
+</div>
+
+<!-- ==================================================== LAGRE I PROSJEKT -->
+<div class="modal-overlay" id="saveModal" role="dialog" aria-modal="true" aria-labelledby="saveModalTitle">
+  <div class="modal-box">
+    <button class="modal-close" id="saveModalClose" aria-label="Lukk">✕</button>
+    <h2 id="saveModalTitle">Lagre i prosjekt</h2>
+    <p class="sub" id="saveModalSub"></p>
+    <div class="field" style="margin-top:1rem">
+      <label>Hva skal lagres <span class="hint">— hak bort det du ikke trenger</span></label>
+      <div class="save-items" id="saveItems"></div>
+      <p class="hint" style="margin-top:.45rem">Du overstyrer den beregnede lista — sjekk selv at du får med alt du faktisk trenger.</p>
+    </div>
+    <div class="field">
+      <label for="saveProjectSelect">Velg prosjekt</label>
+      <select id="saveProjectSelect"></select>
+    </div>
+    <div class="field">
+      <label for="saveNewProjectName">Eller opprett nytt prosjekt</label>
+      <input type="text" id="saveNewProjectName" placeholder="f.eks. Hyttetomta 2026">
+    </div>
+    <div class="actions">
+      <button class="btn" id="saveConfirmBtn" type="button">Lagre beregning</button>
+    </div>
+    <div class="alert ok" id="saveOkNote" style="display:none;margin-top:1rem">Lagret ✓</div>
+    <div class="alert warn" id="saveErrNote" style="display:none;margin-top:1rem"></div>
+  </div>
+</div>
+
+<!-- ==================================================== PROSJEKTDETALJER -->
+<div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true" aria-labelledby="projectModalTitle">
+  <div class="modal-box" style="max-width:680px">
+    <button class="modal-close" id="projectModalClose" aria-label="Lukk">✕</button>
+    <h2 id="projectModalTitle">Prosjekt</h2>
+    <p class="sub" id="projectModalSub"></p>
+    <button class="btn secondary" id="projectDeleteBtn" type="button" style="margin-top:.75rem">Slett prosjekt</button>
+    <section class="card" style="margin-top:1rem">
+      <h2>Bilder</h2>
+      <div id="projectImages" class="project-images"></div>
+      <div class="actions" style="margin-top:.75rem">
+        <label class="btn secondary" style="cursor:pointer">Last opp bilde
+          <input type="file" id="projectImageInput" accept="image/*" multiple style="display:none">
+        </label>
+        <span id="projectImageStatus" class="copy-status" role="status"></span>
+      </div>
+    </section>
+    <div id="projectModalCalcs"></div>
+  </div>
+</div>
+
+
+<section class="card artikkel" aria-label="Om beregningen">
+<p class="artikkel-ingress">En levegg er enkel å bygge, men reglene for hva du kan sette opp uten å søke er konkrete — og de handler om både høyde, lengde og avstand til nabogrensen.</p>
+<h3>Når slipper du å søke</h3>
+<p>Etter byggesaksforskriften § 4-1 er en levegg inntil 1,8 meter høy og 5 meter lang unntatt søknadsplikt selv om den står helt inntil nabogrensen. Er den inntil 10 meter lang, må avstanden til grensen være minst 1,0 meter.</p>
+<p>Unntaket gjelder én levegg. Flere levegger i kombinasjon må vurderes samlet av kommunen, og arealplanen for området gjelder uansett.</p>
+<h3>Utforming påvirker vindlasten</h3>
+<p>En tett vegg gir best le, men tar full vindlast og stiller størst krav til stolpene og fundamentet. Tosidig forskjøvet kledning gir nesten like god le med vesentlig mindre belastning, fordi vinden slipper gjennom.</p>
+<p>En spilevegg med 30 mm åpning er den letteste konstruksjonen, men skjermer bare delvis.</p>
+<h3>Stolpene er det svake punktet</h3>
+<p>Stolpene skal 90 cm ned i komprimert pukk eller støpes fast — aldri bare graves ned i jord. På vindutsatt tomt bør senteravstanden ned til 1,2 meter og fundamentet støpes frostfritt.</p>
+<p>Hold bordene 5–10 cm over terreng, ellers suger endeveden fukt.</p>
+</section>
+
+<footer>
+  <div class="wrap" style="padding:0">
+    <b>Tommestokk1</b> gjør tabelloppslag i veiledende spenntabeller (C24, snølast 4,5 kN/m²) og følger produsentenes
+    monteringsveiledninger — det er ikke prosjektering. Punktlaster, spesiell bruksbelastning eller store høyder krever
+    kvalifisert dimensjonering. Priser er redigerbare utgangspunkt; sjekk dagspris hos forhandler. Regelsjekker er
+    veiledende — se dibk.no og kommunens arealplan. DryppStop-beregningen følger Plastmos veiledning; reklamasjonsrett
+    forutsetter DryppStop-skruer og -fugemasse.
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- Butikksammenligning: testdata og logikk er skilt fra UI-et, så datakilden
+     kan byttes uten å røre kalkulatorene. Se retail.js for provider-API-et. -->
+<script src="retail-mockdata.js"></script>
+<script src="retail.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

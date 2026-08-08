@@ -6,5 +6,6 @@
 .assetsignore
 wrangler.jsonc
 serve.py
+build.py
 README.md
 supabase
