@@ -1,0 +1,10 @@
+# Filer som ikke skal publiseres på tommestokk1.no.
+# Uten denne lastes bl.a. .git-mappa opp som offentlige filer.
+.git
+.gitignore
+.wrangler
+.assetsignore
+wrangler.jsonc
+serve.py
+README.md
+supabase
