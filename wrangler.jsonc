@@ -1,0 +1,17 @@
+{
+  // Cloudflare-konfigurasjon for tommestokk1.no.
+  // Siden kjører som Worker med statiske filer (ingen byggesteg, ingen backend).
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tommestokk1",
+  "compatibility_date": "2026-08-08",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": ".",
+    // Hvert verktøy har sin egen adresse (/terrasse, /parkett …), men alt
+    // ligger i index.html. Ukjente stier må derfor svare med index.html i
+    // stedet for 404, så nettleseren kan rute videre selv.
+    "not_found_handling": "single-page-application"
+  }
+}
