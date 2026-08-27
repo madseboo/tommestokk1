@@ -680,6 +680,25 @@ const AUTH = (()=>{
 
   function init(){
     $("authLoginBtn").addEventListener("click", openLoginModal);
+    $("authGoogleBtn").addEventListener("click", async ()=>{
+      if (!sb) return;
+      $("authErrorNote").style.display = "none";
+      $("authGoogleBtn").disabled = true;
+      /* Sender brukeren til Google og tilbake til siden hen sto på.
+         Krever at Google-provideren er aktivert i Supabase og at
+         https://tommestokk1.no/* står i tillatte redirect-URL-er. */
+      const {error} = await sb.auth.signInWithOAuth({
+        provider: "google",
+        options: { redirectTo: location.origin + location.pathname }
+      });
+      if (error){
+        $("authGoogleBtn").disabled = false;
+        $("authErrorNote").textContent = "Google-innlogging er ikke tilgjengelig akkurat nå: " + error.message
+          + " — bruk engangskode på e-post i mellomtiden.";
+        $("authErrorNote").style.display = "block";
+      }
+      /* Ved suksess navigerer nettleseren bort — ingen opprydding nødvendig. */
+    });
     $("authModalClose").addEventListener("click", closeLoginModal);
     $("authModal").addEventListener("click", e=>{ if(e.target.id==="authModal") closeLoginModal(); });
     $("authLogoutBtn").addEventListener("click", signOut);
