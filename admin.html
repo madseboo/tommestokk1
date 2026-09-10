@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="nb">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin — Tommestokk1</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: light;
+  --bg:#EFF1EE; --panel:#FFFFFF; --ink:#1C2A33; --ink-soft:#4A5A64;
+  --alu:#C9CFD4; --alu-dark:#8E979E; --signal:#E85D0F; --signal-dark:#C24C0A;
+  --ok:#1E7A46; --line:#DCE0DD; --radius:10px;
+  --font-display:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-body:"Inter",-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;min-height:100vh}
+a{color:var(--signal-dark)}
+
+header{background:var(--ink);color:#fff;padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.brand{text-decoration:none;display:flex;align-items:center;gap:.7rem;color:#fff;font-family:var(--font-display);font-weight:700;font-size:1.55rem;letter-spacing:.05em;text-transform:uppercase}
+.brand svg{height:30px;width:auto;display:block}
+.brand em{font-style:normal;color:var(--signal)}
+header .crumb{font-size:.8rem;color:var(--alu);border:1px solid var(--alu-dark);border-radius:999px;padding:.15rem .7rem}
+.header-auth{margin-left:auto;display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;font-size:.8rem;color:var(--alu)}
+.header-btn{font:inherit;font-weight:600;font-size:.82rem;padding:.4rem .9rem;border-radius:999px;border:1px solid var(--alu-dark);background:transparent;color:#fff;cursor:pointer}
+.header-btn:hover{background:var(--signal);border-color:var(--signal)}
+
+.wrap{max-width:1180px;margin:0 auto;padding:1.5rem}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1.25rem;margin-top:1.25rem}
+.card h2{font-family:var(--font-display);font-weight:600;font-size:1.15rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:2px solid var(--signal);display:inline-block;padding-bottom:.15rem;margin-bottom:1rem}
+.hint{font-size:.78rem;color:var(--ink-soft)}
+.btn{font:inherit;font-weight:600;font-size:.88rem;padding:.6rem 1.1rem;border-radius:7px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer}
+.btn:hover{background:var(--signal);border-color:var(--signal)}
+.btn:disabled{opacity:.6;cursor:default}
+.btn-google{display:flex;align-items:center;justify-content:center;gap:.6rem;width:100%;margin-top:1rem;padding:.7rem 1rem;font:inherit;font-weight:600;font-size:.9rem;color:var(--ink);background:#fff;border:1px solid var(--alu-dark);border-radius:7px;cursor:pointer}
+.btn-google:hover{border-color:var(--ink);background:var(--bg)}
+.field{margin-top:1rem}
+.field label{display:block;font-weight:600;font-size:.85rem;margin-bottom:.25rem}
+.field input{width:100%;padding:.55rem .7rem;font:inherit;border:1px solid var(--alu-dark);border-radius:6px;background:#fff;color:var(--ink)}
+.field input:focus{outline:2px solid var(--signal);outline-offset:1px}
+.error-note{border-left:4px solid var(--signal);background:#FCF2EA;border-radius:0 6px 6px 0;padding:.6rem .8rem;font-size:.83rem;margin-top:.75rem}
+
+/* ---- stat-fliser ---- */
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1.1rem;margin-top:1.25rem}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:1rem 1.15rem}
+.kpi .label{font-size:.78rem;font-weight:600;color:var(--ink-soft)}
+.kpi .value{font-size:1.9rem;font-weight:600;line-height:1.2;margin-top:.15rem}
+.kpi .delta{font-size:.78rem;color:var(--ok);font-weight:600}
+
+/* ---- diagrammer ---- */
+.colchart{position:relative;margin-top:.5rem}
+.colchart .plot{display:flex;align-items:flex-end;gap:2px;height:180px;border-bottom:1px solid var(--line);position:relative}
+.colchart .gridline{position:absolute;left:0;right:0;border-top:1px solid var(--line);pointer-events:none}
+.colchart .gridline span{position:absolute;right:100%;top:-.6em;padding-right:.5rem;font-size:.7rem;color:var(--ink-soft);font-variant-numeric:tabular-nums;white-space:nowrap}
+.colchart .band{flex:1 1 0;height:100%;display:flex;align-items:flex-end;justify-content:center;cursor:default;position:relative}
+.colchart .band:hover{background:rgba(28,42,51,.05)}
+.colchart .col{width:100%;max-width:24px;background:var(--signal);border-radius:2px 2px 0 0;min-height:0}
+.colchart .peak{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:.72rem;font-weight:600;color:var(--ink);padding-bottom:2px}
+.colchart .xlabels{display:flex;gap:2px;margin-top:.3rem}
+.colchart .xlabels span{flex:1 1 0;font-size:.68rem;color:var(--ink-soft);text-align:center;white-space:nowrap;overflow:visible}
+.colchart{padding-left:2.4rem}
+
+.tooltip{position:fixed;z-index:10;background:var(--ink);color:#fff;font-size:.78rem;padding:.35rem .6rem;border-radius:6px;pointer-events:none;white-space:nowrap;display:none}
+.tooltip b{font-variant-numeric:tabular-nums}
+
+.barlist{margin-top:.5rem}
+.barrow{display:grid;grid-template-columns:11rem 1fr;gap:.7rem;align-items:center;padding:.22rem 0}
+.barrow .name{font-size:.85rem;text-align:right;color:var(--ink)}
+.barrow .track{display:flex;align-items:center;gap:.5rem;min-width:0}
+.barrow .bar{height:18px;background:var(--signal);border-radius:0 4px 4px 0;flex:none}
+.barrow .val{font-size:.82rem;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+@media(max-width:560px){.barrow{grid-template-columns:7.5rem 1fr}.barrow .name{font-size:.78rem}}
+
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{font-family:var(--font-display);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-soft);text-align:left;padding:.45rem .6rem;border-bottom:2px solid var(--line)}
+td{padding:.45rem .6rem;border-bottom:1px solid var(--line)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow-x:auto}
+
+.dash-head{display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;margin-top:.5rem}
+.dash-head h1{font-family:var(--font-display);font-weight:700;font-size:clamp(1.8rem,4vw,2.5rem);text-transform:uppercase;letter-spacing:.02em}
+.dash-head h1 em{font-style:normal;color:var(--signal)}
+.login-card{max-width:420px;margin:2.5rem auto 0}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="brand" href="/" aria-label="Til forsiden">
+    <svg viewBox="0 0 64 34" aria-hidden="true"><g stroke="#E85D0F" stroke-width="6" stroke-linecap="round" fill="none"><path d="M5 29 L24 6 L43 29 L59 10"/></g><g fill="#fff"><circle cx="5" cy="29" r="3"/><circle cx="24" cy="6" r="3"/><circle cx="43" cy="29" r="3"/><circle cx="59" cy="10" r="3"/></g></svg>
+    Tommestokk<em>1</em>
+  </a>
+  <span class="crumb">Admin</span>
+  <div class="header-auth" id="headerAuth" style="display:none">
+    <span id="headerEmail"></span>
+    <button class="header-btn" id="logoutBtn" type="button">Logg ut</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- Innlogging -->
+  <div class="card login-card" id="loginCard" style="display:none">
+    <h2>Logg inn</h2>
+    <p class="hint">Denne siden er bare for administrator.</p>
+    <button class="btn-google" id="googleBtn" type="button">
+      <svg viewBox="0 0 48 48" aria-hidden="true" width="20" height="20"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+      Fortsett med Google
+    </button>
+    <div id="otpStep1">
+      <div class="field">
+        <label for="emailInput">…eller få engangskode på e-post</label>
+        <input type="email" id="emailInput" autocomplete="email" placeholder="din@epost.no">
+      </div>
+      <button class="btn" id="sendCodeBtn" type="button" style="margin-top:.75rem">Send kode</button>
+    </div>
+    <div id="otpStep2" style="display:none">
+      <div class="field">
+        <label for="codeInput">Engangskoden fra e-posten</label>
+        <input type="text" id="codeInput" inputmode="numeric" autocomplete="one-time-code" placeholder="123456">
+      </div>
+      <button class="btn" id="verifyBtn" type="button" style="margin-top:.75rem">Logg inn</button>
+    </div>
+    <div class="error-note" id="loginError" style="display:none"></div>
+  </div>
+
+  <!-- Ikke admin -->
+  <div class="card login-card" id="deniedCard" style="display:none">
+    <h2>Ingen tilgang</h2>
+    <p class="hint" style="margin-top:.5rem">Kontoen <b id="deniedEmail"></b> har ikke administratortilgang.
+    Logg ut og prøv med administrator-kontoen.</p>
+    <button class="btn" id="deniedLogoutBtn" type="button" style="margin-top:1rem">Logg ut</button>
+  </div>
+
+  <!-- Dashbord -->
+  <div id="dash" style="display:none">
+    <div class="dash-head">
+      <h1>Bruk av <em>Tommestokk1</em></h1>
+      <span class="hint" id="fetchedAt"></span>
+      <button class="header-btn" id="refreshBtn" type="button" style="border-color:var(--alu-dark);color:var(--ink)">Oppdater</button>
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card">
+      <h2>Visninger per dag — siste 30 dager</h2>
+      <div class="colchart" id="dayChart"></div>
+    </div>
+
+    <div class="card">
+      <h2>Visninger per verktøy — siste 30 dager</h2>
+      <div class="barlist" id="toolBars"></div>
+    </div>
+
+    <div class="card">
+      <h2>Alle tall per verktøy</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>Verktøy</th><th class="num">Visninger siste 30 d</th><th class="num">Visninger totalt</th><th class="num">Lagrede beregninger</th></tr></thead>
+          <tbody id="toolTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Nyeste brukere</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th>E-post</th><th>Registrert</th><th>Sist innlogget</th></tr></thead>
+          <tbody id="userTable"></tbody>
+        </table>
+      </div>
+      <p class="hint" style="margin-top:.6rem">De ti nyeste kontoene. Full liste finnes i Supabase → Authentication.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="tooltip" id="tooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = "https://edutnmtttkhuhkemnnmo.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_2_sgCwLsDxXvm-1M1FAVLw_tTbCpb6s";
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const TOOL_LABELS = {terrasse:"Terrasse", dryppstop:"DryppStop undertak", rekkverk:"Rekkverk",
+  parkett:"Parkett og laminat", kledning:"Kledning", levegg:"Levegg", pergola:"Pergola",
+  utemaling:"Maling utvendig", belegningsstein:"Belegningsstein og grus", plen:"Plen",
+  gjerde:"Gjerde", innemaling:"Maling innvendig", flis:"Flis til bad"};
+
+const $ = id => document.getElementById(id);
+const fmt = n => Number(n||0).toLocaleString("nb-NO");
+const dtFmt = iso => iso ? new Date(iso).toLocaleString("nb-NO",{dateStyle:"short",timeStyle:"short"}) : "—";
+
+function show(state){ // "login" | "denied" | "dash" | none
+  $("loginCard").style.display  = state==="login"  ? "" : "none";
+  $("deniedCard").style.display = state==="denied" ? "" : "none";
+  $("dash").style.display       = state==="dash"   ? "" : "none";
+}
+
+/* ---------------- innlogging ---------------- */
+function loginError(msg){ $("loginError").textContent = msg; $("loginError").style.display = "block"; }
+
+$("googleBtn").addEventListener("click", async ()=>{
+  $("loginError").style.display = "none";
+  const {error} = await sb.auth.signInWithOAuth({provider:"google",
+    options:{redirectTo: location.origin + "/admin"}});
+  if (error) loginError("Google-innlogging feilet: " + error.message);
+});
+
+$("sendCodeBtn").addEventListener("click", async ()=>{
+  const email = $("emailInput").value.trim();
+  if (!email) return;
+  $("loginError").style.display = "none";
+  $("sendCodeBtn").disabled = true;
+  const {error} = await sb.auth.signInWithOtp({email});
+  $("sendCodeBtn").disabled = false;
+  if (error){ loginError("Kunne ikke sende kode: " + error.message); return; }
+  $("otpStep1").style.display = "none";
+  $("otpStep2").style.display = "";
+  $("codeInput").focus();
+});
+
+$("verifyBtn").addEventListener("click", async ()=>{
+  const email = $("emailInput").value.trim();
+  const code = $("codeInput").value.trim();
+  if (!code) return;
+  $("verifyBtn").disabled = true;
+  const {error} = await sb.auth.verifyOtp({email, token:code, type:"email"});
+  $("verifyBtn").disabled = false;
+  if (error) loginError("Feil kode: " + error.message);
+});
+
+async function signOut(){ await sb.auth.signOut(); location.reload(); }
+$("logoutBtn").addEventListener("click", signOut);
+$("deniedLogoutBtn").addEventListener("click", signOut);
+
+/* ---------------- henting + tegning ---------------- */
+async function loadStats(user){
+  const {data, error} = await sb.rpc("admin_stats");
+  if (error){
+    $("deniedEmail").textContent = user.email;
+    show("denied");
+    return;
+  }
+  render(data);
+  show("dash");
+}
+
+function render(s){
+  $("fetchedAt").textContent = "Hentet " + dtFmt(s.hentet_at);
+
+  $("kpis").innerHTML = [
+    {label:"Visninger siste 7 dager", value:s.visninger_7d},
+    {label:"Visninger siste 30 dager", value:s.visninger_30d},
+    {label:"Visninger totalt", value:s.visninger_totalt},
+    {label:"Brukere", value:s.brukere_totalt, delta:s.brukere_30d ? `+${fmt(s.brukere_30d)} siste 30 d` : ""},
+    {label:"Aktive siste 30 dager", value:s.aktive_30d},
+    {label:"Prosjekter", value:s.prosjekter_totalt},
+    {label:"Lagrede beregninger", value:s.beregninger_totalt},
+  ].map(k=>`<div class="kpi"><div class="label">${k.label}</div><div class="value">${fmt(k.value)}</div>${k.delta?`<div class="delta">${k.delta}</div>`:""}</div>`).join("");
+
+  renderDayChart(s.per_dag_30d || []);
+  renderToolBars(s.per_verktoy || []);
+  renderToolTable(s.per_verktoy || []);
+
+  $("userTable").innerHTML = (s.siste_brukere||[]).map(u=>
+    `<tr><td>${u.epost||"—"}</td><td>${dtFmt(u.opprettet_at)}</td><td>${dtFmt(u.sist_innlogget_at)}</td></tr>`
+  ).join("") || `<tr><td colspan="3" class="hint">Ingen brukere ennå.</td></tr>`;
+}
+
+/* Rene aksetall: 1-2-5-mønster. */
+function niceMax(m){
+  if (m<=4) return 4;
+  const p = Math.pow(10, Math.floor(Math.log10(m)));
+  for (const f of [1,2,5,10]) if (f*p >= m) return f*p;
+  return 10*p;
+}
+
+function renderDayChart(rows){
+  const byDay = Object.fromEntries(rows.map(r=>[r.dag, r.antall]));
+  const days = [];
+  const today = new Date();
+  for (let i=29;i>=0;i--){
+    const d = new Date(today); d.setDate(today.getDate()-i);
+    const key = d.toLocaleDateString("sv-SE"); // yyyy-mm-dd i lokal tid
+    days.push({key, date:d, antall: byDay[key]||0});
+  }
+  const max = niceMax(Math.max(1, ...days.map(d=>d.antall)));
+  const peak = Math.max(...days.map(d=>d.antall));
+
+  const grid = [0.25,0.5,0.75,1].map(f=>
+    `<div class="gridline" style="bottom:${f*100}%"><span>${fmt(Math.round(max*f))}</span></div>`).join("");
+
+  const cols = days.map((d,i)=>{
+    const h = d.antall/max*100;
+    const isPeak = peak>0 && d.antall===peak && days.findIndex(x=>x.antall===peak)===i;
+    return `<div class="band" data-i="${i}">
+      <div class="col" style="height:${h}%"></div>
+      ${isPeak?`<div class="peak" style="bottom:${h}%">${fmt(d.antall)}</div>`:""}
+    </div>`;
+  }).join("");
+
+  const lbl = days.map((d,i)=> i%5===2
+    ? `<span>${d.date.toLocaleDateString("nb-NO",{day:"numeric",month:"short"})}</span>`
+    : `<span></span>`).join("");
+
+  $("dayChart").innerHTML = `<div class="plot">${grid}${cols}</div><div class="xlabels">${lbl}</div>`;
+
+  const tip = $("tooltip");
+  $("dayChart").querySelectorAll(".band").forEach(band=>{
+    const d = days[+band.dataset.i];
+    band.addEventListener("mousemove", e=>{
+      tip.innerHTML = `${d.date.toLocaleDateString("nb-NO",{weekday:"short",day:"numeric",month:"short"})} · <b>${fmt(d.antall)}</b> visninger`;
+      tip.style.display = "block";
+      tip.style.left = Math.min(e.clientX+12, window.innerWidth-170)+"px";
+      tip.style.top = (e.clientY-34)+"px";
+    });
+    band.addEventListener("mouseleave", ()=>{ tip.style.display="none"; });
+  });
+}
+
+function renderToolBars(rows){
+  const sorted = [...rows].sort((a,b)=>b.visninger_30d-a.visninger_30d);
+  const max = Math.max(1, ...sorted.map(r=>r.visninger_30d));
+  $("toolBars").innerHTML = sorted.map(r=>{
+    const pct = r.visninger_30d/max*100;
+    return `<div class="barrow">
+      <div class="name">${TOOL_LABELS[r.verktoy]||r.verktoy}</div>
+      <div class="track"><div class="bar" style="width:${pct}%"></div><span class="val">${fmt(r.visninger_30d)}</span></div>
+    </div>`;
+  }).join("") || `<p class="hint">Ingen visninger registrert ennå.</p>`;
+}
+
+function renderToolTable(rows){
+  const sorted = [...rows].sort((a,b)=>b.visninger-a.visninger);
+  $("toolTable").innerHTML = sorted.map(r=>
+    `<tr><td>${TOOL_LABELS[r.verktoy]||r.verktoy}</td>
+     <td class="num">${fmt(r.visninger_30d)}</td>
+     <td class="num">${fmt(r.visninger)}</td>
+     <td class="num">${fmt(r.beregninger)}</td></tr>`
+  ).join("") || `<tr><td colspan="4" class="hint">Ingen data ennå.</td></tr>`;
+}
+
+$("refreshBtn").addEventListener("click", ()=>{
+  sb.auth.getSession().then(({data})=>{ if (data.session) loadStats(data.session.user); });
+});
+
+/* ---------------- oppstart ---------------- */
+let loadedFor = null;
+sb.auth.onAuthStateChange((_event, session)=>{
+  const user = session?.user || null;
+  $("headerAuth").style.display = user ? "flex" : "none";
+  if (user) $("headerEmail").textContent = user.email;
+  if (user && loadedFor !== user.id){ loadedFor = user.id; loadStats(user); }
+  if (!user){ loadedFor = null; show("login"); }
+});
+sb.auth.getSession().then(({data})=>{
+  if (!data.session) show("login");
+});
+</script>
+</body>
+</html>
